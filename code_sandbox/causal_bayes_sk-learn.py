@@ -1,6 +1,7 @@
 import numpy as np
+from IPython.core.display import Latex
 from sklearn.linear_model import LinearRegression
-
+import matplotlib.pyplot as plt
 # ---------------------------
 # 1. Generate synthetic data
 # ---------------------------
@@ -10,6 +11,11 @@ Z = np.random.randn(N, 1)
 X = 2 * Z + 0.5 * np.random.randn(N, 1)       # X depends on Z
 Y = 3 * X + 4 * Z + np.random.randn(N, 1)     # true causal effect of X = 3
 
+plt.figure()
+plt.plot(X,Z, marker="o", linestyle="", markersize=1)
+plt.xlabel("$x$")
+plt.ylabel("$y$")
+plt.show()
 # ---------------------------
 # 2. Naive observational model: Y ~ X
 # ---------------------------
