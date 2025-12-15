@@ -1,4 +1,4 @@
-# Causal inference for text data
+# Causal inference for time series and text data
 
 List of Contents
 =======================
