@@ -14,6 +14,9 @@
 4. [On the Fly Detection of Root Causes from Observed Data with Application to IT Systems](https://arxiv.org/abs/2402.06500)
 5. [Relaxing partition admissibility in Cluster-DAGs: a causal calculus with arbitrary variable clustering](https://arxiv.org/abs/2511.01396)
 6. [Modèles de Fondation et Ajustement : Vers une Nouvelle Génération de Modèles pour la Prévision des Séries Temporelles](https://www.arxiv.org/abs/2511.22674)
+7. [Causal Discovery from Time Series with Hybrids of Constraint-Based and Noise-Based Algorithms](https://arxiv.org/abs/2306.08765)
+8. [Inferring extended summary causal graphs from observational time series](https://arxiv.org/pdf/2205.09422)
+<!-- https://arxiv.org/abs/2204.06479 (no need to cite) -->
 
 ### Textbooks on causal inference
 1. [Elements of Causal Inference: Foundations and Learning Algorithms](https://web.math.ku.dk/~peters/jonas_files/ElementsOfCausalInference.pdf) by Jonas Peters, Dominik Janzing, and Bernhard Schölkopf
