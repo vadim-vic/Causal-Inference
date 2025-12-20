@@ -12,6 +12,8 @@
 2. [Causal discovery from time series with hybrids of constraint-based and noise-based algorithms](https://arxiv.org/abs/2306.08765), [appendix](https://arxiv.org/abs/2306.08765)
 3. [Identifiability in Causal Abstractions: A Hierarchy of Criteria](https://arxiv.org/pdf/2507.06213)
 4. [On the Fly Detection of Root Causes from Observed Data with Application to IT Systems](https://arxiv.org/abs/2402.06500)
+5. [Relaxing partition admissibility in Cluster-DAGs: a causal calculus with arbitrary variable clustering](https://arxiv.org/abs/2511.01396)
+6. [Modèles de Fondation et Ajustement : Vers une Nouvelle Génération de Modèles pour la Prévision des Séries Temporelles](https://www.arxiv.org/abs/2511.22674)
 
 ### Textbooks on causal inference
 1. [Elements of Causal Inference: Foundations and Learning Algorithms](https://web.math.ku.dk/~peters/jonas_files/ElementsOfCausalInference.pdf) by Jonas Peters, Dominik Janzing, and Bernhard Schölkopf
@@ -23,13 +25,17 @@
 7. [Introduction to Causal Inference](https://pmc.ncbi.nlm.nih.gov/articles/PMC2836213) by Judea Pearl
 8. [Probabilistic Graphical Models: Principles and Techniques](http://mcb111.org/w06/KollerFriedman.pdf) by Daphne Koller and Nir Friedman, this fat gray book
 9. [A Tutorial on Learning With Bayesian Networks](http://heckerman.com/david/tutorial.pdf) by David Heckerman
+10. [Introduction to Judea Pearl’s Do-Calculus](https://arxiv.org/abs/1305.5506) by Robert R. Tucci
+
 
 ### General references on time series causal inference
 1. [Toward Causal Representation Learning](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9363924) by Bernhard Schölkopf et al.
-2. [Causal Structure Learning and Effect Identification in Linear Non-Gaussian Models and Beyond](https://helda.helsinki.fi/server/api/core/bitstreams/db658dd0-6d6e-4e35-854f-f4d973548599/content) by Doris Entner, [site](https://sites.google.com/site/dorisentner/publications?authuser=0#h.p_pKxBzrRlMHl_)
+2. [Causal Structure Learning and Effect Identification in Linear Non-Gaussian Models and Beyond](https://helda.helsinki.fi/server/api/core/bitstreams/db658dd0-6d6e-4e35-854f-f4d973548599/content) by Doris Entner, and [site](https://sites.google.com/site/dorisentner/publications?authuser=0#h.p_pKxBzrRlMHl_)
 3. [Causal inference for time series](https://causalinferencelab.com/wp-content/uploads/2023/06/Runge_Causal_Inference_for_Time_Series_NREE.pdf)
 4. [A Linear Non-Gaussian Acyclic Model for Causal Discovery](https://www.cs.helsinki.fi/group/neuroinf/lingam/JMLR06.pdf)
 5. [LiNGAM: References](https://sites.google.com/view/sshimizu06/lingam)
+6. [Causal inference for time series](https://causalinferencelab.com/publications/) by Jakob Runge et al., and [site](https://causalinferencelab.com/)
+
 
 ### Tools for causal discovery
 1. [LiNGAM: Linear Non-Gaussian Acyclic Model for Causal Discovery](https://github.com/cdt15/lingam), [github](https://github.com/cdt15/lingam)
