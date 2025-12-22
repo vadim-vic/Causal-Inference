@@ -6,7 +6,7 @@
 \usepackage{xypic}
 
 %=============================================
-\title{Causal inference in the latent space of convergent cross-mapping}
+\title{Causal inference in the latent spaces of Canonical Correlation Analysis}
 \author{IA pour la Science}
 \date{December $19^\text{th}$, 2025}
 %=============================================
@@ -104,24 +104,26 @@ and select the components of the diagonal matrix~$\Lambda$ that express the caus
 \end{columns}
 
 \bigskip
-The Canonical Correlation Analysis%
-\footnote{The Partial Least Squares regression comprises.}
+The Canonical Correlation Analysis %
+%\footnote{The Partial Least Squares regression comprises.}
 reduce the dimensionality of the source data.
 %Lauzon-Gauthier et al., 2018; Engel et al., 2017; Biancolillo et al., 2017; Herv´as et al., 2018). 
 It  projects observed data into low-dimensional space and uses it as new model features. It maps the source  and the target~$X,Y$ onto joint latent space~$P,Q$ and maximizes the covariance between the projections~$$\mathop{\text{cov}}(P,Q)\to\max.$$
 
-\bigskip
 %The parameters of the linear model are set in order to obtain a better forecast subject to the
 %condition~$\cov(U, T)\to\max$. 
 The latent variables~$P, Q$ approximate hidden dependencies in joint space using linear models~$U, V$.
 
 %It retrieves the information about the initial input and target matrices and extracts their relations. The following diagram shows the main principles of forecasting for the case, where both the source~$X$ and the target~$Y$ lie in spaces that have hidden dependencies, which could be reduced. The model projects input and target data into joint latent space and maximizes covariances between the projections.
+
+\bigskip
+In the terms of Causality Inference, the linear operator $\Lambda$, the diagonal matrix, defines the \emph{bilateral graph of causality}.
 \end{frame}
 %=============================================
 \begin{frame}{The plan of action}
 The background research
 \begin{enumerate}[1)]
-\item Write Bayesian Inference for CCA 
+\item Write Bayesian Causality Inference for CCA 
 \item Generalize for CCM and Transformer
 \item Propose Causality Propagation model
 \item Propose Generative Causality Search
