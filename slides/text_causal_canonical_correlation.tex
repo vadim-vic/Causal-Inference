@@ -1,0 +1,241 @@
+% Sandbox of the paper text_causal_canonical_correlation.tex
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{a4wide}
+\title{Comparative analysis of my projects}
+%\author{not specified}
+\date{}
+\begin{document}
+\maketitle
+
+
+
+
+
+\section{Project title 1}
+Short description of the projects, 1--3 sentences.
+\begin{enumerate}
+\item \emph{The impact} is; what the project changes
+\item \emph{The consistency} or reliability is; where is the science, proofs, and analysis in your project
+\item \emph{The novelty} is; how the proposed solution differs from the alternatives
+\item \emph{My contribution} is; put where your personal effort go
+\item \emph{The project focuses} on; put the main message you defend
+\end{enumerate}
+
+\section{Project title 2}
+Short description of the projects, 1--3 sentences.
+\begin{enumerate}
+\item \emph{The impact}
+\item \emph{The consistency}
+\item \emph{The novelty}
+\item \emph{My contribution}
+\item \emph{The project focuses}
+\end{enumerate}
+
+\section{Project title 3}
+Short description of the projects, 1--3 sentences.
+\begin{enumerate}
+\item \emph{The impact}
+\item \emph{The consistency}
+\item \emph{The novelty}
+\item \emph{My contribution}
+\item \emph{The project focuses}
+\end{enumerate}
+
+\section{Resume}
+The project \emph{Title} has the highest priority since, due to; put a brief motivation here.
+
+\end{document}
+
+
+
+
+\beamertemplatenavigationsymbolsempty
+\documentclass{beamer}
+\setbeamertemplate{footline}[page number]
+
+\title{Causal inference for text data \\via convergent cross-mapping}
+\author{IA pour la Science}
+\date{December $12^\text{th}$, 2025}
+
+\begin{document}
+\begin{frame}
+  \titlepage
+\end{frame}
+%=============================================
+\begin{frame}{Causal inference for text data}
+
+\begin{block}{The goal of research}
+Propose the Bayesian causal inference in terms of generative modeling for text data.
+\end{block}
+
+\begin{block}{The focus}
+Represent the text data as multivariate time series and use Convergent Cross-Mapping for Causal Inference. 
+\end{block}
+
+\begin{enumerate}
+\item Reformulate the control problem as the $|\text{do}(X)$ intervention for dynamical systems.
+\item Prepare the model selection pipeline with domain localization and dimensionality reduction.
+\item  Generalise the CCM to Canonical Correlation Analysis and Attention.
+\item Conduct a computational experiment on d-variate time series, including text and video.
+\end{enumerate}
+\end{frame}
+%=============================================
+\begin{frame}{Convergent Cross Mapping}
+
+\begin{itemize}
+    \item We observe a pair of dynamical systems $X$ and $Y$, whose true behavior is described by the manifolds $W_x$ and $W_y$ in their corresponding phase spaces.
+    We can only infer information about these manifolds from their projections $M_x$ and $M_y$ onto the observed values of the time series $\{x_t\}_{t=1}^T$ and $\{y_t\}_{t=1}^T$ corresponding to these systems.
+    
+    \item \textbf{Cross Mapping}. From the phase trajectory of one system, $M_x$, we can predict the values of the second system: $y_t \simeq \hat{y}_t|M_x$. Similarly, we can construct predictions $\hat{x}_t|M_y$. The accuracy of these predictions indicates whether a causal relationship exists between the systems.
+    
+    \item \textbf{Convergence}. If such a relationship exists, the prediction quality should improve as the considered time interval $T$ increases.
+\end{itemize}
+\end{frame}
+%=============================================
+\begin{frame}{Convergent Cross Mapping Algorithm (1)}
+\begin{enumerate}
+    \item There given two time series $\{x_1, x_2, ..., x_T\}$ and $\{y_1, y_2, ..., y_T\}$ of length $T$.
+    \item For the series $\{x_t\}_{t=1}^T$, construct history vectors of dimension $E$ with time lag $\tau$:
+    $$ \mathbf{x}_t = \begin{pmatrix}
+        x_t, & x_{t - \tau}, & x_{t - 2\tau}, & \dots, & x_{t - (E-1)\tau}
+    \end{pmatrix}.$$
+    \item In the \emph{phase} space $\mathbb{R}^E$, these history vectors form the \emph{phase trajectory} of the system:
+   $$M_x = \{\mathbf{x}_t \ | \ t = 1 + (E - 1)\tau, ..., T \}.$$
+    \item[4.] One has to build a prediction for the value $y_t$. To do this, find the $E + 1$ vectors from $M_x$ that are closest to $\mathbf{x}_t$ (in terms of, for example, the standard metric $d$ in $\mathbb{R}^n$). Sort their time indices $t_1, ..., t_{E+1}$ from the nearest to the farthest points
+    $$ d_i = d(\mathbf{x}_t, \mathbf{x}_{t_i}), \quad d_1 < d_2 < ... < d_{E + 1}.$$
+\end{enumerate}
+\end{frame}
+
+%=============================================
+\begin{frame}{Convergent Cross Mapping Algorithm (2)}
+
+\begin{enumerate}
+    \item[5.] The estimate of the value $y_t$ is then constructed as a weighted sum of the series values at times $t_1, ..., t_{E+1}$:
+    $$ \hat{y}_t|M_x = \sum_{i=1}^{E+1} \omega_i y(t_i),$$
+    $$ \omega_i = \frac{u_i}{\displaystyle \sum_{j=1}^{E + 1}u_j}, \qquad 
+       u_i = \text{exp}\Big(-\frac{d_i}{d_1}\Big), \qquad i = 1, ..., E+1.$$
+    \item[6.] To assess the existence of dependence between the time series $\{x_t\}_{t=1}^T$ and $\{y_t\}_{t=1}^T$,   compute the Pearson correlation coefficient:
+    $$ C_{yx} = \Bigg[\rho \Big( y, \hat{y}|M_x \Big) \Bigg]^2.$$
+\end{enumerate}
+
+\end{frame}
+%=============================================
+\begin{frame}{State space reconstruction}
+\begin{itemize}
+    \item Takens' theorem use delay vectors to reconstruct the internal structure of a dynamical system.
+    \item When the condition $m \geq 2d + 1$ is satisfied, where $d$ is the embedding dimension, it becomes possible to reconstruct the system’s state space.
+    \item In particular, the conclusions of Takens' theorem are used in CCM. The CCM algorithm is analogous to a statistical test and evaluates the causal relationship between two time series.
+\end{itemize}
+\end{frame}
+%=============================================
+\begin{frame}{Questions to discuss}
+\begin{enumerate}
+\item List machine learning problems with text data to illustrate cases of Causal Inference.
+\item List cases where the text data are represented as time series.
+\item List datasets for the experiment \\
+~~~~~1) time series to illustrate, \\
+~~~~~2) text data to test.
+\end{enumerate}
+\end{frame}
+
+%=============================================
+\begin{frame}{Appendix: text data as time series, illustration (1)}
+
+\includegraphics[scale=.26]{clef_text_as_time_series}\\
+\centering{Plagiarism detection examples}
+
+\end{frame}
+%=============================================
+\begin{frame}{Appendix: text data as time series, illustration (2)}
+
+\includegraphics[scale=.27]{clef_text_segmentation}\\
+\centering{Text segmentation markdown}
+
+\end{frame}
+%=============================================
+\begin{frame}{Appendix: phase trajectory of time series}
+
+\includegraphics[scale=.37]{phase_trajectory_dimensionality}\\
+\centering{Delay embedding delivers dimensionality reduction and keeps the reconstruction}
+
+\end{frame}
+%=============================================
+\begin{frame}{Appendix: convergent cross-mapping}
+
+{\centering{\includegraphics[scale=.35]{convergent_cross-mapping}}\\
+\centering{The time series $y$ depends on the time series $x$, but not vice versus}}\\
+
+\bigskip
+The time series $y$ depends on the time series $x$, if in the
+neighbourhood $(x,x^\prime) \in H_x$ there exists a \emph{Lipschitz continuous map}
+$\varphi H_x \to H_y$  such that  $\rho\bigl(H_y (\varphi(x,x^\prime)\bigr) \geqslant L \rho H_x (x,x^\prime)$.
+
+\end{frame}
+
+
+
+
+
+
+
+
+%=============================================
+\end{document}
+
+\begin{frame}{Delay Embedding}
+
+A time series $\{x_i\}_1^N$ is an array of $N$ numbers
+\begin{itemize}
+    \item representing the values of some measured (observed) dynamical variable $\mathbf{x}(t)$,
+    \item taken at a constant time step $\Delta t$.
+\end{itemize}
+
+Often, it is convenient to represent a time series in the form of \textit{phase trajectories} — instead of using the variables of the system directly, we use delay vectors:
+$$ \mathbf{z}_i = [x_i, x_{i-1}, \dots, x_{i-m+1}]. $$
+Each such vector is an element of the $m$-dimensional phase space $\mathbb{R}^m$.
+\end{frame}
+%=============================================
+\begin{frame}{Elements of Takens' Theory}
+
+\begin{itemize}
+    \item Let a dynamical system $f(\mathbf{x})$ be given with phase space $\mathbb{R}^M$.
+    \item The quantities forming the time series are the values of some function $h$ of the state $\mathbf{x}(t)$ of this dynamical system on a manifold $W^d \subset \mathbb{R}^M$:
+    $$ h: W^d \rightarrow \mathbb{R}, \qquad x_i = h(\mathbf{x}(t_i)) = h(f(\mathbf{x}_0, t_i)). $$
+    \item With a fixed time step $\Delta t$:  
+    $$ \mathbf{x}(t) = f(\mathbf{x}_0, t_i + i \cdot \Delta t). $$
+\end{itemize}
+
+Therefore, for the components of the delay vectors we have:
+
+$$ x_i = h(\mathbf{x}(t_i)) = h(f(\mathbf{x}_0,t_i)) $$
+$$ x_{i+1} = h(\mathbf{x}(t_{i+1})) = h(f(\mathbf{x}_0, t_i + \Delta t)) $$
+$$ \dots $$
+$$ x_{i+m-1} = h(\mathbf{x}(t_{i+m-1})) = h(f(\mathbf{x}_0, t_i + (m-1)\cdot \Delta t)) $$
+
+\end{frame}
+
+%=============================================
+\begin{frame}{Elements of Takens' Theory}
+
+Since all components of the vector  
+$$\mathbf{z}_i = [x_i, x_{i-1}, \dots, x_{i+m-1}]$$  
+can be associated with the same measurement of the dynamical system's state  
+$$x_i = h(f(\mathbf{x}_0, t_i)),$$  
+there exists a vector-valued function $\Lambda$ that maps $x_i$ into vectors in the $m$-dimensional space $\mathbb{R}^m$:
+
+$$
+\mathbf{z}_i = \Lambda(x_i), \qquad \mathbf{z}_i \in \mathbb{R}^m.
+$$
+
+These considerations form the core of Takens' theorem, which states that when  
+$$ m \geq 2d + 1, $$  
+the mapping $\Lambda$ constitutes an embedding of the manifold $W^d$ into $\mathbb{R}^m$.
+
+\end{frame}
+%=============================================
+
+\end{document}
