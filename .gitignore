@@ -7,4 +7,5 @@
 *.toc
 *.tex.bak
 /.idea/*
+/out/*
 /main.py
