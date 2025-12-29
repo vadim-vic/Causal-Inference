@@ -19,8 +19,32 @@
 
 \section{Convergent Cross-Mapping}
 
+\section{Multivariate Causal Models}\label{sec:multivariate-causal-models}
+Feature selection for the optimal latent space require the following assumptions:
+\begin{enumerate}
+    \item The system state is reconstructable for both observable sets.
+    \item An error of reconstruction in each set has gaussian distribution.
+    \item A non-empty causal dependency between the source and the target.
+    \item This dependency comprises only the reconstructed components.
+    \item It is linear in the latent space.
+\end{enumerate}
+Let the dependency be a linear map $A$ between the latent spaces of the source and the target.
+Then, the problem of feature selection can be formulated as the following optimization problem:
+\begin{equation}
+\min_{S_x, S_y} \| Z_y - A Z_x \|_F^2 + \lambda_x \| S_x \|_1 + \lambda_y \| S_y \|_1,
+\end{equation}
+where $Z_x$ and $Z_y$ are the matrices of the selected features from the source and the target, respectively; $S_x$ and $S_y$ are the binary selection vectors; $\lambda_x$ and $\lambda_y$ are the regularization parameters; and $\|\cdot\|_F$ and $\|\cdot\|_1$ are the Frobenius and L1 norms, respectively.
 
-\section{Multivariate Causal Models}
+
+#4. Variant 2 we need alignment with
+#5. There is a basis in both spaces and there is a dependency as a
+#6. bipartite graph
+#7. triangular graph
+
+
+
+
+
 Short description of the projects, 1--3 sentences.
 \begin{enumerate}[1)]
 \item \emph{The impact} is; what the project changes

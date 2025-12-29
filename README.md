@@ -39,5 +39,8 @@
 6. [Causal inference for time series](https://causalinferencelab.com/publications/) by Jakob Runge et al., and [site](https://causalinferencelab.com/)
 
 ### Tools for causal discovery
-1. [LiNGAM: Linear Non-Gaussian Acyclic Model for Causal Discovery](https://github.com/cdt15/lingam), [github](https://github.com/cdt15/lingam)
-2. [Do-Why: is a Do-sampler](https://www.pywhy.org/dowhy/v0.11.1/example_notebooks/do_sampler_demo.html)
+1. [LiNGAM: Linear Non-Gaussian Acyclic Model for Causal Discovery](https://lingam.readthedocs.io/), [github](https://github.com/cdt15/lingam)
+2. [Do-Why: is a Do-sampler](https://www.pywhy.org/dowhy/v0.11.1/example_notebooks/do_sampler_demo.html), [site](https://www.pywhy.org/), [pypi](https://pypi.org/project/dowhy/), [pywhy](https://www.pywhy.org/dowhy/v0.14/)
+3. [Tigramite and PCMCI](https://jakobrunge.github.io/tigramite/)
+4. [causal-learn](https://causal-learn.readthedocs.io/)
+5. [CausalEGM](https://causalegm.readthedocs.io/en/latest/installation.html)
