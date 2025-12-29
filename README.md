@@ -1,6 +1,7 @@
 # Causal inference for time series and text data
 
 ## List of Contents
+- Canonical correlation analysis for causal inference via generative modeling [pdf](slides/intro_CCA_Gen.pdf)
 - Causal inference in the latent space [pdf](slides/intro_CI_CCM.pdf)
 - Convergent cross mapping short introduction [pdf](slides/intro_CCM.pdf)
 - Causal inference for domain localization and dimensionality reduction [pdf](slides/draft_Causal_Inference.pdf) 
