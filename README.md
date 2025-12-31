@@ -45,3 +45,4 @@
 3. [Tigramite and PCMCI](https://jakobrunge.github.io/tigramite/)
 4. [causal-learn](https://causal-learn.readthedocs.io/)
 5. [CausalEGM](https://causalegm.readthedocs.io/en/latest/installation.html)
+6. [Tetrad](https://tetrad-manual.readthedocs.io/en/latest/)
