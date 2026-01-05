@@ -1,6 +1,8 @@
 # Causal inference for time series and text data
 
 ## List of Contents
+- Transformers and canonical correlation analysis
+for causal inference [pdf](slides/intro_Distr.pdf)
 - Canonical correlation analysis for causal inference via generative modeling [pdf](slides/intro_CCA_Gen.pdf)
 - Causal inference in the latent space [pdf](slides/intro_CI_CCM.pdf)
 - Convergent cross mapping short introduction [pdf](slides/intro_CCM.pdf)
