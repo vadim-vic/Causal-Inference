@@ -43,6 +43,8 @@
 1. [LiNGAM: Linear Non-Gaussian Acyclic Model for Causal Discovery](https://lingam.readthedocs.io/), [github](https://github.com/cdt15/lingam)
 2. [Do-Why: is a Do-sampler](https://www.pywhy.org/dowhy/v0.11.1/example_notebooks/do_sampler_demo.html), [site](https://www.pywhy.org/), [pypi](https://pypi.org/project/dowhy/), [pywhy](https://www.pywhy.org/dowhy/v0.14/)
 3. [Tigramite and PCMCI](https://jakobrunge.github.io/tigramite/)
-4. [causal-learn](https://causal-learn.readthedocs.io/)
-5. [CausalEGM](https://causalegm.readthedocs.io/en/latest/installation.html)
-6. [Tetrad](https://tetrad-manual.readthedocs.io/en/latest/)
+4. [F-PCMCI](https://lcastri.github.io/fpcmci/)
+5. [causal-learn](https://causal-learn.readthedocs.io/)
+6. [CausalEGM](https://causalegm.readthedocs.io/en/latest/installation.html)
+7. [Tetrad](https://tetrad-manual.readthedocs.io/en/latest/)
+
