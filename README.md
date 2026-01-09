@@ -1,6 +1,7 @@
 # Causal inference for time series and text data
 
 ## List of Contents
+- Discussion of the $p(\mathbf{w}|\text{do}(\mathbf{x}),\mathbf{y})$ for $\mathbf{W}^\mathsf{T}\mathbf{x}$ estimation [pdf](/slides/intro_Setup.pdf)
 - Transformers and canonical correlation analysis
 for causal inference [pdf](slides/intro_Distr.pdf)
 - Canonical correlation analysis for causal inference via generative modeling [pdf](slides/intro_CCA_Gen.pdf)
