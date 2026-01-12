@@ -10,7 +10,7 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 - Causal inference for domain localization and dimensionality reduction [pdf](slides/draft_Causal_Inference.pdf) 
 - Code examples for causal inference for 1) [sk-learn](code_sandbox/causal_bayes_sk-learn.py) 2) [pytorch](code_sandbox/causal_bayes_torch.py)
 
-## References
+## General references
 ### Team publications
 1. [Causal inference for time series](https://causalinferencelab.com/wp-content/uploads/2023/06/Runge_Causal_Inference_for_Time_Series_NREE.pdf)
 2. [Causal discovery from time series with hybrids of constraint-based and noise-based algorithms](https://arxiv.org/abs/2306.08765), [appendix](https://arxiv.org/abs/2306.08765)
@@ -33,12 +33,13 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 8. [Probabilistic Graphical Models: Principles and Techniques](http://mcb111.org/w06/KollerFriedman.pdf) by Daphne Koller and Nir Friedman, this fat gray book
 9. [A Tutorial on Learning With Bayesian Networks](http://heckerman.com/david/tutorial.pdf) by David Heckerman
 10. [Introduction to Judea Pearl’s Do-Calculus](https://arxiv.org/abs/1305.5506) by Robert R. Tucci
+11. inFERENCe by Ferenc Huszár: [part 1](https://www.inference.vc/untitled/), [part 4](https://www.inference.vc/causal-inference-4/), [example](https://www.inference.vc/causal-inference-2-illustrating-interventions-in-a-toy-example/) 
 
 ### General references on time series causal inference
 1. [Toward Causal Representation Learning](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9363924) by Bernhard Schölkopf et al.
+2. [A Linear Non-Gaussian Acyclic Model for Causal Discovery](https://www.cs.helsinki.fi/group/neuroinf/lingam/JMLR06.pdf)
 2. [Causal Structure Learning and Effect Identification in Linear Non-Gaussian Models and Beyond](https://helda.helsinki.fi/server/api/core/bitstreams/db658dd0-6d6e-4e35-854f-f4d973548599/content) by Doris Entner, and [site](https://sites.google.com/site/dorisentner/publications?authuser=0#h.p_pKxBzrRlMHl_)
 3. [Causal inference for time series](https://causalinferencelab.com/wp-content/uploads/2023/06/Runge_Causal_Inference_for_Time_Series_NREE.pdf)
-4. [A Linear Non-Gaussian Acyclic Model for Causal Discovery](https://www.cs.helsinki.fi/group/neuroinf/lingam/JMLR06.pdf)
 5. [LiNGAM: References](https://sites.google.com/view/sshimizu06/lingam)
 6. [Causal inference for time series](https://causalinferencelab.com/publications/) by Jakob Runge et al., and [site](https://causalinferencelab.com/)
 
@@ -50,4 +51,50 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 5. [causal-learn](https://causal-learn.readthedocs.io/)
 6. [CausalEGM](https://causalegm.readthedocs.io/en/latest/installation.html)
 7. [Tetrad](https://tetrad-manual.readthedocs.io/en/latest/)
+
+## Special references 
+
+### Generative modeling for causal inference
+1. [Causal EGM: encoding generative modeling](https://causalegm.readthedocs.io/en/latest/tutorial_r.html)
+2. Generative CCA: [Deep Dynamic Probabilistic Canonical Correlation Analysis](https://arxiv.org/html/2502.05155v1)
+
+### Non-Parametric CI
+1. [Non-Parametric Path Analysis in Structural Causal Models](https://par.nsf.gov/servlets/purl/10111046)
+2. [Non-Parametric Methods for Partial Identification of Causal Effects](https://causalai.net/r72.pdf)
+3. [Non-parametric Causal Inference in Dynamic Thresholding Designs](https://arxiv.org/abs/2512.15244)
+
+### Functional CI with brain
+1. [Functional CI with brain](https://arxiv.org/pdf/2401.09641)
+2. [Modeling Causal Interactions Across Brain Functional Subnetworks](https://arxiv.org/pdf/2511.05548)
+
+### Structure learning
+1. [DAGs with NO TEARS: Continuous Optimization for Structure Learning](https://proceedings.neurips.cc/paper_files/paper/2018/file/e347c51419ffb23ca3fd5050202f9c3d-Paper.pdf)
+
+### Granger 
+1. [Learning Causal Representations with Granger PCA](https://openreview.net/pdf?id=XsTEnaD_Lel)
+
+### Convergent Cross Mapping and Sugihara
+1. [Causal Discovery in Symmetric Dynamic Systems with Convergent Cross Mapping](https://arxiv.org/html/2505.04815v1)
+2. [Convergent Cross-Mapping and Pairwise Asymmetric Inference](https://arxiv.org/pdf/1407.5696)
+3. [Limits to Causal Inference with State-Space Reconstruction for Infectious Disease](https://pmc.ncbi.nlm.nih.gov/articles/PMC5193453/)
+4. [Distinguishing time-delayed causal interactions using convergent cross mapping](https://www.nature.com/articles/srep14750)
+5. [Causal Modelling and Brain Connectivity in Functional Magnetic Resonance Imaging](https://pmc.ncbi.nlm.nih.gov/articles/PMC2642881/)
+6. Science 2012, Foundational CCM method: Detecting causality in complex ecosystems
+7. Science 2016, Advanced CCM/forecasting techniques: Information leverage in interconnected ecosystems
+8. Nature Scientific Reports 2015, Distinguishing time-delayed causal interactions using CCM 
+9. [Causal Discovery in Semi-Stationary Time Series](https://arxiv.org/pdf/2407.07291)
+10. [Towards Characterizing Domain Counterfactuals for Invertible Latent Causal Models](https://openreview.net/forum?id=v1VvCWJAL8)
+11. [Conditional Generative Models are Sufficient to Sample from Any Causal Effect Estimand](https://arxiv.org/pdf/2402.07419)
+12. [Causal Bandits](https://github.com/CausalML-Lab/CausalBandits_with_UnknownGraph)
+13. [Detecting causal associations in large nonlinear time series datasets](https://arxiv.org/pdf/1702.07007)
+
+### Runge PCMCI and time series
+1. [Discovering contemporaneous and lagged causal relations in autocorrelated nonlinear time series datasets](https://proceedings.mlr.press/v124/runge20a/runge20a.pdf)
+2. Science advances, 2019: [Detecting and quantifying causal associations in large nonlinear time series datasets](https://arxiv.org/abs/1702.07007)
+
+<!---### LLM and CI (obsoleted) 
+Integrating Large Language Models in Causal Discovery: A Statistical Causal Approach
+https://arxiv.org/html/2402.01454v4
+-->
+
 
