@@ -23,6 +23,7 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 <!-- https://arxiv.org/abs/2204.06479 (no need to cite) -->
 
 ### Textbooks on causal inference
+1. [Causal Artificial Intelligence](https://causalai-book.net/) by Elias Bareinboim
 1. [Elements of Causal Inference: Foundations and Learning Algorithms](https://web.math.ku.dk/~peters/jonas_files/ElementsOfCausalInference.pdf) by Jonas Peters, Dominik Janzing, and Bernhard Schölkopf
 2. [The book of why: the new science of cause and effect](https://bayes.cs.ucla.edu/WHY/) by Judea Pearl and Dana Mackenzie
 3. [Causal Inference for the Brave and True](https://matheusfacure.github.io/python-causality-handbook/landing-page.html) site by Matheus Facure Alves
