@@ -90,8 +90,6 @@ slope_causal = sum(slopes) / len(slopes)
 print("Causal slope (adjusted):", slope_causal)
 '''
 
-
-
 XZ_test = torch.cat([X_test, torch.zeros_like(X_test)], dim=1)
 slope_causal = torch.autograd.functional.jacobian(causal_fn, XZ_test)[:, :, 0].mean().item()  # partial derivative wrt X
 
