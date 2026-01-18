@@ -12,7 +12,7 @@ It is estimated using sampling technique:
 2. Optimizing to sample of parameters from prior distribution of a 2nn [ipynb](posterior_sample_2nn.ipynb)
 3. Estimation of posterior distribution using flow-based model [ipynb](posterior_flow_density.ipynb)
 4. Visualisation of posterior distribution in Riemannian space [ipynb](posterior_visualization.ipynb)
-5. Singular Values Decomposition as part of neural network [ipynb](decomposition_ssa_nn.ipynb
+5. Singular Values Decomposition as part of neural network [ipynb](decomposition_ssa_nn.ipynb)
 6. Printout parameters of each neuron [ipynb](posterior_sample_seq.ipynb)
 
 For causal inference sandbox see [the folder](../code_sandbox).
