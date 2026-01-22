@@ -93,6 +93,7 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 ### Runge PCMCI and time series
 1. [Discovering contemporaneous and lagged causal relations in autocorrelated nonlinear time series datasets](https://proceedings.mlr.press/v124/runge20a/runge20a.pdf)
 2. Science advances, 2019: [Detecting and quantifying causal associations in large nonlinear time series datasets](https://arxiv.org/abs/1702.07007)
+3. An Algorithm for Fast Recovery of  Sparse Causal Graphs by Peter Spirtes and Clark Glymour, 1990 [original PC](https://www.cmu.edu/dietrich/philosophy/docs/tech-reports/15_Spirtes.pdf)
 
 <!---### LLM and CI (obsoleted) 
 Integrating Large Language Models in Causal Discovery: A Statistical Causal Approach

@@ -59,9 +59,7 @@ print("E[Y | do(X)]:")
 print(Y_do)
 
 
-# ---------------------------
-# 5. Causal effect = derivative wrt X under do(X)
-# ---------------------------
-
+#%%
+# Causal effect = derivative wrt X under do(X)
 causal_effect = w_X
 print("Causal effect d/dX E[Y | do(X)]:", causal_effect)

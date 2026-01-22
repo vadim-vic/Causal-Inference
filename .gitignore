@@ -8,5 +8,6 @@
 *.tex.bak
 /.idea/*
 /out/*
+/temporary/*
 /main.py
 /code_sandbox/biogeoscience_case_study.ipynb
