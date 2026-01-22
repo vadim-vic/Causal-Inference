@@ -15,4 +15,7 @@ It is estimated using sampling technique:
 5. Singular Values Decomposition as part of neural network [ipynb](parameters_svd_nn.ipynb)
 6. Printout parameters of each neuron [ipynb](posterior_sample_seq.ipynb)
 
+## List of initial models
+1. Singular Structure Analysys [ipynb](SSA_minimum.ipynb)
+
 For causal inference sandbox see [the folder](../code_sandbox).
