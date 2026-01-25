@@ -92,8 +92,23 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 
 ### Runge PCMCI and time series
 1. [Discovering contemporaneous and lagged causal relations in autocorrelated nonlinear time series datasets](https://proceedings.mlr.press/v124/runge20a/runge20a.pdf)
-2. Science advances, 2019: [Detecting and quantifying causal associations in large nonlinear time series datasets](https://arxiv.org/abs/1702.07007)
+2. Science advances, 2019: [Detecting and quantifying causal associations in large nonlinear time series datasets],[pdf 2019](https://www.science.org/doi/epdf/10.1126/sciadv.aau4996), [arxiv 2017](https://arxiv.org/abs/1702.07007), [arxiv 2018](https://arxiv.org/pdf/1702.07007)
 3. An Algorithm for Fast Recovery of  Sparse Causal Graphs by Peter Spirtes and Clark Glymour, 1990 [original PC](https://www.cmu.edu/dietrich/philosophy/docs/tech-reports/15_Spirtes.pdf)
+
+### Generative modeling for CI
+1. Causal Effect Inference with Deep Latent-Variable Models [arxiv](https://arxiv.org/abs/1705.08821)
+2. GANITE [pdf](https://pmc.ncbi.nlm.nih.gov/articles/PMC7759680/pdf/fgene-11-585804.pdf), [pdf](https://openreview.net/pdf?id=ByKWUeWA-)
+3. Conditional GANs [pdf](https://pmc.ncbi.nlm.nih.gov/articles/PMC7759680/pdf/fgene-11-585804.pdf), 2020
+
+### Basics of causal discovery
+1. [Do-Calculus: Causal Inference Rules](https://www.emergentmind.com/topics/do-calculus), 2025
+2. [do(x) operator meaning](https://stats.stackexchange.com/questions/211008/dox-operator-meaning)
+3. [Do-calculus rules and backdoors](https://www.andrewheiss.com/blog/2021/09/07/do-calculus-backdoors/)
+4. [Causal Models](https://plato.stanford.edu/entries/causal-models/index.html) in the Stanford Encyclopedia of Philosophy, 2018
+2. [Back and frontdoor](https://stats.stackexchange.com/questions/312992/causal-effect-by-back-door-and-front-door-adjustments)
+2. [The Do-Calculus Revisited](https://ftp.cs.ucla.edu/pub/stat_ser/r402.pdf) by Judea Pearl, 2012
+3. [ML beyond Curve Fitting: An Intro to Causal Inference and do-Calculus](https://www.inference.vc/untitled/) by Ferenc Huszár, 2018
+
 
 <!---### LLM and CI (obsoleted) 
 Integrating Large Language Models in Causal Discovery: A Statistical Causal Approach

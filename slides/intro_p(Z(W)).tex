@@ -1,0 +1,299 @@
+% Simple Beamer Template
+\documentclass{beamer}
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{footline}[page number]
+
+\newcommand{\T}{^{\mathsf{T}}}
+%\usepackage{array,tabularx,tabulary,booktabs}
+%\usepackage{longtable}
+%\usepackage{multirow}
+
+\title{Distribution of model paramers and causality}
+\author{IA pour la Science}
+\date{January $23^\text{th}$, 2026}
+
+\begin{document}
+\begin{frame}
+  \titlepage
+\end{frame}
+%=============================================
+\begin{frame}{I}
+The main difference between LinGAM, PCMCIA and CCM is that CCM is a non-parametric way to reveal dependence in the variables.
+LinGAM and PCMCIA assume fixed model structure to investigate and their causality inference depends on the model structure.
+CCM keeps two spaces disconnected.
+
+%\begin{enumerate}
+%    \item Low dimensional spaces represent the main features of the data
+%    \item Investigate the causality through the change of distribution
+%\end{enumerate}
+%=============================================
+\begin{block}{To gain benefits of the two approaches we propose the following:}
+\begin{enumerate}
+    \item Optimize the latent spaces of the causality by reconstruction
+    \item Assign the model structure to connect the spaces: CCA or Transformers
+    \item Investigate the causality through the change of distribution in separate spaces
+	\item Apply the interventional distribution to estimate the causal effect united spaces
+\end{enumerate}
+\end{block}
+\end{frame}
+%=============================================
+
+%------------------------------------------------
+\begin{frame}{High variance and high co-variance in time series}
+	Dynamic graph reflects dependencies between the time series.
+	\includegraphics[width=\textwidth]{tmp/fig_pairwise_reduction}
+	To reconstruct the dependencies
+	\begin{enumerate}
+		\item Reconstruct phase trajectories through time-delay embedding.
+		\item Define distance between points of the phase trajectories.
+		\item Make low-rank decomposition, prune the dependency graph.
+		\item Reconstruct time series.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}{Time-delay embedding in Singula Spectrum Analysis}
+	\includegraphics[width=\textwidth]{tmp/fig_td_embedding_ssa}
+\end{frame}
+%=============================================
+\begin{frame}{Model of the phase trajectory in the state space}
+	\includegraphics[width=\textwidth]{tmp/fig_phase_trajectory}
+\end{frame}
+\end{document}
+
+{\small
+	Attention mechanisms are used to determine the relevance of different parts of the input data.
+	The self-attention mechanism is defined as follows:
+
+	\begin{equation*}
+		\begin{aligned}
+			&\text{attn}: \mathbb{R}^{m \times d} \times \mathbb{R}^{m \times d} \times \mathbb{R}^{m \times d} \longrightarrow \mathbb{R}^{m \times d} \\
+			&\text{attn}(Q, K, V) = \varphi\left(\frac{Q K^\top}{\sqrt{d}}\right) V
+		\end{aligned}
+		\label{attn}
+	\end{equation*}
+
+	where $Q, K, V \in \mathbb{R}^{m \times d}$ represent the queries, keys, and values, respectively, and $\varphi: \mathbb{R}^{m \times m} \longrightarrow \mathbb{R}^{m \times m}$ is row-wise applied nonlinear function, usually softmax. The dot product between $Q$ and $K$ determines the attention weights, which are normalized using the softmax function. The result is then applied to the values $V$ to generate the output.
+}
+\end{frame}
+
+%=============================================
+\begin{frame}{Self-attention and cross-attention (2)}
+
+	{\small
+Self-attention applied to the input $X \in \mathbb{R}^{m \times n_1}$ is computed as:
+
+\begin{equation*}
+	\begin{aligned}
+		&\text{self-attn}: \mathbb{R}^{m \times n_1} \longrightarrow \mathbb{R}^{m \times d} \\
+		&\text{self-attn}(X) = \text{attn}(X W_q, X W_k, X W_v)
+	\end{aligned}
+	\label{self-attn}
+\end{equation*}
+
+where $W_q, W_k, W_v \in \mathbb{R}^{n_1 \times d}$ ~--- parameter matrices
+
+
+	In multihead attention, several attention heads are used in parallel, where each head computes its own attention weights and outputs. The outputs are then concatenated and linearly transformed by a weight matrix $W^Q \in \mathbb{R}^{p \cdot d \times d}$:
+
+	\begin{equation*}
+		\text{multihead-attn}(Q, K, V) = [\text{head}_1, \ldots, \text{head}_p] W^Q,
+		\label{multihead-attn}
+	\end{equation*}
+
+
+	where $\text{head}_i = \text{self-attn}(X)$
+
+	Cross-attention, in contrast, involves attention between two different sets of inputs. It computes attention by using one set of inputs for queries $X_1 \in \mathbb{R}^{m \times d_1}$ and another set for keys and values $X_2 \in \mathbb{R}^{m \times d_2}$:
+
+	\begin{equation}
+		\text{cross-attn}(X_1, X_2) = \text{attn}(X_1 W_q, X_2 W_k, X_2 W_v) \label{cross-attn}
+	\end{equation}
+	}
+\end{frame}
+%=============================================
+\begin{frame}{Comparison of Attention Mechanisms and CCA}
+
+	Both CCA and attention mechanisms aim to find relationships between two sets of data. However, they differ significantly in their approach and applications:
+
+%		\begin{tabulary}{\textwidth}{|C|C|C|}
+%			\hline
+%			\textbf{Aspect} & \textbf{Attention} & \textbf{Canonical Correlation Analysis (CCA)} \\
+%			\hline
+%			Goal & Identify relevant parts of input sequences & Receive embeddings in the same hidden space + dimensionality reduction \\
+%			\hline
+%			Similarity Measure & $A = \frac{1}{\sqrt{d}} Q K\T$ ~-- attention matrix & $\text{tr}(A\T S_{12} B), \text{ s.t. } A\T S_{11} A = B\T S_{22} B = I$ \\
+%			\hline
+%			Optimization Goal & Minimize task-specific loss & $\max_{A,B} \text{corr}(A^T X, B^T Y)$ \\
+%			\hline
+%		\end{tabulary}
+	\includegraphics[scale=.38]{temp_trans_cca_1}
+\end{frame}
+
+%=============================================
+\begin{frame}{United notation of CCA and attention}
+Note that $A\T S_{12} B = \frac{1}{m} A\T X Y\T B = \frac{1}{m} A\T X \left( B\T Y \right)\T = \frac{1}{m} \widehat{Q} \widehat{K}\T $. And it's quite similar to attention matrix formula $A = \dfrac{1}{\sqrt{d}} Q K\T$. Especially, in cross attention case, where $Q$ is a linear transformation of $X_1$ and $K$ is a linear transformation of $X_2$.
+%		\begin{tabulary}{\textwidth}{|C|C|C|C|C|C|}
+%			\hline
+%			\textbf{Attn} & \textbf{Self-attn} & \textbf{Cross-attn} & \textbf{CCA} & \textbf{CCA-X} & \textbf{CCA-Y} \\
+%			\hline
+%			$Q$                & $W_Q\T X$                 & $W_Q\T X$                  & $A\T X$ & $S_{11}^{-\frac{1}{2}}X$ & $S_{11}^{-\frac{1}{2}}X$  \\
+%			\hline
+%			$K$                & $W_K\T X$                 & $W_K\T Y$                  & $B\T Y$ & $S_{22}^{-\frac{1}{2}}Y$ & $S_{22}^{-\frac{1}{2}}Y$    \\
+%			\hline
+%			$V$                & $W_V\T X$                 & $W_V\T Y$                  & I & $S_{11}^{-\frac{1}{2}}X$ & $S_{22}^{-\frac{1}{2}}Y$  \\
+%			\hline
+%			$\varphi$ & softmax & softmax & Id & $\text{SVD}_U$ & $\text{SVD}_V$ \\
+%			\hline
+%		\end{tabulary}
+\includegraphics[scale=.38]{temp_trans_cca_2}
+
+Details of the CCA projection of $X$ to latent space:
+	\begin{equation}
+		\begin{aligned}
+			\text{CCA}_{XY}(X) &= U\T S_{11}^{-\frac{1}{2}}X = U\T X_1 \\
+			\text{CCA}_{XY}(Y) &= V\T S_{22}^{-\frac{1}{2}}Y = V\T Y_1 \\
+			Z &= S_{11}^{- \frac{1}{2}} S_{12} S_{22}^{- \frac{1}{2}} = \frac{1}{m} X_1 Y_1\T
+		\end{aligned}
+	\end{equation}
+\end{frame}
+%=============================================
+\begin{frame}{Estimate empirtical distribution of one neuron}
+For each neuron from the autoencoder we estimate the empirical distribution through the monte-carlo sampling
+    \[
+        f = \sigma \circ W^T x, \quad
+        W =[w_1,\dots,w^N], \quad
+        \mathbf{w}_j \sim \mathcal{N}(\hat{\mathbf{w}}_j, \hat{\mathbf{A}}_j).
+    \]
+
+	\begin{columns}
+	\begin{column}{0.8\textwidth}
+		The algorithm:
+		\begin{enumerate}
+		\item Sample $k$-th batch $\{x\}$ from the data set $D$.
+		\item For each batch find the parameters $w$.
+		\item Construct the matrix $\bar{W}$ stacking the parameters.
+		\item Estimate from $\bar{W}$ the $E(w), A = Cov(w) = \frac{1}{K-1} W^T W $.
+		\item Do intervention.
+		\item Estimate the difference between the two distributions (before and after intervention) through KL-divergence.
+		\end{enumerate}
+	\end{column}
+	\begin{column}{0.25\textwidth}
+    \includegraphics[scale=.135]{distribution_neurons_light}
+	\end{column}
+	\end{columns}
+%\midskip
+	Hypothesis. The metric tensor $A$ changes with its 1st derivative continuously.
+\end{frame}
+%=============================================
+%------------------------------------------------
+\begin{frame}{Probabilistic Model of CCA}
+\begin{theorem}[Probabilistic CCA]
+Let $Z \sim \mathcal{N}(0,I_k)$, then
+\[
+X = AZ + \varepsilon_X, \quad \varepsilon_X \sim \mathcal{N}(0,\Psi_X), \quad
+Y = BZ + \varepsilon_Y, \quad \varepsilon_Y \sim \mathcal{N}(0,\Psi_Y).
+\]
+There exists a parametrization $(A^*,B^*)$ such that the classical canonical directions $(U,V)$ satisfy
+\[
+A^* = C_{11}^{1/2} U \Lambda^{1/2}, \quad B^* = C_{22}^{1/2} V \Lambda^{1/2}.
+\]
+\end{theorem}
+\begin{block}{Insight}
+pCCA represents CCA as a latent-variable model and relates probabilistic parameters to canonical directions.
+\end{block}
+\end{frame}
+
+%=============================================
+
+%------------------------------------------------
+\begin{frame}{SCM with $\text{do}(X)$ Intervention}
+
+Consider the model
+\[
+Z \sim \mathcal N(0,I_k), \quad
+X = AZ + U_X, \quad
+Y = CX + BZ + U_Y.
+\]
+Then $\mathcal M = \langle \mathcal U, \mathcal V, \mathcal F, P(\mathcal U)\rangle$ defines a structural causal model for $X \to Y$ with hidden confounder $Z$ and direct effect $C$.
+\begin{block}{Insight}
+Formalizes causal relationships and sets the basis for interventional analysis via \texttt{do(X)}.
+\end{block}
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{Interventional Distribution}
+\begin{theorem}[Interventional Distribution]
+For the SCM above,
+\[
+P(Y \mid do(X=x)) = \mathcal N(Cx, BB^\top + \Psi_Y).
+\]
+\end{theorem}
+\begin{block}{Insight}
+Mean encodes direct causal effect, variance accounts for latent confounders. Allows separation of causation from correlation.
+\end{block}
+\begin{corollary}[Linear Causal Effect]
+\[
+\mathbb E[Y \mid do(X=x_1)] - \mathbb E[Y \mid do(X=x_0)] = C (x_1 - x_0)
+\]
+\end{corollary}
+\begin{block}{Insight}
+Identifies linear, pure causal effect, independent of hidden confounders.
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Projection onto CCA Subspace}
+
+\begin{theorem}[Projection of Causal Effect]
+Let $(u_i,v_i)$ be canonical directions normalized by
+$u_i^\top C_{11} u_i = v_i^\top C_{22} v_i = 1$. Then
+\[
+v_i^\top \mathbb E[Y \mid do(X=x)] = (v_i^\top C u_i) (u_i^\top x).
+\]
+\end{theorem}
+
+\begin{block}{Insight}
+Shows how interventional effect projects linearly onto canonical coordinates, facilitating interpretation in CCA space.
+\end{block}
+
+\begin{theorem}[Non-Causal Nature of Canonical Correlations]
+For SCM with $X = AZ$, $Y = CX + BZ$ and $\Psi_X = \Psi_Y = 0$, the canonical correlation $\rho_i$ satisfies
+\[
+\rho_i = u_i^\top C_{11} C^\top v_i + u_i^\top A B^\top v_i.
+\]
+\end{theorem}
+
+\end{frame}
+
+%------------------------------------------------
+\begin{frame}{A question to discuss}
+	\begin{enumerate}
+		\item A simple approach to infer causality between two latent spaces
+		applicable to transformer so that we can use both time series and textual data.
+	\end{enumerate}
+
+
+	\begin{itemize}
+		\item The thing is the literature review shows that Causal Inference is used for time series and spatial time series data (which is great),
+		\item but it seems there is no significant works for textual data.
+	\end{itemize}
+\end{frame}
+\end{document}
+%------------------------------------------------
+\begin{frame}{Interpretation for Time Series and CCM}
+\begin{block}{Time Series}
+- $\text{do}(X_t = x)$: force state at time $t$, observe $Y_{t+\tau}$.
+- SCM + pCCA isolates direct causal influence from latent dynamics.
+\end{block}
+\begin{block}{CCM Perspective}
+- Project interventional response on reconstructed manifold.
+- Enables estimation of directed influence $X \to Y$ beyond correlation.
+\end{block}
+\begin{block}{Textual Analogy}
+- $\text{do}(X=x)$: modify embeddings of linguistic features.
+- $Z$: latent semantic concepts.
+- Measures causal impact on related documents.
+\end{block}
+\end{frame}
+
+\end{document}

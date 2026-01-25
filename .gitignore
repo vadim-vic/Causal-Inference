@@ -9,5 +9,6 @@
 /.idea/*
 /out/*
 /temporary/*
+/slides/tmp/*
 /main.py
 /code_sandbox/biogeoscience_case_study.ipynb
