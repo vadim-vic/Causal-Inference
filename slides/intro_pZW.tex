@@ -18,25 +18,26 @@
 \end{frame}
 %=============================================
 \begin{frame}{Distribution of model parameters and causality}
-The research focuses on the causal inference for the model selection in machine learning.
-To select a model we need to estimate the distribution of model parameters.
+Focus on the causal inference for the model selection in machine learning.
+To select a model estimate the distribution of model parameters. PyTorch provides a well-developed automated differentiation framework to estimate the parameters of the model.
+\begin{block}{The nearest goal is}
+	to propose a method to build Causal Structural Model through the distribution of model parameters and use it for model selection purposes.
+\end{block}
 
-PyTorch provides a well-developed automated differentiation framework to estimate the parameters of the model.
-The nearest goal is to propose a method to build Causal Structural Model through the distribution of model parameters and use it for model selection purposes.
+\begin{block}{Challenge:}
+	How to modify PyTorch autograd so that (after optimization procedure) it returns the causal structure of the model?
+\end{block}
 
-Below:
+\begin{block}{Below:}
 \begin{enumerate}
     \item Causal machine and Control Problem
     \item Clarification of the CI for time series
 	\item Applications of the Causal Discovery
 \end{enumerate}
+\end{block}
 \end{frame}
 %=============================================
-\begin{frame}{Causal Inference and Control Problem}
-	\includegraphics[width=\textwidth]{tmp/fig_control_pid}
-\end{frame}
-%=============================================
-\begin{frame}{Causal Chambers\footnote{https://www.nature.com/articles/s42256-024-00964-x}}
+\begin{frame}{Causal Chambers\footnote{Nature, 2025: https://www.nature.com/articles/s42256-024-00964-x}}
 	\includegraphics[width=\textwidth]{tmp/causal_chambers_1}
 \end{frame}
 %=============================================
@@ -46,6 +47,14 @@ Below:
 %=============================================
 \begin{frame}{Causal Chambers (3)}
 	\includegraphics[width=\textwidth]{tmp/causal_chambers_3}
+\end{frame}
+%=============================================
+\begin{frame}{Causal Inference and Control Problem}
+	\includegraphics[width=0.9\textwidth]{tmp/fig_control_pid}
+\end{frame}
+%=============================================
+\begin{frame}{Conrol problem for time series forecasting\footnote{Nature, 2021: https://www.nature.com/articles/s41467-021-21554-0}}
+	\includegraphics[width=\textwidth]{tmp/fig_nature}
 \end{frame}
 %=============================================
 \begin{frame}{Time-delay embedding in Singula Spectrum Analysis}
@@ -58,10 +67,6 @@ Below:
 %=============================================
 \begin{frame}{Linear model for time series forecasting}
 	\includegraphics[width=\textwidth]{tmp/fig_linear_forecasting}
-\end{frame}
-%=============================================
-\begin{frame}{Conrol problem for time series forecasting\footnote{https://doi.org/10.1038/s41467-021-21554-0}}
-	\includegraphics[width=\textwidth]{tmp/fig_nature}
 \end{frame}
 %=============================================
 \begin{frame}{Covariance matrix of forecasting model parameters}
@@ -87,6 +92,13 @@ Below:
 %\begin{frame}{Neural network model selection}
 %	\includegraphics[width=\textwidth]{tmp/fig_bayesian_nn}
 %\end{frame}
+%=============================================
+\begin{frame}{Testing ideas for Causal Discovery in time series forecasting}
+	Driven oscillations: there is a mathematical and statistical model.
+	Its phase trajectory in the state space is well-known.
+		{\centering{\includegraphics[width=0.6\textwidth]{tmp/fig_wiki_driven_osc}}}
+	The latent space contains two variables for the pendulum and two variables for the driving force.
+\end{frame}
 %=============================================
 \begin{frame}{Do-operations and tests}
 	\includegraphics[width=0.3\textwidth]{tmp/fig_do_sin}

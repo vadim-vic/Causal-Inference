@@ -113,7 +113,7 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 2. [Back and frontdoor](https://stats.stackexchange.com/questions/312992/causal-effect-by-back-door-and-front-door-adjustments)
 2. [The Do-Calculus Revisited](https://ftp.cs.ucla.edu/pub/stat_ser/r402.pdf) by Judea Pearl, 2012
 3. [ML beyond Curve Fitting: An Intro to Causal Inference and do-Calculus](https://www.inference.vc/untitled/) by Ferenc Huszár, 2018
-
+3. [A Survey on Causal Discovery: Theory and Practice](https://arxiv.org/pdf/2305.10032), 2025
 
 <!---### LLM and CI (obsoleted) 
 Integrating Large Language Models in Causal Discovery: A Statistical Causal Approach
