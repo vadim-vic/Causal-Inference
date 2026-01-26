@@ -1,8 +1,8 @@
 # Causal inference for time series and text data
 
 ## List of Contents
-- Distribution of model parameters and causality [pdf](intro_pZW.pdf)
-- Estimation of posterior distributions for Bayesian causal inference [in code_posterior](code_posterior/README.md)
+- Distribution of model parameters and causality [pdf](/slides/intro_pZW.pdf)
+- Estimation of posterior distributions for Bayesian causal inference [in code_posterior](/code_posterior/README.md)
 - Discussion of the $p(\mathbf{w}|\text{do}(\mathbf{x}),\mathbf{y})$ for $\mathbf{W}^\mathsf{T}\mathbf{x}$ estimation [pdf](/slides/intro_Setup.pdf)
 - Transformers and canonical correlation analysis
 for causal inference [pdf](slides/intro_Distr.pdf)
