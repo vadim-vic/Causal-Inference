@@ -1,0 +1,102 @@
+% Simple Beamer Template
+\documentclass{beamer}
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{footline}[page number]
+\usepackage{pdfpages}
+%\newcommand{\T}{^{\mathsf{T}}}
+%\usepackage{array,tabularx,tabulary,booktabs}
+%\usepackage{longtable}
+%\usepackage{multirow}
+
+\title{Distribution of model parameters and causality}
+\author{IA pour la Science}
+\date{January $23^\text{th}$, 2026}
+
+\begin{document}
+\begin{frame}
+  \titlepage
+\end{frame}
+%=============================================
+\begin{frame}{Distribution of model parameters and causality}
+The research focuses on the causal inference for the model selection in machine learning.
+To select a model we need to estimate the distribution of model parameters.
+
+PyTorch provides a well-developed automated differentiation framework to estimate the parameters of the model.
+The nearest goal is to propose a method to build Causal Structural Model through the distribution of model parameters and use it for model selection purposes.
+
+Below:
+\begin{enumerate}
+    \item Causal machine and Control Problem
+    \item Clarification of the CI for time series
+	\item Applications of the Causal Discovery
+\end{enumerate}
+\end{frame}
+%=============================================
+\begin{frame}{Causal Inference and Control Problem}
+	\includegraphics[width=\textwidth]{tmp/fig_control_pid}
+\end{frame}
+%=============================================
+\begin{frame}{Time-delay embedding in Singula Spectrum Analysis}
+	\includegraphics[width=\textwidth]{tmp/fig_td_embedding_ssa}
+\end{frame}
+%=============================================
+\begin{frame}{Model of the phase trajectory in the state space}
+	\includegraphics[width=\textwidth]{tmp/fig_phase_trajectory}
+\end{frame}
+%=============================================
+\begin{frame}{Linear model for time series forecasting}
+	\includegraphics[width=\textwidth]{tmp/fig_linear_forecasting}
+\end{frame}
+%=============================================
+\begin{frame}{Conrol problem for time series forecasting}
+	\includegraphics[width=\textwidth]{tmp/fig_nature}
+\end{frame}
+%=============================================
+\begin{frame}{Covariance matrix of forecasting model parameters}
+	Estimate parameters $\mathbf{w}(\tau) = (\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}\mathbf{X}^\mathsf{T}\mathbf{y}$,
+	then calculate the sample $s(\tau)=\mathbf{w}^\mathsf{T}(\tau)\mathbf{X}_{m+1}$
+	for each $\tau$ of the next $m + 1$-th period.\\
+	\centering{\includegraphics[width=0.6\textwidth]{tmp/fig_linear_covariance}}\\
+	The color shows the value of a parameter for each hour.
+\end{frame}
+%=============================================
+\begin{frame}{Probabilistic model selection}
+	\includegraphics[width=\textwidth]{tmp/fig_bayesian_inference}
+\end{frame}
+%=============================================
+\begin{frame}{ Empirical distribution of model parameters}
+	\includegraphics[width=1.1\textwidth]{tmp/fig_bayesian_sampling}
+\end{frame}
+%=============================================
+\begin{frame}{Evidence of the model}
+	\includegraphics[width=\textwidth]{tmp/fig_bayesian_evidence}
+\end{frame}
+%=============================================
+%\begin{frame}{Neural network model selection}
+%	\includegraphics[width=\textwidth]{tmp/fig_bayesian_nn}
+%\end{frame}
+%=============================================
+\begin{frame}{Do-operations and tests}
+	\includegraphics[width=0.3\textwidth]{tmp/fig_do_sin}
+\end{frame}
+%=============================================
+\begin{frame}{High variance and high co-variance in time series}
+	Dynamic graph reflects dependencies between the time series.
+	\includegraphics[width=\textwidth]{tmp/fig_pairwise_reduction}
+	To reconstruct the dependencies
+	\begin{enumerate}
+		\item Reconstruct phase trajectories through time-delay embedding.
+		\item Define distance between points of the phase trajectories.
+		\item Make low-rank decomposition, prune the dependency graph.
+		\item Reconstruct time series.
+	\end{enumerate}
+\end{frame}
+%=============================================
+\begin{frame}{Causal discovery for syblolic regression modeling}
+	\includegraphics[width=\textwidth]{tmp/fig_symbolic_regression}
+\end{frame}
+%=============================================
+\includepdf[pages=-]{tmp/structure_learning.pdf}
+%=============================================
+\includepdf[pages=-]{tmp/partial_order.pdf}
+\end{document}
