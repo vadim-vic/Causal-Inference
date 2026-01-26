@@ -101,6 +101,10 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 2. GANITE [pdf](https://pmc.ncbi.nlm.nih.gov/articles/PMC7759680/pdf/fgene-11-585804.pdf), [pdf](https://openreview.net/pdf?id=ByKWUeWA-)
 3. Conditional GANs [pdf](https://pmc.ncbi.nlm.nih.gov/articles/PMC7759680/pdf/fgene-11-585804.pdf), 2020
 
+### Nature
+1. Data-driven control of complex networks [doi](https://doi.org/10.1038/s41467-021-21554-0), 2021
+2.  Causal chambers as a real-world physical testbed for AI methodology [doi](https://doi.org/10.1038/s42256-024-00964-x), 2025
+
 ### Basics of causal discovery
 1. [Do-Calculus: Causal Inference Rules](https://www.emergentmind.com/topics/do-calculus), 2025
 2. [do(x) operator meaning](https://stats.stackexchange.com/questions/211008/dox-operator-meaning)
