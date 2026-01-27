@@ -1,6 +1,7 @@
 # Causal inference for time series and text data
 
 ## List of Contents
+<!-- - Covatiance [pdf](/slides/intro_CovW.pdf)-->
 - Distribution of model parameters and causality [pdf](/slides/intro_pZW.pdf)
 - Estimation of posterior distributions for Bayesian causal inference [in code_posterior](/code_posterior/README.md)
 - Discussion of the $p(\mathbf{w}|\text{do}(\mathbf{x}),\mathbf{y})$ for $\mathbf{W}^\mathsf{T}\mathbf{x}$ estimation [pdf](/slides/intro_Setup.pdf)
@@ -22,6 +23,7 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 6. [Modèles de Fondation et Ajustement : Vers une Nouvelle Génération de Modèles pour la Prévision des Séries Temporelles](https://www.arxiv.org/abs/2511.22674)
 7. [Causal Discovery from Time Series with Hybrids of Constraint-Based and Noise-Based Algorithms](https://arxiv.org/abs/2306.08765)
 8. [Inferring extended summary causal graphs from observational time series](https://arxiv.org/pdf/2205.09422)
+9. [Causal Representation Learning from Multiple Distributions: A General Setting](https://arxiv.org/pdf/2402.05052), 2024
 <!-- https://arxiv.org/abs/2204.06479 (no need to cite) -->
 
 ### Textbooks on causal inference
