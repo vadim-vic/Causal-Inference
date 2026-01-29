@@ -15,7 +15,7 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 
 ## General references
 ### Team publications
-1. [Causal inference for time series](https://causalinferencelab.com/wp-content/uploads/2023/06/Runge_Causal_Inference_for_Time_Series_NREE.pdf)
+1. [Causal inference for time series](https://causalinferencelab.com/wp-content/uploads/2023/06/Runge_Causal_Inference_for_Time_Series_NREE.pdf), [slides](https://project.inria.fr/aaltd22/files/2022/09/slides_Devijver_AALTD22.pdf)
 2. [Causal discovery from time series with hybrids of constraint-based and noise-based algorithms](https://arxiv.org/abs/2306.08765), [appendix](https://arxiv.org/abs/2306.08765)
 3. [Identifiability in Causal Abstractions: A Hierarchy of Criteria](https://arxiv.org/pdf/2507.06213)
 4. [On the Fly Detection of Root Causes from Observed Data with Application to IT Systems](https://arxiv.org/abs/2402.06500)
@@ -24,6 +24,8 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 7. [Causal Discovery from Time Series with Hybrids of Constraint-Based and Noise-Based Algorithms](https://arxiv.org/abs/2306.08765)
 8. [Inferring extended summary causal graphs from observational time series](https://arxiv.org/pdf/2205.09422)
 9. [Causal Representation Learning from Multiple Distributions: A General Setting](https://arxiv.org/pdf/2402.05052), 2024
+10. [Complete Characterization for Adjustment in Summary Causal Graphs of Time Series](https://proceedings.mlr.press/v286/yvernes25a.html), 2025
+11. [Identifiability by common backdoor in summary causal graphs of time series](https://arxiv.org/abs/2506.14862)
 <!-- https://arxiv.org/abs/2204.06479 (no need to cite) -->
 
 ### Textbooks on causal inference
@@ -62,6 +64,7 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 ### Generative modeling for causal inference
 1. [Causal EGM: encoding generative modeling](https://causalegm.readthedocs.io/en/latest/tutorial_r.html)
 2. Generative CCA: [Deep Dynamic Probabilistic Canonical Correlation Analysis](https://arxiv.org/html/2502.05155v1)
+3. [Flow-Based Non-stationary Temporal Regime Causal Structure Learning](https://arxiv.org/abs/2506.17065), 2025
 
 ### Non-Parametric CI
 1. [Non-Parametric Path Analysis in Structural Causal Models](https://par.nsf.gov/servlets/purl/10111046)
@@ -86,12 +89,16 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 5. [Causal Modelling and Brain Connectivity in Functional Magnetic Resonance Imaging](https://pmc.ncbi.nlm.nih.gov/articles/PMC2642881/)
 6. Science 2012, Foundational CCM method: Detecting causality in complex ecosystems
 7. Science 2016, Advanced CCM/forecasting techniques: Information leverage in interconnected ecosystems
-8. Nature Scientific Reports 2015, Distinguishing time-delayed causal interactions using CCM 
+8. Nature Scientific Reports 2015, Distinguishing time-delayed causal interactions using CCM
+9. [Improved convergent cross mapping method for causal inference based on decomposition of the Lorenz trajectory](https://www.nature.com/articles/s41598-025-22300-y)
 9. [Causal Discovery in Semi-Stationary Time Series](https://arxiv.org/pdf/2407.07291)
 10. [Towards Characterizing Domain Counterfactuals for Invertible Latent Causal Models](https://openreview.net/forum?id=v1VvCWJAL8)
 11. [Conditional Generative Models are Sufficient to Sample from Any Causal Effect Estimand](https://arxiv.org/pdf/2402.07419)
 12. [Causal Bandits](https://github.com/CausalML-Lab/CausalBandits_with_UnknownGraph)
 13. [Detecting causal associations in large nonlinear time series datasets](https://arxiv.org/pdf/1702.07007)
+14. [Causalized Convergent Cross Mapping and Its Implementation in Causality Analysis](https://www.mdpi.com/1099-4300/26/7/539/pdf?version=1719219192)
+15. [Causalized convergent cross-mapping and its approximate equivalence with directed information in causality analysis](https://academic.oup.com/pnasnexus/article-pdf/3/1/pgad422/55381360/pgad422.pdf)
+16. [Latent Convergent Cross Mapping](https://openreview.net/forum?id=4TSiOTkKe5P), 2021 
 
 ### Runge PCMCI and time series
 1. [Discovering contemporaneous and lagged causal relations in autocorrelated nonlinear time series datasets](https://proceedings.mlr.press/v124/runge20a/runge20a.pdf)
@@ -100,12 +107,18 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 
 ### Generative modeling for CI
 1. Causal Effect Inference with Deep Latent-Variable Models [arxiv](https://arxiv.org/abs/1705.08821)
+2. An encoding generative modeling approach to dimension  reduction and covariate adjustment in causal inference  with observational studies [doi](https://pnas.org/doi/10.1073/pnas.2322376121)
 2. GANITE [pdf](https://pmc.ncbi.nlm.nih.gov/articles/PMC7759680/pdf/fgene-11-585804.pdf), [pdf](https://openreview.net/pdf?id=ByKWUeWA-)
 3. Conditional GANs [pdf](https://pmc.ncbi.nlm.nih.gov/articles/PMC7759680/pdf/fgene-11-585804.pdf), 2020
+4. A Conditional Mutual Information Estimator [pdf](https://www.mdpi.com/1099-4300/24/9/1234), 2022
 
 ### Nature
 1. Data-driven control of complex networks [doi](https://doi.org/10.1038/s41467-021-21554-0), 2021
 2.  Causal chambers as a real-world physical testbed for AI methodology [doi](https://doi.org/10.1038/s42256-024-00964-x), 2025
+3. Improved convergent cross  mapping method for causal  inference based on decomposition [doi](https://www.nature.com/articles/s41598-025-22300-y), 2025
+
+### Functional Data Analysis and CI
+1. [Fast fitting of neural ordinary differential equations by  Bayesian neural gradient matching](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.14121), 2022
 
 ### Basics of causal discovery
 1. [Do-Calculus: Causal Inference Rules](https://www.emergentmind.com/topics/do-calculus), 2025
