@@ -75,6 +75,43 @@ For several layers of a neural network
     f = \boldsymbol{\sigma}_L \circ \mathbf{W}_L \circ \boldsymbol{\sigma}_{L-1} \circ \mathbf{W}_{L-1} \circ \cdots \circ \boldsymbol{\sigma}_1 \circ \mathbf{W}_1 \mathbf{x},
 \]
 
+\section{The intervention algorithm}
+\begin{enumerate}
+    \item One step of back-prop in one layer.
+    \item Compute the covariance of the parameters (note the relation between Cov, Hessian and Fisher matrices).
+    \item Select a node~$X$ to make an intervention.
+    \item Make an intervention $do(X=\mathbf{x}_0)$ for a given node.
+    \item Compute the KL divergence between the distributions of the parameters with and without intervention.
+    \item Remove the intervention and go to step~1 until all nodes are processed.
+    \item The causal graph is constructed as a directed graph with edges weighted by the KL divergences.
+\end{enumerate}
+
+For a linear operator~$W^T$, elimination of an edge from a node~$X$
+is equivalent to zeroing the corresponding item~$w_{ij}$.
+The node~$X$ corresponds to a column in~$W$.
+
+Since the item~$w$ acts both as a parameter and as a random variable, the following statement holds:
+
+\begin{table}[h]
+    \caption{The action for a node based on the variance of the parameter~$w$.}
+    \begin{tabular}{|l|l|l|l|}
+        \hline
+        \bf{Expectation} & \bf{Variance} & \bf{Statement} & \bf{Action} \\ \hline \hline
+        0       & tends to 0        & Sure that there is no impact  & Remove the node\\
+        0       & not tends to 0    & Uncertain about the impact    & Research to remove\\
+        not 0   & tends to 0        & Sure that there is an impact  & Assert the node\\
+        not 0   & not tends to 0    & The impact must be specified  & Research to assert\\
+        any     & large values      & Sure that there is no impact  & Remove the node\\
+        \hline
+    \end{tabular}
+\end{table}
+
+
+
+
+
+
+
 \section{Computational experiment}
 For control problem we investigate a driven pendulum problem.
 A pendulum of a given length has its own period of oscillation.
