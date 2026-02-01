@@ -12,7 +12,7 @@
 \author{IA pour la Science}
 \date{30 january 2026}
 \begin{document}
-%\maketitle
+\maketitle
 
 \section{Causal inference in latent space}
 
@@ -35,7 +35,7 @@ x_{t-N} & x_{t-(N-1)} & \cdots & x_{T}
 where $T\ni\{1,\dots,t\}$ is the sample size, $N$ is the original embedding dimension, and the time lag~$\Delta t = 1$.
 A column of this matrix contains a point~$\mathbf{x}_t$ in the state space.
 The sequence~$\{\mathbf{x}_t\}$ forms the phase trajectory~$\mathbf{X}$.
-Call the \emph{embedding} the linear map $\mathbf{z}={U}\mathbf{x}$.
+Call the \emph{embedding} the linear map $\mathbf{z}=\mathbf{U}\mathbf{x}$.
 
 Set the forecasting model
 \[f: \mathbf{x}\to \mathbf{y}\]
@@ -51,7 +51,7 @@ Introduce the singular value decomposition $f=U\Lambda V^\mathsf{T}$:
 
 The system dynamics is represented by the generative model~$p(\mathbf{z})$ that approximates the embedding in the latent space with the support $t$.
 
-Treat this superposition as a decoder and a encoder, where the linear operators $U$ and $V$ are the orthogonal and $\Lambda$ is diagonal with positive elements.
+Treat this superposition as a decoder and a encoder, where the linear operators $\mathbf{U}$ and $\mathbf{V}$ are the orthogonal and $\Lambda$ is diagonal with positive elements.
 Each row of the matrix
 \[
 \mathbf{U}\mathbf{x} =
@@ -65,6 +65,15 @@ Each row of the matrix
 \subsection{The probabilistic view}
 Let the prior distribution of a vector~$\mathbf{u} \sim \mathcal{N}(\mathbf{u}, \mathbf{A})$.
 Its parameters are estimated as empirical distribution from the data.
+As a criteion of the causal relationship between the elements of the model,
+we use the Kullback-Leibler divergence between the distributions of the parameters given the intervention~$do(\mathbf{x})$:
+\[\text{KL}\bigl(p(\mathbf{w}|do(X)\,||\,p(\mathbf{w}|do(X=\mathbf{x}_0)\bigr),\]
+where~$\mathbf{w} = \{\mathbf{U}\}$ is the set of the model parameters.
+
+For several layers of a neural network
+\[
+    f = \boldsymbol{\sigma}_L \circ \mathbf{W}_L \circ \boldsymbol{\sigma}_{L-1} \circ \mathbf{W}_{L-1} \circ \cdots \circ \boldsymbol{\sigma}_1 \circ \mathbf{W}_1 \mathbf{x},
+\]
 
 \section{Computational experiment}
 For control problem we investigate a driven pendulum problem.
@@ -75,8 +84,11 @@ They superposition are observed.
 A change in the frequency of the driving force disturbs the superposition.
 The goal is to identify the causal relationship between the driving force and the normal mode of the pendulum oscillations.
 
-
 \newpage
+\section{Appendix: Miscellaneous}
+
+
+
 \section{Appendix: Control problem and Canonical Correlation Analysis}
 \begin{equation*}
     \xymatrix{
@@ -85,9 +97,8 @@ The goal is to identify the causal relationship between the driving force and th
         ~ & t \ar "2,2"^{p(\mathbf{z})} & ~
     }
 \end{equation*}
-}
 
-\section{Appendix: countinous time dynamical system and delay embedding}
+\section{Appendix: continuous time dynamical system and delay embedding}
 For the continuous-time dynamical system, the state vector~$\mathbf{z}(t)$ evolves according to the differential equation
 \[
     \frac{d\mathbf{z}(t)}{dt} = f\bigl(\mathbf{z}(t), \mathbf{x}(t), \mathbf{y}(t)\bigr)  + \boldsymbol{\varepsilon}(t),
