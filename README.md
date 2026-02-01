@@ -1,7 +1,7 @@
 # Causal inference for time series and text data
 
 ## List of Contents
-<!-- - Covatiance [pdf](/slides/intro_CovW.pdf)-->
+- CovatiCausalityance [pdf](/slides/text_causal_latent.pdf) <!--intro_CovW.pdf)-->
 - Distribution of model parameters and causality [pdf](/slides/intro_pZW.pdf)
 - Estimation of posterior distributions for Bayesian causal inference [in code_posterior](/code_posterior/README.md)
 - Discussion of the $p(\mathbf{w}|\text{do}(\mathbf{x}),\mathbf{y})$ for $\mathbf{W}^\mathsf{T}\mathbf{x}$ estimation [pdf](/slides/intro_Setup.pdf)
