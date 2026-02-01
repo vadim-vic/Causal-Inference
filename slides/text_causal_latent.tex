@@ -5,7 +5,7 @@
 \usepackage{amsmath,amsfonts,amssymb}
 \usepackage{graphicx}
 \usepackage{a4wide}
-\usepackage{tikz}
+%\usepackage{tikz}
 \usepackage{xypic}
 
 \title{Causal inference in latent space for time series and text data}
@@ -36,6 +36,7 @@ where $T\ni\{1,\dots,t\}$ is the sample size, $N$ is the original embedding dime
 A column of this matrix contains a point~$\mathbf{x}_t$ in the state space.
 The sequence~$\{\mathbf{x}_t\}$ forms the phase trajectory~$\mathbf{X}$.
 Call the \emph{embedding} the linear map $\mathbf{z}=\mathbf{U}\mathbf{x}$.
+% TODO include an example with the phase trajectory
 
 Set the forecasting model
 \[f: \mathbf{x}\to \mathbf{y}\]
@@ -107,9 +108,7 @@ Since the item~$w$ acts both as a parameter and as a random variable, the follow
 \end{table}
 
 
-
-
-
+% TODO Insert an algorithm how to sample the \emph{empirical} parameter distribution (estimate the expectation and variance).
 
 
 \section{Computational experiment}
@@ -124,7 +123,38 @@ The goal is to identify the causal relationship between the driving force and th
 \newpage
 \section{Appendix: Miscellaneous}
 
+Todo: Put plate notations for the bayesian model structure~$\Gamma$ in the slides (on monday).
+Introduce the bayesian structure of model~$\Gamma$ and associate it with the causal graph~$G$.
+(The distribution of$\Gamma$ could be coincided with the weights of the edges in~$G$.)
+The weights of the arrows in the causation model means the posterior model structure~$\Gamma$.
 
+In the section 1: construct the manifold from the set of samples $\{\mathbf{z}\}$.
+Then control this manifold and the variables~$do(Z=\mathbf{z})$ to infer the forecasting model~$f$.
+Weight change and distribution as new data.
+Change parameters of the generative model~$p(\mathbf{z})$ and observe changes in the forecast.
+Use Variational Autoencoder instead of Normalising Flows.
+It simplifies the generative model.
+
+Discussion in January.
+Check the error:
+Infer another time series.
+It changes parameter, but does not changes the forecast.
+The error can stay the same.
+
+
+Insert into section 2: Intervention in neuron weights versus intervention in the input data: proof of pros and cons.
+
+We apply do()  the sin to reconstruct the trajectory. We know the sin since we know the trajectory could be reduced to dim=2.
+
+Review: Hypothesis of \emph{mélange} by M.S.~Pinsker, or Ergodic Theory by Y.G.~Sinai is exactly the Causal Inference.
+% Remark on Review: The problem of CI for LLM is all works I found are technical. It requires working infrastructure (code, computational resources). The papers on CI for LLM came through are technical, of specific purpose, mainty on linguestics, not data analysis and equire specific progrmming setup. The most interesting starts for spatial time series.
+
+Afterlife: When a Neural Network is a solution of the differential equation?
+Use the Neural ODE to test Causality in the mathematical models.
+
+Domain transfer by causality graph: same model different datasets
+
+% CCA. Use the main purpose of CI to show that the dynamic system is the cause of the observed signals. We investigate state models of two different sets of observations: source and target.
 
 \section{Appendix: Control problem and Canonical Correlation Analysis}
 \begin{equation*}
