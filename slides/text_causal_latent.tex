@@ -8,11 +8,19 @@
 %\usepackage{tikz}
 \usepackage{xypic}
 
+\newcommand{\T}{^{\mathsf{T}}}
+\newcommand{\eL}{\mathcal{L}}
+
 \title{Causal inference in latent space for time series and text data}
 \author{IA pour la Science}
 \date{30 january 2026}
 \begin{document}
+%+++++++++++++++++++++++++++++++++++++++++
+\iffalse
+%+++++++++++++++++++++++++++++++++++++++++
+
 \maketitle
+
 
 \section{Causal inference in latent space}
 
@@ -107,8 +115,81 @@ Since the item~$w$ acts both as a parameter and as a random variable, the follow
     \end{tabular}
 \end{table}
 
+%+++++++++++++++++++++++++++++++++++++++++
+\fi
+%+++++++++++++++++++++++++++++++++++++++++
 
 % TODO Insert an algorithm how to sample the \emph{empirical} parameter distribution (estimate the expectation and variance).
+
+\section{Consequent causal inference}
+Results of the computational experiment: the norm of the gradient
+$\|\frac{\partial \eL}{\partial W}\|_2$
+of the layer (l) causes the norm of the gradient in the previous layer $l-1$
+\[
+    \Big\|\frac{\partial \eL}{\partial W^{(l)}}\Big\|_2 \leadsto \Big\|\frac{\partial \eL}{\partial W^{(l-1)}}\Big\|_2.
+\]
+As well as the error on the training set causes the error on the validation set,
+\[
+    L_\text{train} \leadsto L_\text{validation}.
+\]
+This holds for different optimization sessions.
+
+
+\section{Do(X) intervention policy}
+For regression or one-class classification, $do(X = x)$ is considered with values of $x$ that lie outside the distribution of the time series at time $t$.
+For two-class classification, $do(X = x)$ is considered with values of $x$ equal to the expectation of the opposite class.
+
+What happens after the intervention?
+Until the forecasting and reconstruction error remains the same:
+\[
+    \eL\bigl(p(\mathbf{y}|\mathbf{x}; \mathbf{w})\bigr) = \text{const},
+\]
+
+When the error increases, The model parameters change.
+
+Until the end of the short-term forecast horizon.
+
+From one of sides, either X or Z, we start the intervention.
+Start with the parameter of maximum variance of reconstruction error
+Then, move to the parameters with lower variance.
+Estimate the KL divergence of maximum posterior after each intervention.
+Analyse the expectation and the variance of the parameters.
+Eliminate the parameters with the highest KL divergence.
+Keep the parameters with the lowest KL divergence.
+Store them in the graph of causality.
+
+%-----------------------------------------
+Compare two graphs: direct and reverse.
+%-----------------------------------------
+
+
+
+
+\section{Relations between the Hessain, Fisher, and Covariance matrices of the parameters}
+The Hessian matrix of the loss function~$\eL$ is defined as
+\[\mathbf{H} = \frac{\partial^2 \eL}{\partial \mathbf
+{w} \partial \mathbf{w}^\mathsf{T}}.\]
+Using the log-likelihood function, we have
+\[
+    \mathbf{H} = \mathbb{E}\Bigg[{\frac{\partial^2 \log p(\mathbf{y}|\mathbf{x}; \mathbf{w})}{\partial \mathbf{w} \partial \mathbf{w}^\math{T}}}\Bigg].
+\]
+Using the posterior of the parameters, we have
+\[
+    \mathbf{H} = \mathbb{E}\Bigg[{\frac{\partial^2 \log p(\mathbf{w}|\mathbf{x}, \mathbf{y})}{\partial \mathbf{w} \partial \mathbf{w}^\math{T}}}\Bigg].
+\]
+
+The Fisher information matrix is defined as
+\[\mathbf{F} = \mathbb{E}\Bigg[\Big(\frac
+{\partial \log p(\mathbf{y}|\mathbf{x}; \mathbf{w})}{\partial \mathbf{w}}\Big)\Big(\frac{\partial \log p(\mathbf{y}|\mathbf{x}; \mathbf{w})}{\partial \mathbf{w}}\Big)^\mathsf{T}\Bigg].\]
+Under certain regularity conditions, the following relation holds:
+\[\mathbf{H} = -\mathbf{F}.\]
+The covariance matrix of the parameters~$\mathbf{w}$ is defined as
+\[\mathbf{C} = \mathbb{E}\Big[(\mathbf{w} - \mathbb{E}[\mathbf{w}])(\mathbf{w} - \mathbb{E}[\mathbf{w}])^\mathsf{T}\Big].\]
+Under certain assumptions, the following relation holds:
+\[\mathbf{C} = \mathbf{F}^{-1}.\]
+Thus, the Hessian, Fisher, and covariance matrices are interrelated and provide insights into the salience of the model parameters.
+
+
 
 
 \section{Computational experiment}
