@@ -11,13 +11,24 @@
 \newcommand{\eL}{\mathcal{L}}
 \newcommand{\doc}{\mathrm{do}}
 \newcommand{\bW}{\mathbf{W}}
+\newcommand{\ba}{\mathbf{a}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bz}{\mathbf{z}}
 
 \title{Causal inference in latent space for time series and text data}
 \author{IA pour la Science}
 \date{30 january 2026}
 \begin{document}
 %+++++++++++++++++++++++++++++++++++++++++
-
+%+++++++++++++++++++++++++++++++++++++++++
+\iffalse
+%+++++++++++++++++++++++++++++++++++++++++
+... some notes for the presentation
+%+++++++++++++++++++++++++++++++++++++++++
+\fi
+%+++++++++++++++++++++++++++++++++++++++++
 %+++++++++++++++++++++++++++++++++++++++++
 
 \maketitle
@@ -219,103 +230,8 @@ As well as the error on the training set causes the error on the validation set,
 The backprop procedure compute the parameters and their variance for sequence of layers.
 For several layers of a neural network
 \[
-    f = \boldsymbol{\sigma}^{(L)} \circ \mathbf{W}^{(L)} \circ \boldsymbol{\sigma}^{(l-1)} \circ \mathbf{W}^{(l-1)} \circ \cdots \circ \boldsymbol{\sigma}^{(1)} \circ \mathbf{W}^{(1)} \mathbf{x},
+    f = \boldsymbol{\sigma}^{(L)} \circ \mathbf{W}^{(L)} \circ \boldsymbol{\sigma}^{(l-1)} \circ \mathbf{W}^{(l-1)} \circ \cdots \circ \boldsymbol{\sigma}^{(1)} \circ \mathbf{W}^{(1)} \mathbf{x}.
 \]
-
-
-\iffalse
-\section*{Backpropagation in a Fully Connected Neural Network}
-\subsection*{Network Definition}
-
-Consider a fully connected feedforward neural network with $L$ layers (excluding the input layer).
-For layer $\ell = 1, \dots, L$:
-
-\begin{itemize}
-  \item Weight matrix: $\bm{W}^{(\ell)} \in \mathbb{R}^{n_\ell \times n_{\ell-1}}$
-  \item Bias vector: $\bm{b}^{(\ell)} \in \mathbb{R}^{n_\ell}$
-  \item Pre-activation: $\bm{z}^{(\ell)} \in \mathbb{R}^{n_\ell}$
-  \item Activation: $\bm{a}^{(\ell)} \in \mathbb{R}^{n_\ell}$
-\end{itemize}
-
-The input is $\bm{a}^{(0)} = \bm{x}$.
-
-\subsection*{Forward Propagation}
-
-For $\ell = 1, \dots, L$:
-\begin{align}
-\bm{z}^{(\ell)} &= \bm{W}^{(\ell)} \bm{a}^{(\ell-1)} + \bm{b}^{(\ell)} \\
-\bm{a}^{(\ell)} &= \sigma^{(\ell)}\!\left( \bm{z}^{(\ell)} \right)
-\end{align}
-
-where $\sigma^{(\ell)}(\cdot)$ is the activation function of layer $\ell$.
-
-Let the network output be $\hat{\bm{y}} = \bm{a}^{(L)}$.
-
-\subsection*{Loss Function}
-
-Let $\mathcal{L}(\hat{\bm{y}}, \bm{y})$ be a scalar loss function comparing prediction $\hat{\bm{y}}$
-with target $\bm{y}$.
-
-\subsection*{Backpropagation}
-
-Define the error signal (gradient of the loss with respect to pre-activation):
-\[
-\bm{\delta}^{(\ell)} \equiv \frac{\partial \mathcal{L}}{\partial \bm{z}^{(\ell)}}
-\]
-
-\subsubsection*{Output Layer}
-
-Using the chain rule:
-\begin{align}
-\bm{\delta}^{(L)}
-&= \frac{\partial \mathcal{L}}{\partial \bm{a}^{(L)}}
-\odot \sigma'^{(L)}\!\left(\bm{z}^{(L)}\right)
-\end{align}
-
-where $\odot$ denotes element-wise multiplication.
-
-\subsubsection*{Hidden Layers}
-
-For $\ell = L-1, \dots, 1$:
-\begin{align}
-\bm{\delta}^{(\ell)}
-&= \left( \bm{W}^{(\ell+1)} \right)^{\!\top} \bm{\delta}^{(\ell+1)}
-\odot \sigma'^{(\ell)}\!\left(\bm{z}^{(\ell)}\right)
-\end{align}
-
-\subsection*{Gradients with Respect to Parameters}
-
-Using the definition of $\bm{\delta}^{(\ell)}$:
-
-\begin{align}
-\frac{\partial \mathcal{L}}{\partial \bm{W}^{(\ell)}}
-&= \bm{\delta}^{(\ell)} \left( \bm{a}^{(\ell-1)} \right)^{\!\top} \\
-\frac{\partial \mathcal{L}}{\partial \bm{b}^{(\ell)}}
-&= \bm{\delta}^{(\ell)}
-\end{align}
-
-\subsection*{Summary (Vectorized Form)}
-
-For each layer $\ell$:
-\[
-\boxed{
-\begin{aligned}
-\bm{z}^{(\ell)} &= \bm{W}^{(\ell)} \bm{a}^{(\ell-1)} + \bm{b}^{(\ell)} \\
-\bm{a}^{(\ell)} &= \sigma^{(\ell)}(\bm{z}^{(\ell)}) \\
-\bm{\delta}^{(\ell)} &=
-\begin{cases}
-\dfrac{\partial \mathcal{L}}{\partial \bm{a}^{(L)}} \odot \sigma'^{(L)}(\bm{z}^{(L)}), & \ell = L \\
-\left( \bm{W}^{(\ell+1)} \right)^{\!\top} \bm{\delta}^{(\ell+1)}
-\odot \sigma'^{(\ell)}(\bm{z}^{(\ell)}), & \ell < L
-\end{cases} \\
-\frac{\partial \mathcal{L}}{\partial \bm{W}^{(\ell)}} &= \bm{\delta}^{(\ell)} (\bm{a}^{(\ell-1)})^\top \\
-\frac{\partial \mathcal{L}}{\partial \bm{b}^{(\ell)}} &= \bm{\delta}^{(\ell)}
-\end{aligned}
-}
-\]
-%+++++++++++++++++++++++++++++++++++++++++
-\fi
-%+++++++++++++++++++++++++++++++++++++++++
 
 \section{The Hessain, Fisher, and covariance matrices}
 The Hessian matrix of the loss function~$\eL$ is defined as
@@ -335,6 +251,75 @@ The covariance matrix of the parameters~$\mathbf{w}$ is defined as
 \[\mathbf{A} = \mathbb{E}\Big[(\mathbf{w} - \mathbb{E}[\mathbf{w}])(\mathbf{w} - \mathbb{E}[\mathbf{w}])^\mathsf{T}\Big].\]
 Under certain assumptions, the following relation holds:
 \[\mathbf{A} = \mathbf{F}^{-1}.\]
+
+\section*{Causal intervention in the backpropagation procedure}
+
+The fully connected feedforward neural network with $L$ layers $\ell = 1, \dots, L$ has %\\
+the weight matrix $\bW^{(\ell)} \in \mathbb{R}^{n_\ell \times n_{\ell-1}}$, %\\
+the bias vector $\bb^{(\ell)} \in \mathbb{R}^{n_\ell}$, %\\
+pre-activation $\bz^{(\ell)} \in \mathbb{R}^{n_\ell}$, %\\
+activation $\ba^{(\ell)} \in \mathbb{R}^{n_\ell}$ and $\ba^{(0)} = \bx$ is the input.
+
+The forward propagation, for $\ell = 1, \dots, L$:
+\begin{align}
+\bz^{(\ell)} &= \bW^{(\ell)} \ba^{(\ell-1)} + \bb^{(\ell)} \\
+\ba^{(\ell)} &= \boldsymbol{\sigma}^{(\ell)}\!\left( \bz^{(\ell)} \right)
+\end{align}
+where ${\boldsymbol\sigma}^{(\ell)}(\cdot)$ is the activation function of layer $\ell$.
+The network output is $\hat{\by} = \ba^{(L)}$.
+
+The loss function $\eL(\hat{\by}, \by)$ is a scalar loss function comparing prediction
+$\hat{\by}$ with target $\by$.
+
+Backpropagation. Define the error signal (gradient of the loss with respect to pre-activation):
+\[
+\boldsymbol{\delta}^{(\ell)} \equiv \frac{\partial \mathcal{L}}{\partial \bz^{(\ell)}}
+\]
+
+Output Layer. Using the chain rule:
+\begin{align}
+\boldsymbol{\delta}^{(L)}
+&= \frac{\partial \eL}{\partial \ba^{(L)}}
+\odot \boldsymbol{\sigma}'^{(L)}\!\left(\bz^{(L)}\right),
+\end{align}
+where $\odot$ denotes element-wise multiplication.
+
+Hidden Layers. For $\ell = L-1, \dots, 1$:
+\begin{align}
+\boldsymbol{\delta}^{(\ell)}
+&= \left( \bW^{(\ell+1)} \right)^{\!\top} \boldsymbol{\delta}^{(\ell+1)}
+\odot {\boldsymbol\sigma}'^{(\ell)}\!\left(\bz^{(\ell)}\right)
+\end{align}
+
+\subsection*{Gradients with Respect to Parameters}
+
+Using the definition of $\boldsymbol{\delta}^{(\ell)}$:
+\begin{align}
+\frac{\partial \mathcal{L}}{\partial \bW^{(\ell)}}
+&= \boldsymbol{\delta}^{(\ell)} \left( \ba^{(\ell-1)} \right)^{\!\top} \\
+\frac{\partial \mathcal{L}}{\partial \bb^{(\ell)}}
+&= \boldsymbol{\delta}^{(\ell)}
+\end{align}
+
+Vectorized Form.
+
+For each layer $\ell$:
+\[
+%\boxed{
+\begin{aligned}
+\bz^{(\ell)} &= \bW^{(\ell)} \ba^{(\ell-1)} + \bb^{(\ell)} \\
+\ba^{(\ell)} &= {\boldsymbol\sigma}^{(\ell)}(\bz^{(\ell)}) \\
+\boldsymbol{\delta}^{(\ell)} &=
+\begin{cases}
+\dfrac{\partial \mathcal{L}}{\partial \ba^{(L)}} \odot \boldsymbol{\sigma}'^{(L)}(\bz^{(L)}), & \ell = L \\
+\left( \bW^{(\ell+1)} \right)^{\!\top} \boldsymbol{\delta}^{(\ell+1)}
+\odot {\boldsymbol\sigma}'^{(\ell)}(\bz^{(\ell)}), & \ell < L
+\end{cases} \\
+\frac{\partial \mathcal{L}}{\partial \bW^{(\ell)}} &= \boldsymbol{\delta}^{(\ell)} (\ba^{(\ell-1)})^\top \\
+\frac{\partial \mathcal{L}}{\partial \bb^{(\ell)}} &= \boldsymbol{\delta}^{(\ell)}
+\end{aligned}
+%}
+\]
 
 \section{Computational experiment}
 For control problem we investigate a driven pendulum problem.

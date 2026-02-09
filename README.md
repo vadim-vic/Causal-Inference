@@ -1,7 +1,7 @@
 # Causal inference for time series and text data
 
 ## List of Contents
-- Causal inference in latent space [pdf](/slides/text_causal_latent.pdf) <!--intro_CovW.pdf)-->
+- Causal inference in latent space [ipynb](/code_posterior/norm_descent_mahalanobis.ipynb)
 - Distribution of model parameters and causality [pdf](/slides/intro_pZW.pdf)
 - Estimation of posterior distributions for Bayesian causal inference [in code_posterior](/code_posterior/README.md)
 - Discussion of the $p(\mathbf{w}|\text{do}(\mathbf{x}),\mathbf{y})$ for $\mathbf{W}^\mathsf{T}\mathbf{x}$ estimation [pdf](/slides/intro_Setup.pdf)
@@ -131,6 +131,11 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 2. [The Do-Calculus Revisited](https://ftp.cs.ucla.edu/pub/stat_ser/r402.pdf) by Judea Pearl, 2012
 3. [ML beyond Curve Fitting: An Intro to Causal Inference and do-Calculus](https://www.inference.vc/untitled/) by Ferenc Huszár, 2018
 3. [A Survey on Causal Discovery: Theory and Practice](https://arxiv.org/pdf/2305.10032), 2025
+
+### Natural gradient descent and Geometric Learning [CMA-ES](https://en.wikipedia.org/wiki/CMA-ES)
+1. [Exponential Natural Evolution Strategies](https://people.idsia.ch/~tom/publications/xnes.pdf), 2010
+2. [Information-Geometric Optimization Algorithms](https://www.jmlr.org/papers/volume18/14-467/14-467.pdf), 2017
+3. [Natural Gradients](https://andrewcharlesjones.github.io/journal/natural-gradients.html) by Andrew Charles Jones, 2018
 
 <!---### LLM and CI (obsoleted) 
 Integrating Large Language Models in Causal Discovery: A Statistical Causal Approach
