@@ -74,4 +74,159 @@ We suppose either:
 \item it is non-stationary but with rejection to discover its structure.
 \end{enumerate}
 
+\section{Appendix. Natural Gradient Descent}
+The natural gradient descent is a method to optimize the model parameters $\theta$ by estimating the distribution
+\[
+    p(\theta) \propto \exp(-\eL(\theta))
+\]
+where $\eL(\theta)$ is the loss function of the model.
+The natural gradient descent is defined as
+\[
+    \theta_{t+1} = \theta_t - \eta F^{-1}
+\]
+where $F$ is the Fisher information matrix of the model parameters $\theta$.
+
+\subsection*{Fisher Metric and Natural Gradient}
+
+When working with probabilistic models, we can use a metric that is more natural for probability distributions: the Kullback--Leibler (KL) divergence. Suppose we have a likelihood model
+\[
+p(x \mid \theta),
+\]
+where \(x\) denotes fixed data and \(\theta\) is a parameter vector.
+
+Let \(\theta_t\) denote the current parameter values, and suppose we wish to find updated parameters \(\theta_{t+1}\). Under the natural gradient framework, this is done by solving the following optimization problem:
+\[
+\theta_{t+1}
+=
+\arg\min_{\theta}
+\left[
+f(\theta_t)
++
+\nabla f(\theta_t)^\top (\theta - \theta_t)
++
+D_{\mathrm{KL}}\!\left(
+p(x \mid \theta)
+\;\|\;
+p(x \mid \theta_t)
+\right)
+\right].
+\]
+
+In general, this minimization problem is intractable. However, the KL divergence can be approximated locally using a second-order Taylor expansion. This expansion yields the Fisher information matrix \(F\), which captures the local curvature of the statistical manifold. In particular, around \(\theta_t\), we have
+\[
+D_{\mathrm{KL}}\!\left(
+p(x \mid \theta)
+\;\|\;
+p(x \mid \theta_t)
+\right)
+\;\approx\;
+\frac{1}{2}
+(\theta - \theta_t)^\top
+F
+(\theta - \theta_t),
+\]
+where the Fisher information matrix is defined as
+\[
+F
+=
+\mathbb{E}_{x \sim p(x \mid \theta)}
+\left[
+\bigl( \nabla_\theta \log p(x \mid \theta) \bigr)
+\bigl( \nabla_\theta \log p(x \mid \theta) \bigr)^\top
+\right].
+\]
+
+The Fisher information matrix therefore encodes the curvature of the likelihood-based loss function in parameter space. Using this approximation, the resulting natural gradient update rule becomes
+\[
+\theta_{t+1}
+=
+\theta_t
+-
+\gamma
+F^{-1}
+\nabla f(\theta_t),
+\]
+where \(\gamma > 0\) is the learning rate.
+
+\subsection*{Natural Gradient from an Information-Geometric Perspective}
+
+Consider a parametric family of probability distributions
+\[
+\mathcal{M} = \{ p(x \mid \theta) \mid \theta \in \Theta \subset \mathbb{R}^d \},
+\]
+which forms a smooth statistical manifold \(\mathcal{M}\). Each parameter vector \(\theta\) corresponds to a point on this manifold, and the coordinate system \(\theta\) is generally non-Euclidean.
+
+The natural notion of distance between nearby probability distributions on \(\mathcal{M}\) is given by the Kullback--Leibler divergence. For two infinitesimally close distributions \(p(x \mid \theta)\) and \(p(x \mid \theta + d\theta)\), the KL divergence admits the second-order expansion
+\[
+D_{\mathrm{KL}}\!\left(
+p(x \mid \theta + d\theta)
+\;\|\;
+p(x \mid \theta)
+\right)
+=
+\frac{1}{2}
+d\theta^\top
+G(\theta)
+d\theta
++
+o(\|d\theta\|^2),
+\]
+where
+\[
+G(\theta)
+=
+\mathbb{E}_{x \sim p(x \mid \theta)}
+\left[
+\bigl( \nabla_\theta \log p(x \mid \theta) \bigr)
+\bigl( \nabla_\theta \log p(x \mid \theta) \bigr)^\top
+\right]
+\]
+is the **Fisher information metric tensor** on \(\mathcal{M}\).
+
+Let \(f(\theta)\) be a smooth objective function defined on the manifold (e.g., the negative log-likelihood or empirical risk). Given the current point \(\theta_t \in \mathcal{M}\), we seek a new point \(\theta_{t+1}\) by minimizing a first-order approximation of \(f\) subject to a constraint on the geodesic distance induced by the Fisher metric. This leads to the optimization problem
+\[
+\theta_{t+1}
+=
+\arg\min_{\theta}
+\left\{
+f(\theta_t)
++
+\nabla f(\theta_t)^\top (\theta - \theta_t)
+\;\middle|\;
+D_{\mathrm{KL}}\!\left(
+p(x \mid \theta)
+\;\|\;
+p(x \mid \theta_t)
+\right)
+\le \epsilon
+\right\}.
+\]
+
+Using the local quadratic approximation of the KL divergence, this constrained problem reduces to minimizing the linearized objective under a Riemannian norm constraint. The solution is given by a step in the direction of the **natural gradient**, defined as
+\[
+\widetilde{\nabla} f(\theta)
+=
+G(\theta)^{-1}
+\nabla f(\theta).
+\]
+
+Accordingly, the natural gradient descent update takes the form
+\[
+\theta_{t+1}
+=
+\theta_t
+-
+\gamma
+\widetilde{\nabla} f(\theta_t)
+=
+\theta_t
+-
+\gamma
+G(\theta_t)^{-1}
+\nabla f(\theta_t),
+\]
+where \(\gamma > 0\) is the step size.
+
+From an information-geometric standpoint, this update corresponds to moving along the direction of steepest descent with respect to the Fisher–Rao Riemannian metric, ensuring invariance under smooth reparameterizations of the statistical manifold.
+
 \end{document}

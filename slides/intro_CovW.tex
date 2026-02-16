@@ -13,9 +13,33 @@
 \date{January $30^\text{th}$, 2026}
 
 \begin{document}
-%\begin{frame}
-%  \titlepage
-%\end{frame}
+\begin{frame}
+  \titlepage
+\end{frame}
+%=============================================
+\begin{frame}{Questions to discuss}
+\begin{enumerate}
+	\item There is a difference between the causal graphs $G_t$ and $G_{t-1}$ for insufficient $T$.
+    \item (Th.) There is no difference between the causal graphs $G_t$ and $G_{t-1}$ for sufficient $T$.
+	\item The exhaustive and combinatorial algorithms are special cases of optimization.
+    \item The latent space is a spectrum of the observable domain $t\to s$ as in Laplace transform.
+    \item The time is continuous as in the Laplace transform with adaptation to the neural ODE\@.
+\end{enumerate}
+\end{frame}
+%=============================================
+\begin{frame}{MVP}
+\begin{enumerate}
+	\item Discrete time.
+    \item Latent space.
+	\item Direct and inverse causal graph.
+    \item The target to optimize the causal graph.
+    \item The graph structure.
+    \item The natural gradient descent to optimize the model.
+    \item The NGD estimate the distribution of the model parameters during Python optimization.
+    \item Generative model to generate the inverse causal graph.
+    \item Double pendulum example.
+\end{enumerate}
+\end{frame}
 %=============================================
 \begin{frame}{Covariance and Causality}
 	\includegraphics[width=1.09\textwidth]{tmp/fig_discuss_dynamic_scm}
