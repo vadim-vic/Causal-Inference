@@ -136,6 +136,7 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 1. [Exponential Natural Evolution Strategies](https://people.idsia.ch/~tom/publications/xnes.pdf), 2010
 2. [Information-Geometric Optimization Algorithms](https://www.jmlr.org/papers/volume18/14-467/14-467.pdf), 2017
 3. [Natural Gradients](https://andrewcharlesjones.github.io/journal/natural-gradients.html) by Andrew Charles Jones, 2018
+4. (Bayesian optimization)[https://github.com/bayesian-optimization/BayesianOptimization]
 
 <!---### LLM and CI (obsoleted) 
 Integrating Large Language Models in Causal Discovery: A Statistical Causal Approach
