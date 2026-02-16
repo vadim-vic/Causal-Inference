@@ -1,6 +1,7 @@
 # Causal inference for time series and text data
 
 ## List of Contents
+- Slides for discussion [pdf](/slides/intro_CovW.pdf)
 - Direct and indirect causes in the time series [pdf](/slides/text_causal_graph.pdf)
 - Bayesian structure of a model as a causal graph [pdf](/slides/intro_Gamma.pdf)
 - Causal inference in latent space [ipynb](/code_posterior/norm_descent_mahalanobis.ipynb)

@@ -18,18 +18,41 @@
 %\end{frame}
 %=============================================
 \begin{frame}{Covariance and Causality}
-	\includegraphics[width=\textwidth]{tmp/fig_discuss_dynamic_scm}
+	\includegraphics[width=1.09\textwidth]{tmp/fig_discuss_dynamic_scm}
 \end{frame}
 %=============================================
-\begin{frame}{~}
-	~
+\begin{frame}{Summary Causal Graph}
+	\includegraphics[width=\textwidth]{tmp/fig_summary_causal_graph}
 \end{frame}
 %=============================================
-\begin{frame}{~}
-	~
+\begin{frame}{The dimensionality of the model}
+\[
+    \begin{pmatrix}
+        w_{1,1} & w_{1,2} & \cdots & w_{1,N} \\
+        w_{2,1} & w_{2,2} & \cdots & w_{2,N} \\
+        \vdots  & \vdots  & w_{\kappa,\tau} & \vdots  \\
+        w_{K,1} & w_{K,2} & \cdots & w_{K,N}
+    \end{pmatrix}
+    \underbrace{
+    \begin{pmatrix}
+        x_{t-1} & x_{t-2} & \cdots & x_{t-(N+T)} \\
+        x_{t-2} & x_{t-3} & \cdots & x_{t-(N+T-1)} \\
+        \vdots & \vdots & x_{t-\tau} & \vdots \\
+        x_{t-N} & x_{t-(N-1)} & \cdots & x_{T}
+    \end{pmatrix}}_{\text{Hankel matrix }\mathbf{X}_{t-1}}.
+\]
+Convolution of $f$ and $g$
+\[
+	(f \ast g) (t) = \int_{\tau=0}^T f(\tau)g(t-\tau)d\tau
+\]
+The bilateral Laplace transform
+\[
+F(s) \cdot G(s) = \int_{-\infty}^\infty \int_{-\infty}^\infty e^{-st} \ f(u) \ g(t - u) \ \text{d}u \ \text{d}t
+= \int_{-\infty}^\infty e^{-st} (f * g)(t) \ \text{d}t.
+\]
 \end{frame}
 %=============================================
-\begin{frame}{$\text{KL}\bigl(p(\mathbf{w}|do(X=\mathbf{x})\,||\,p(\mathbf{w}|do(X=\mathbf{x})\bigr)$}
+\begin{frame}{$\text{KL}\bigl(p(\mathbf{w}|X)\,||\,p(\mathbf{w}|do(X=\mathbf{x})\bigr)$}
 	\includegraphics[width=\textwidth]{tmp/fig_discuss_wdox}
 \end{frame}
 %=============================================
