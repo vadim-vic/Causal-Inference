@@ -1,0 +1,64 @@
+% Sandbox of the paper text_causal_latent.tex
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{a4wide}
+\usepackage{xypic}
+
+\newcommand{\T}{^{\mathsf{T}}}
+\newcommand{\eL}{\mathcal{L}}
+\newcommand{\doc}{\mathrm{do}}
+\newcommand{\bW}{\mathbf{W}}
+\newcommand{\ba}{\mathbf{a}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bz}{\mathbf{z}}
+
+\title{Direct and indirect causes in the time series}
+\author{IA pour la Science}
+\date{16 february 2026}
+\begin{document}
+%+++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++
+\iffalse
+%+++++++++++++++++++++++++++++++++++++++++
+... some notes for the presentation
+%+++++++++++++++++++++++++++++++++++++++++
+\fi
+%+++++++++++++++++++++++++++++++++++++++++
+%+++++++++++++++++++++++++++++++++++++++++
+
+\maketitle
+\section*{Introduction}
+The goal of this document is to describe the target function of the causal graph.
+
+We treat the algorithm in the paper PCGCE in the paper "Extended summary graphs (ESG)" belongs to
+class of the exhaustive search algorithms.
+So to an optimal causal graph we make no difference between
+1) exhaustive printing or combinatorial algorithms,
+2) gradient-based algorithms including algorithms with relaxations,
+3) zero-gradient algorithms.
+The only thing we expect its result is a causal graph, optimal according to this criterion.
+
+The model structure includes:
+1) the time is continuous $\frac{dx}{dt}=f(x,t)$ (basic: discrete with $\Delta t=1$),
+2) the time series $X, Y, Z$ has a spacial structure $\frac{dx}{dx} = g(x,s)$ (basic: scalar-valued),
+3) there is no limitations of the time as in the ESG,
+4) the model is linear in the latent space (basic: linear in the observable space),
+5) the latent space represent a spectrum of the observable domain.
+
+The graph structure:
+1) the graph is a bipartite graph between the observable and the latent,
+2) the direct graph is isomorphic to the reverse graph.
+
+The time structure for the convolutional model $\int_{\tau=0}^T f(\tau)h(t-\tau)d\tau $
+
+The causal graph $G=G(t)$ is a time series.
+We suppose either:
+1) it is stationary fot all $t$,
+2) it is stationary for $t\geq T$ for with the period $T$,
+3) it is non-stationary but with rejection to discover its structure.
+\end{document}
