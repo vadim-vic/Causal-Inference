@@ -2,7 +2,7 @@
 \documentclass{beamer}
 \beamertemplatenavigationsymbolsempty
 \setbeamertemplate{footline}[page number]
-
+\usepackage{amsmath}
 \newcommand{\T}{^{\mathsf{T}}}
 %\usepackage{array,tabularx,tabulary,booktabs}
 %\usepackage{longtable}
@@ -112,4 +112,48 @@ F(s) \cdot G(s) = \int_{-\infty}^\infty \int_{-\infty}^\infty e^{-st} \ f(u) \ g
 	\includegraphics[width=\textwidth]{tmp/fig_discuss_wdox}
 \end{frame}
 %=============================================
+    \begin{frame}{Graphical model for the structure parameters $\Gamma $}
+	\includegraphics[width=0.5\textwidth]{tmp/fig_gamma}
+\end{frame}
+
+%=============================================
+\begin{frame}{Causal graph optimization}
+
+    \begin{columns}[T]
+                \begin{column}{.5\textwidth}
+
+    \begin{block}{There given}
+    \begin{enumerate}
+        \item Model structure $\Gamma$
+        \item Causal graph $G$
+        \item Causal hypergraph $\mathcal{G}$
+        \item Observable $\mathbf{x}$ and latent $\mathbf{z}$ spaces and data with reconstructions
+        \item Set of do-interventions in $\mathbf{x}$ and $\mathbf{z}$
+    \end{enumerate}
+    \end{block}
+
+    \begin{block}{Set of criterions}
+     ${X} \text{prind} {Y}$, $\text{KL}(X||Y)$, $\text{MI}(X,Y)$ and 3 rules of do-calculus
+    \end{block}
+
+            \end{column}
+                \begin{column}{.5\textwidth}
+
+    \begin{block}{The algorithm}
+        Forward $(\mathbf{x} \to \mathbf{z})$ and backward $(\mathbf{z} \to \mathbf{x})$
+    \begin{enumerate}
+        \item Optimization step: get distributions (without do)
+        \item Select a (hyper)node
+        \item Run do-intervention
+        \item Optimization step: get distributions (with do)
+        \item Compute the criterion
+        \item Eliminate the $v\in\mathcal{G}$ and $\gamma\in\Gamma$
+        \item Continue until convergence
+    \end{enumerate}
+    \end{block}
+
+                \end{column}
+            \end{columns}
+
+\end{frame}
 \end{document}
