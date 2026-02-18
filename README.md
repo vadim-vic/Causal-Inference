@@ -3,6 +3,7 @@
 ## List of Contents
 - Slides for discussion [pdf](/slides/intro_CovW.pdf)
 - Direct and indirect causes in the time series [pdf](/slides/text_causal_graph.pdf)
+- Causal inference in latent space [pdf](/slides/text_causal_latent.pdf)
 - Bayesian structure of a model as a causal graph [pdf](/slides/intro_Gamma.pdf)
 - Causal inference in latent space [ipynb](/code_posterior/norm_descent_mahalanobis.ipynb)
 - Distribution of model parameters and causality [pdf](/slides/intro_pZW.pdf)
