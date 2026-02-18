@@ -76,6 +76,38 @@ F(s) \cdot G(s) = \int_{-\infty}^\infty \int_{-\infty}^\infty e^{-st} \ f(u) \ g
 \]
 \end{frame}
 %=============================================
+\begin{frame}{Phase Space of a pendulum: x,y-axis are $(\theta, \dot{\theta})$}
+
+\centering{\includegraphics[width=0.65\textwidth]{tmp/fig_pendulum2_space}}
+
+\[
+    {\theta}(t) =-\mu\theta(t)  - \frac{g}{L} \sin\big(\theta(t)\big)
+\]
+
+\[
+\frac{d}{dt}
+\begin{bmatrix}
+\theta(t) \\
+\dot{\theta}(t)
+\end{bmatrix}
+=
+\begin{bmatrix}
+\dot{\theta}(t) \\
+\ddot{\theta}(t)
+\end{bmatrix}
+=
+\begin{bmatrix}
+\dot{\theta}(t) \\
+- \mu \dot{\theta}(t) - \frac{g}{L} \sin\big(\theta(t)\big)
+\end{bmatrix}
+\]
+
+\end{frame}
+%=============================================
+\begin{frame}{Phase trajectory}
+	\includegraphics[width=\textwidth]{tmp/fig_phase_trajectory}
+\end{frame}
+%=============================================
 \begin{frame}{$\text{KL}\bigl(p(\mathbf{w}|X)\,||\,p(\mathbf{w}|do(X=\mathbf{x})\bigr)$}
 	\includegraphics[width=\textwidth]{tmp/fig_discuss_wdox}
 \end{frame}
