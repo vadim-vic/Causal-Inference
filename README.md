@@ -30,7 +30,7 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 9.  [Complete Characterization for Adjustment in Summary Causal Graphs of Time Series](https://proceedings.mlr.press/v286/yvernes25a.html), 2025
 11. [Identifiability by common backdoor in summary causal graphs of time series](https://arxiv.org/abs/2506.14862)
 12. [Discovery of extended summary graphs in time series](https://proceedings.mlr.press/v180/assaad22a.html), 2022 (discussed)
-13. [Causal Representation Learning from Multiple Distributions: A General Setting](https://arxiv.org/pdf/2402.05052), 2024 (discussed)
+13. [Causal Representation Learning from Multiple Distributions: A General Setting](https://arxiv.org/pdf/2402.05052), 2024 (discussed-twice!)
 10. [Learning Causal Graphs with Small Interventions](https://arxiv.org/abs/1511.00041), 2015 (discussed)
 <!-- https://arxiv.org/abs/2204.06479 (no need to cite) -->
 
