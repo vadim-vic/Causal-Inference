@@ -7,6 +7,9 @@ It is estimated using sampling technique:
 3. Collect the set of parameters $\{\mathbf{w}_i\}$ over all batches.
 4. Estimate the density of the set $\{\mathbf{w}_i\}$ using 1) gaussian model, 2) flow-based model.
 
+## For discussion
+1. Plot the histogram of the model parameters [py](posterior_sample_seq.py)
+
 ## List of notebooks and modules 
 1. Sampling of parameters from prior distribution of a neural network [ipynb](posterior_sample_1nn.ipynb)
 2. Optimizing to sample of parameters from prior distribution of a 2nn [ipynb](posterior_sample_2nn.ipynb)
@@ -14,8 +17,9 @@ It is estimated using sampling technique:
 4. Visualisation of posterior distribution in Riemannian space [ipynb](posterior_visualization.ipynb)
 5. Singular Values Decomposition as part of neural network [ipynb](parameters_svd_nn.ipynb)
 6. Printout parameters of each neuron [ipynb](posterior_sample_seq.ipynb)
+7. Tracking the Hessian of the loss function during backpropagation [ipynb](backprop_hessian_tracking.ipynb)
+8. Causal VAE [ipynb](causal_vae.ipynb)
+9. Norm descent with Mahalanobis distance [ipynb](norm_descent_mahalanobis.ipynb)
 
-## List of initial models
-1. Singular Structure Analysys [ipynb](SSA_minimum.ipynb)
-
-For causal inference sandbox see [the folder](../code_sandbox).
+## See also
+For causal inference sandbox see [the folder](../code_sandbox)
