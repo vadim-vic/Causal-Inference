@@ -3,9 +3,13 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 #===========================
-#%%
+# This code trains a simple feedforward neural network on synthetic data and collects the weights and biases of each linear layer after each epoch. The parameters are stored in a dictionary where the keys are the module names and the values are 3D numpy arrays containing the parameter samples across epochs. After training, it plots histograms of the collected parameter samples for each weight and bias.
 import numpy as np
 import matplotlib.pyplot as plt
+#===========================
+from sklearn.datasets import load_iris
+#===========================
+#%%
 
 # Reproducibility
 torch.manual_seed(0)
@@ -90,6 +94,7 @@ optimizer = optim.SGD(model.parameters(), lr=0.1)
 
 num_epochs = 34
 
+## Training 1: Observed dataset, no interventions
 for epoch in range(num_epochs):
     model.train()
     for xb, yb in loader:
@@ -105,8 +110,33 @@ for epoch in range(num_epochs):
     module_parameter_samples = parameter_sample_set(model, module_parameter_samples)
     print(Wb.shape)  # Should be [out_features, in_features + 1] for the last linear layer
 
+## Training 2: Intervention into the dataset
+# Pick a random feature and set it to zero for all samples
+intervention_feature = np.random.randint(0, X.shape[1])
+print(f"\nIntervening on feature {intervention_feature} (setting it to zero)")
+X[:, intervention_feature] = 0.0  # Set the chosen feature to zero for all samples
+# Create a new dataloader with the intervened dataset
+intervened_loader = DataLoader(TensorDataset(X, y), batch_size=16, shuffle=True)
+for epoch in range(num_epochs):
+    model.train()
+    for xb, yb in intervened_loader:
+        optimizer.zero_grad()
+        logits = model(xb)
+        loss = criterion(logits, yb)
+        loss.backward()
+        optimizer.step()
+        module_parameter_samples_inter = parameter_sample_set(model, module_parameter_samples)
+
+    # Print neuron parameters AFTER the epoch update
+    Wb = print_linear_params_by_neuron(model, epoch)
+    module_parameter_samples = parameter_sample_set(model, module_parameter_samples)
+    print(Wb.shape)  # Should be [out_features, in_features + 1] for the last linear layer
+
+
 for name, samples in module_parameter_samples.items():
     print(f"\nModule: {name}, Samples shape: {samples.shape}")
+
+
 
 for name, samples in module_parameter_samples.items():
     for i in range(samples.shape[0]):
@@ -118,3 +148,5 @@ for name, samples in module_parameter_samples.items():
             plt.xlabel("Value")
             plt.ylabel("Frequency")
             plt.show()
+
+
