@@ -15,30 +15,49 @@ from sklearn.datasets import load_iris
 torch.manual_seed(0)
 
 # 1. Generate synthetic data
-#N = 2000
-#Z = torch.randn(N, 1)
-#X = 2 * Z + 0.5 * torch.randn(N, 1)
-#Y = 3 * X + 4 * Z + torch.randn(N, 1)
-
+num_samples = 2000
+var_Z = torch.randn(num_samples, 1)
+var_X = 2 * var_Z + 0.5 * torch.randn(num_samples, 1)
+# Stack features into a single matrix
+X = torch.cat([var_X, var_Z], dim=1)  # [num_samples, 2]
+y = 3 * var_X + 4 * var_Z + torch.randn(num_samples, 1)
+y = torch.randint(0, 2, (num_samples,)) # Binary classification labels (0 or 1)
 # 2. Create dataset and dataloader
 #dataset = TensorDataset(X, Z, Y)
 #dataloader = DataLoader(dataset, batch_size=64, shuffle=True)
-
+"""
 # 1. Dataset: 100 samples, 8 features
 X = torch.randn(1000, 8)
 y = torch.randint(0, 2, (1000,))
-
+"""
 # 2. Create dataloader
 loader = DataLoader(TensorDataset(X, y), batch_size=16, shuffle=True)
 
+# Gather dataset dimensions
+num_in_features = X.shape[1]
+if y.dim() == 1:
+    num_out_features = 1
+else:
+    num_out_features = y.shape[1]
+
 # 3. Define a simple feedforward neural network
 model = nn.Sequential(
-    nn.Linear(8, 4),   # 4 neurons
+    nn.Linear(num_in_features, 3),   # 4 neurons
     nn.ReLU(),
-    nn.Linear(4, 2)    # 2 neurons
+    #nn.Linear(3, 3),   # 4 neurons
+    #nn.ReLU(),
+    nn.Linear(3, 2)    # 2 neurons
 )
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.SGD(model.parameters(), lr=0.1)
+
+# 3a. Define a simple feedforward neural network with only one linear layer (for simplicity in tracking parameters)
+#model = nn.Sequential(
+#    nn.Linear(8, 1)   # 8 input features → 1 output
+#)
 
 module_parameter_samples = {}  # Dictionary to store parameter samples for each module
+module_parameter_samples_inter = {}
 def parameter_sample_set(model, module_parameter_samples):
 # Gather each layer as a matrix of weights and biases (the last column is bias)
     for name, module in model.named_modules():
@@ -63,6 +82,7 @@ def parameter_sample_set(model, module_parameter_samples):
             # module_parameter_samples[name].append(Wb)
     return module_parameter_samples
 
+"""
 def print_linear_params_by_neuron(model, epoch):
     print(f"\n===== Epoch {epoch} =====")
     for name, module in model.named_modules():
@@ -88,12 +108,9 @@ def print_linear_params_by_neuron(model, epoch):
             plt.imshow(Wb, cmap='viridis', aspect='auto')
             plt.show()
     return Wb
-
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.parameters(), lr=0.1)
+"""
 
 num_epochs = 34
-
 ## Training 1: Observed dataset, no interventions
 for epoch in range(num_epochs):
     model.train()
@@ -106,9 +123,12 @@ for epoch in range(num_epochs):
         module_parameter_samples = parameter_sample_set(model, module_parameter_samples)
 
     # Print neuron parameters AFTER the epoch update
-    Wb = print_linear_params_by_neuron(model, epoch)
-    module_parameter_samples = parameter_sample_set(model, module_parameter_samples)
-    print(Wb.shape)  # Should be [out_features, in_features + 1] for the last linear layer
+    #Wb = print_linear_params_by_neuron(model, epoch)
+    #module_parameter_samples = parameter_sample_set(model, module_parameter_samples)
+    #print(Wb.shape)  # Should be [out_features, in_features + 1] for the last linear layer
+
+for name, samples in module_parameter_samples.items():
+    print(f"\nModule: {name}, Samples shape: {samples.shape}")
 
 ## Training 2: Intervention into the dataset
 # Pick a random feature and set it to zero for all samples
@@ -125,20 +145,10 @@ for epoch in range(num_epochs):
         loss = criterion(logits, yb)
         loss.backward()
         optimizer.step()
-        module_parameter_samples_inter = parameter_sample_set(model, module_parameter_samples)
+        module_parameter_samples_inter = parameter_sample_set(model, module_parameter_samples_inter)
 
-    # Print neuron parameters AFTER the epoch update
-    Wb = print_linear_params_by_neuron(model, epoch)
-    module_parameter_samples = parameter_sample_set(model, module_parameter_samples)
-    print(Wb.shape)  # Should be [out_features, in_features + 1] for the last linear layer
-
-
-for name, samples in module_parameter_samples.items():
-    print(f"\nModule: {name}, Samples shape: {samples.shape}")
-
-
-
-for name, samples in module_parameter_samples.items():
+"""
+for name, samples in module_parameter_samples_inter.items():
     for i in range(samples.shape[0]):
         for j in range(samples.shape[1]):
             x = samples[i, j, :]
@@ -148,5 +158,19 @@ for name, samples in module_parameter_samples.items():
             plt.xlabel("Value")
             plt.ylabel("Frequency")
             plt.show()
-
-
+"""
+# Plot the difference in parameter distributions before and after intervention
+for name in module_parameter_samples.keys():
+    samples_before = module_parameter_samples[name]
+    samples_after = module_parameter_samples_inter[name]
+    for i in range(samples_before.shape[0]):
+        for j in range(samples_before.shape[1]):
+            x_before = samples_before[i, j, :]
+            x_after = samples_after[i, j, :]
+            plt.hist(x_before, bins=10, alpha=0.5, label='Before Intervention')
+            plt.hist(x_after, bins=10, alpha=0.5, label='After Intervention')
+            plt.title(f"Module: {name}, Weight[{i},{j}] samples")
+            plt.xlabel("Value")
+            plt.ylabel("Frequency")
+            plt.legend()
+            plt.show()
