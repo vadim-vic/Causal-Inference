@@ -44,7 +44,7 @@ else:
 model = nn.Sequential(
     nn.Linear(num_in_features, 3),   # 4 neurons
     nn.ReLU(),
-    #nn.Linear(3, 3),   # 4 neurons
+    #nn.Linear(4, 3),   # 4 neurons
     #nn.ReLU(),
     nn.Linear(3, 2)    # 2 neurons
 )
