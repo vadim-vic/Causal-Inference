@@ -1,8 +1,8 @@
 """
+A sandbox module to test the random causal DAG generation and CI models verification
 def generate_variable_names(num_vars): -> generated_vars
 def generate_random_dag_matrix(node_names, sparsity): -> dag_df
-
-
+def generate_dataset_by_dag(dag_matrix_df, node_names, num_samples): -> data
 """
 
 import string
@@ -272,7 +272,7 @@ if __name__ == "__main__":
     data_generated = generate_dataset_by_dag(dag_matrix_df, vars_example, num_samples=1000)
     print("First 5 rows of the generated data:")
     print(data_generated.head())
-
+"""
 if __name__ == "__main__":
     # Plot the generated data pairvise to visualize relationships
     for i,j in itertools.combinations(vars_example, 2):
@@ -282,6 +282,7 @@ if __name__ == "__main__":
         plt.xlabel(i)
         plt.ylabel(j)
         plt.show()
+"""
 
 #=======================================================================================
 import lingam

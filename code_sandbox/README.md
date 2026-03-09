@@ -3,6 +3,7 @@
 ## Py-files
 1. Causal Bayesian Inference from sk-learn [py](causal_bayes_sk-learn.py)
 2. Causal Inference with pyTorch [py](causal_bayes_torch.py)
+3. Test Module Sandbox [py](sandbox_module.py)
 
 ## Notebooks  
 Below is a list of notebooks and modules for numerical experiments on causal inference applications:
