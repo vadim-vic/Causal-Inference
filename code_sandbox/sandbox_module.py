@@ -127,6 +127,28 @@ if __name__ == "__main__": # Stub for tests
         assign_sparsity)
     print(f"Generated DAG adjacency matrix with shape {dag_matrix_example.shape} and sparsity {assign_sparsity}:\n{dag_matrix_example}")
     print(f"Total number of edges in the DAG: {dag_matrix_example.sum().sum()}")
+
+#=======================================================================================
+import networkx as nx
+import matplotlib.pyplot as plt
+import pandas as pd
+def plot_dag(dag_df, filename=None):
+    # Plot the DAG structure using NetworkX
+    adj_matrix = dag_df.values
+    var_names = dag_df.columns.tolist()
+    G = nx.from_numpy_array(adj_matrix, create_using=nx.DiGraph)
+    mapping = {i: var_names[i] for i in range(len(var_names))}
+    G = nx.relabel_nodes(G, mapping)
+    plt.figure(figsize=(6, 6))
+    pos = nx.spring_layout(G)
+    nx.draw(G, pos, with_labels=True, node_size=2000, node_color='lightblue', arrowsize=20)
+    # plt.title("SCM Graph Structure")
+    # plt.rcParams['font.family'] = 'DejaVu Serif'
+    if filename:
+        plt.savefig(filename, format='png', dpi=300)
+    else:
+        plt.show()
+
 #=======================================================================================
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -285,44 +307,48 @@ if __name__ == "__main__":
 """
 
 #=======================================================================================
+
 import lingam
 import lingam.utils as lu
+if __name__ == "__main__":
+    # Instantiate the DirectLiNGAM model
+    model = lingam.DirectLiNGAM()
 
-# Instantiate the DirectLiNGAM model
-model = lingam.DirectLiNGAM()
+    # Fit the model to the data DataFrame
+    # The 'data' DataFrame was generated in the previous step and contains the synthetic observational data.
+    model.fit(data_generated)
 
-# Fit the model to the data DataFrame
-# The 'data' DataFrame was generated in the previous step and contains the synthetic observational data.
-model.fit(data_generated)
+    # Extract the learned adjacency matrix
+    # The adjacency_matrix_ attribute returns a numpy array. Convert it to a Pandas DataFrame.
+    # Create a directed graph from the adjacency matrix
+    G_true = nx.from_pandas_adjacency(dag_matrix_df, create_using=nx.DiGraph)
+    # Get a topological sort of the nodes
+    topological_order = list(nx.topological_sort(G_true))
 
-# Extract the learned adjacency matrix
-# The adjacency_matrix_ attribute returns a numpy array. Convert it to a Pandas DataFrame.
-# Create a directed graph from the adjacency matrix
-G_true = nx.from_pandas_adjacency(dag_matrix_df, create_using=nx.DiGraph)
-# Get a topological sort of the nodes
-topological_order = list(nx.topological_sort(G_true))
+    learned_dag_matrix_df = pd.DataFrame(model.adjacency_matrix_, index=topological_order, columns=topological_order)
 
-learned_dag_matrix_df = pd.DataFrame(model.adjacency_matrix_, index=topological_order, columns=topological_order)
-
-print("Learned DAG adjacency matrix using DirectLiNGAM:")
-print(learned_dag_matrix_df.head())
-print(f"Dimensions of the learned DAG matrix: {learned_dag_matrix_df.shape}")
-print(f"Total number of edges in the learned DAG: {learned_dag_matrix_df.sum().sum()}")
+    print("Learned DAG adjacency matrix using DirectLiNGAM:")
+    print(learned_dag_matrix_df.head())
+    print(f"Dimensions of the learned DAG matrix: {learned_dag_matrix_df.shape}")
+    print(f"Total number of edges in the learned DAG: {learned_dag_matrix_df.sum().sum()}")
 
 #=====================================================================================================
-# Show the DAG adjacency matrix as a heatmap
-# dag_matrix_df = pd.DataFrame(learned_dag_matrix_df, index=vars_example, columns=vars_example)
+if __name__ == "__main__":
+    # Show the DAG adjacency matrix as a heatmap
+    # dag_matrix_df = pd.DataFrame(learned_dag_matrix_df, index=vars_example, columns=vars_example)
 
-# Visualize the test DAG using NetworkX
-# # Create a directed graph from the adjacency matrix
-viz_graph = nx.from_numpy_array(learned_dag_matrix_df.values, create_using=nx.DiGraph)
-# Map node indices to their names
-viz_mapping = {i: name for i, name in enumerate(topological_order)}
-G = nx.relabel_nodes(viz_graph, viz_mapping)
+    # Visualize the test DAG using NetworkX
+    # # Create a directed graph from the adjacency matrix
+    viz_graph = nx.from_numpy_array(learned_dag_matrix_df.values, create_using=nx.DiGraph)
+    # Map node indices to their names
+    viz_mapping = {i: name for i, name in enumerate(topological_order)}
+    G = nx.relabel_nodes(viz_graph, viz_mapping)
 
-plt.figure(figsize=(10, 10))
-pos = nx.spring_layout(G, seed=42)  # For consistent layout
-nx.draw_networkx(G, pos, with_labels=True, node_size=2000, node_color='lightblue', font_size=10, arrowsize=20)
-plt.title('Node DAG visualized')
-plt.axis('off')
-plt.show()
+    plt.figure(figsize=(10, 10))
+    pos = nx.spring_layout(G, seed=42)  # For consistent layout
+    nx.draw_networkx(G, pos, with_labels=True, node_size=2000, node_color='lightblue', font_size=10, arrowsize=20)
+    plt.title('Node DAG visualized')
+    plt.axis('off')
+    plt.show()
+
+
