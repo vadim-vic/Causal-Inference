@@ -24,6 +24,7 @@
 \newcommand{\ba}{\mathbf{a}}
 \newcommand{\bb}{\mathbf{b}}
 \newcommand{\bx}{\mathbf{x}}
+\newcommand{\bw}{\mathbf{w}}
 \newcommand{\by}{\mathbf{y}}
 \newcommand{\bz}{\mathbf{z}}
 \newcommand{\bmu}{\boldsymbol{\mu}}
@@ -56,7 +57,7 @@ where~$v_i$ (is a) set of all nodes.
         $ 1 \leq i \leq n$ and obtain $\hat{w}_1^{yx}, \dots, \hat{w}_n^{yx}$,
         where $P(y\mid X_\doop; w)$ in the probability of $Y$ from $\Anc(Y)$ based on all samples, assessed with~$X$;
         \item compute $\hat{\bmu}^{yx}$ and  $\hat{\bSig}^{yx}$ from $\hat{w}_1^{yx}, \dots, \hat{w}_n^{yx}$;
-        \item compute $\KL{p(w; \hat{\bmu}, \hat{bSig})}{p(w; \hat{\bmu}^{xy}, \hat{\bSig}^{xy})}$;
+        \item compute $\KL{p(w; \hat{\bmu}, \hat{\bSig})}{p(w; \hat{\bmu}^{xy}, \hat{\bSig}^{xy})}$;
         \item if $\KL{}{} \geq 0$, $x \in p_a(Y)$.
     \end{enumerate}
 \end{enumerate}
