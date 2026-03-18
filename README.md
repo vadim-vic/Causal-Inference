@@ -10,7 +10,7 @@
 - Causal inference in latent space [pdf](/slides/text_causal_latent.pdf)
 - Bayesian structure of a model as a causal graph [pdf](/slides/intro_Gamma.pdf)
 - Causal inference in latent space [ipynb](/code_posterior/norm_descent_mahalanobis.ipynb)
-- Distribution of model parameters and causality [pdf](/slides/intro_pZW.pdf)
+- Distribution of model parameters and causality (including cones and symbolic) [pdf](/slides/intro_pZW.pdf)
 - Estimation of posterior distributions for Bayesian causal inference [in code_posterior](/code_posterior/README.md)
 - Discussion of the $p(\mathbf{w}|\text{do}(\mathbf{x}),\mathbf{y})$ for $\mathbf{W}^\mathsf{T}\mathbf{x}$ estimation [pdf](/slides/intro_Setup.pdf)
 - Transformers and canonical correlation analysis
