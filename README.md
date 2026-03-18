@@ -2,8 +2,13 @@
 
 ## List of Contents
 ### Texts 
+- (Draft of the paper) Causal discovery with parameter analysis [pdf](/slides/text_causal_paper.pdf)
 - Direct and indirect causes in the time series [pdf](/slides/text_causal_graph.pdf)
 - Causal inference in latent space [pdf](/slides/text_causal_latent.pdf) 
+
+### Code
+1. Parameter estimation sandbox [the folder](../code_posterior)
+2. Causal inference sandbox [the folder](../code_sandbox)
 
 ### Slides
 - Causal graphs and optimization [pdf](/slides/intro_CovW.pdf)
