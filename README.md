@@ -67,12 +67,15 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 
 ### Tools for causal discovery
 1. [LiNGAM: Linear Non-Gaussian Acyclic Model for Causal Discovery](https://lingam.readthedocs.io/), [github](https://github.com/cdt15/lingam)
-2. [Do-Why: is a Do-sampler](https://www.pywhy.org/dowhy/v0.11.1/example_notebooks/do_sampler_demo.html), [site](https://www.pywhy.org/), [pypi](https://pypi.org/project/dowhy/), [pywhy](https://www.pywhy.org/dowhy/v0.14/)
+2. [Do-Why: is a Do-sampler](https://www.pywhy.org/dowhy/v0.11.1/example_notebooks/do_sampler_demo.html), [site](https://www.pywhy.org/), [pypi](https://pypi.org/project/dowhy/), [pywhy](https://www.pywhy.org/dowhy/v0.14/), [do-sampler](https://www.pywhy.org/dowhy/v0.11.1/example_notebooks/do_sampler_demo.html)
 3. [Tigramite and PCMCI](https://jakobrunge.github.io/tigramite/)
 4. [F-PCMCI](https://lcastri.github.io/fpcmci/)
 5. [causal-learn](https://causal-learn.readthedocs.io/)
 6. [CausalEGM](https://causalegm.readthedocs.io/en/latest/installation.html)
-7. [Tetrad](https://tetrad-manual.readthedocs.io/en/latest/)
+7. [Tetrad](https://tetrad-manual.readthedocs.io/en/latest/workflows/workflows.html)
+#### Code
+1. [Time series auto-former enc dec](https://github.com/rakuyorain/Implicit-Forecaster/blob/main/layers/Autoformer_EncDec.py)
+2. [Py-tetrad](https://github.com/cmu-phil/py-tetrad/tree/main/pytetrad/resources)]
 
 ## Special references 
 
@@ -85,6 +88,9 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 1. [Non-Parametric Path Analysis in Structural Causal Models](https://par.nsf.gov/servlets/purl/10111046)
 2. [Non-Parametric Methods for Partial Identification of Causal Effects](https://causalai.net/r72.pdf)
 3. [Non-parametric Causal Inference in Dynamic Thresholding Designs](https://arxiv.org/abs/2512.15244)
+
+### Kernel-based CI
+1. [Practical Kernel Selection for Kernel-based Conditional Independence Test](https://neurips.cc/virtual/2025/loc/san-diego/poster/118068})
 
 ### Functional CI with brain
 1. [Functional CI with brain](https://arxiv.org/pdf/2401.09641)
@@ -150,6 +156,19 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 2. [Information-Geometric Optimization Algorithms](https://www.jmlr.org/papers/volume18/14-467/14-467.pdf), 2017
 3. [Natural Gradients](https://andrewcharlesjones.github.io/journal/natural-gradients.html) by Andrew Charles Jones, 2018
 4. (Bayesian optimization)[https://github.com/bayesian-optimization/BayesianOptimization]
+
+### Dynamic systems and CI
+1. [From Deterministic ODEs to Dynamic Structural Causal Models](https://arxiv.org/pdf/1608.08028)
+2. [Causal Modeling of Dynamical Systems](https://arxiv.org/pdf/1803.08784)
+3. [Implicit Reasoning in Deep Time Series Forecasting](https://arxiv.org/abs/2409.10840)
+4. [Towards Accurate Time Series Forecasting via Implicit Decoding](https://neurips.cc/virtual/2025/loc/san-diego/poster/116698)
+
+
+
+
+
+
+
 
 <!---### LLM and CI (obsoleted) 
 Integrating Large Language Models in Causal Discovery: A Statistical Causal Approach
