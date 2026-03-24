@@ -29,18 +29,84 @@
 \newcommand{\bz}{\mathbf{z}}
 \newcommand{\bmu}{\boldsymbol{\mu}}
 \newcommand{\bSig}{\boldsymbol{\Sigma}}
-\newcommand{\bA}{\mathbb{A}}
+\newcommand{\bA}{\mathbf{A}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\loss}{\mathcal{L}}
+\newcommand{\cN}{\mathcal{N}}
 
 \title{Causal discovery with parameter analysis}
 \author{IA pour la Science}
-\date{19-26 March 2026}
+\date{25 March 2026}
 \begin{document}
-\maketitle
-\begin{abstract}
-    abstract
-\end{abstract}
-\section{Introduction}
+%\maketitle
+%\begin{abstract}
+%    abstract
+%\end{abstract}
+%\section{Introduction}
+\section*{Test the model structure with do-generated dataset}
+There given an observation data $(\bx,\by)$ and a model $f=f(\bx; \bw, \cA)\mapsto \by$.
+There given the model parameters $\hat{\bw}$ and the model structure $\hat{\cA}$  so that three loss functions holds
+\begin{enumerate}[1)]
+\item inference loss $\loss\bigl(f(\bx)\bigr)\to \mathop{\min}\limits_{\bw,\cA}$,
+\item reconstruction loss  $\loss\bigl(f^{-1}(\by)\bigr)\to \mathop{\min}\limits_{\bw,\cA}$.
+\end{enumerate}
+They are obtained by the backpropagation algorithm. The distribution of the parameters $p(\bw\mid \bx,\by,\cA)$ is estimated during their optimization. The structure~$\cA\in\mathbb{B}^n$ (for deep networks a hypergraph on its elements is defined). 
 
+\medskip
+One has to find the optimal test set $\{\doc(\bx,\by)\}$ that maximizes the distance between the structure $\rho(\cA,\cA_\doc) = \exp\bigl(-|\cA-\cA_\doc|\bigr)$ element-wise for each test case $\{\doc(\bx,\by)\}_{\cB_i}$:
+\[
+\sum\limits_{i}\rho(\cA,\cA_\doc\bigl(\cB_i)\bigr) \to\mathop{\max}\limits_{\{\doc(\bx,\by)\}}.
+\]
+In the other words, one has to generate a data, so that for each sample set indexed~$\cB_i\}$ there is a statistically significant change in one element of the model structure~$\cA$ (or a vertex of the structure hypergraph).
+
+Suppose the generated data $\doc(\bx,\by)$ must be similar to the distribution of the observable data for both distributions 
+$p(Y\mid X=\bx)$ and $p(X\mid Y=\by)$. (Best option: one can select from the observation data set a subset to test such that it tests an element of model structure.)
+
+\medskip
+The data generation procedure uses the perturbation of parameters. For simplicity assume a perturbation of a single parameter~$w_i$ with the distribution $p(\hat{\bw}) = \cN(\hat{\bw}, \hat{\bA})$  for some subset of the model parameters.
+Denote~$w_\doc = w+\delta$, where the value of $\delta \gg \frac{\varsigma}{\sqrt{n}}$ is chosen so that the Student t-test detects statistically significant difference. 
+The data generation algorithm is the following:
+\begin{enumerate}[1)]
+\item select an $i$-th element of the model structure~$\cA$,
+\item sample the parameter $w_i$ so that $\doc(w_i) = w_i+\delta$,
+\item denote the indexes of the samples by $\cB_i$,
+\item with the backpropagation generate $\bx_\doc$ samples, 
+\item with the inference (propagation) generate $\by_\doc$ samples, 
+\item gather the generated test dataset $\{\do(\bx,\by)\}_{\cB_i}$,
+\item to use to test the model structure~$\cA$ and ensure that 
+\[
+\doc(\bx,\by) \to \cA_\doc \quad\text{for each}\quad i.
+\]
+\end{enumerate}
+
+Note that both backpropagation and inference require data from the observation set to compute the generated data. Assume that these data are expected values (given time and space for spatial-time data).
+
+Variants of samples in the generated data. 
+\begin{enumerate}
+\item Generation of an element delivers outlines in the data, $ \doc(\bx,by) \sim p(X,Y)$ does not hold.
+\item Generation of an element delivers expected data.
+\end{enumerate}
+
+The procedure of usage of the generated data to eliminate statistically non-relevant elements from the model structure~$\cA$:
+\begin{enumerate}[1)]
+\item estimate the model parameters $p(\bw\mid \bx,\by,\cA)$,
+\item sample the do-parameters $p(\bw_\doc)$ assuming them as the prior distribution,
+\item obtain generated dataset $\doc(\bx,\by)$,
+\item estimate the loss~$\loss\bigl(f(\bx)\bigr)$ for inference and reconstruction~ $\loss\bigl(f^{-1}f(\by)\bigr)$,
+\item find the unused elements of the model structure~$\cA$ such that 
+\[
+\cA_\doc = \mathop{\arg\min}\limits_{\{\doc(\bx,\by)\}} \lambda\loss\bigl(f(\bx)\bigr) + (1-\lambda)\loss\bigl(f^{-1}f(\by)\bigr).
+\]
+\end{enumerate}
+For the selection of model structure procedure the complexity $\mathcal{O}(2^\cA)$ drops to lesser than $\mathcal{O}(\cA)$, since the only procedure we need is to generate the model parameters~$\bw_\doc$.
+ 
+
+
+
+
+
+\maketitle
 \section{The main algorithm}
 
 There given a sample set of interventions
@@ -95,11 +161,10 @@ $V_i$ set of all nodes
 \includegraphics[width=.4\textwidth]{../temporary/tab_DAG1}
 \includegraphics[width=.4\textwidth]{../temporary/tab_DAG2}
 
-
 \section{Classification as a criterion of causal disturbance}
 \begin{itemize}
     \item Set a tests for the causal disturbance: $X$ and $X=\bx_0$.
-    \item Train a classifier to distinguish between the parameter distibution
+    \item Train a classifier to distinguish between the parameter distribution
     \item The distribution of the model parameters are the features.
     \item Maximize the gap between two classes
 \end{itemize}
