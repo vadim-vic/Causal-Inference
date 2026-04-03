@@ -56,6 +56,41 @@ def test_structural_equations_nonlinear(simple_dag):
     assert "tanh" in eqs[3]
 
 
+def test_build_linear_model_from_binary_adjacency(simple_dag):
+
+    gen = CausalDatasetGenerator(simple_dag)
+
+    model = gen.build_linear_model()
+
+    expected = np.array(simple_dag, dtype=float)
+
+    assert np.array_equal(model["coefficient_matrix"], expected)
+    assert np.array_equal(model["intercepts"], np.zeros(4))
+    assert model["equations"][0] == "X0 = ε0"
+    assert model["equations"][3] == "X3 = 1*X1 + 1*X2 + ε3"
+
+
+def test_build_linear_model_with_custom_weights_and_biases(simple_dag):
+
+    gen = CausalDatasetGenerator(simple_dag)
+
+    weights = np.array([
+        [0.0, 0.5, 1.5, 0.0],
+        [0.0, 0.0, 0.0, 2.0],
+        [0.0, 0.0, 0.0, -1.0],
+        [0.0, 0.0, 0.0, 0.0]
+    ])
+    biases = np.array([0.0, 1.0, 0.0, -2.0])
+
+    model = gen.build_linear_model(weights=weights, biases=biases)
+
+    assert model["coefficient_matrix"][0, 1] == 0.5
+    assert model["coefficient_matrix"][2, 3] == -1.0
+    assert model["coefficient_matrix"][0, 3] == 0.0
+    assert model["equations"][1] == "X1 = 0.5*X0 + 1 + ε1"
+    assert model["equations"][3] == "X3 = 2*X1 + -1*X2 + -2 + ε3"
+
+
 def test_dataset_shape(simple_dag):
 
     gen = CausalDatasetGenerator(simple_dag)

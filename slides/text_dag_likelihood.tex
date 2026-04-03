@@ -1,0 +1,142 @@
+\documentclass[12pt]{article}
+\usepackage{text_style}
+\title{Likelihood on the CP-DAG in causal discovery}
+\author{IA pour la Science}
+\date{25 March 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+For a given dataset of observations maximize the likelihood of the causal graph that generates the reconstruction data.
+Estimate the likelihood of the DAG in the linear causal model. Use Markov equivalence classes of DAGs.
+\end{abstract}
+
+There given~$m$ observations ${\mathbf{x}^{(1)}, \dots, \mathbf{x}^{(m)}}$ of a random variable~$X$.
+The model is
+|\[\hat{\bx} = \bW\mathbf{x} + \boldsymbol{\varepsilon}, \qquad \boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{0}, \bSig)
+\]
+where~$\bSig = \mathrm{diag}(\sigma_1^2, \dots, \sigma_n^2)$ is the diagonal noise covariance.
+The dependence between the variables is described by the $n \times n$ weighted adjacency matrix $\bW$  of the DAG.
+An element $W_{ij} \neq 0$ iff $j \to i$ is an edge.
+
+The likelihood of the data given the parameters $(\bW, \bSig)$ is:
+\[
+p(X \mid \bW, \bSig) = \prod_{k=1}^{m} p\left(\mathbf{x}^{(k)} \mid \bW, \bSig\right) = \prod_{k=1}^{m} \mathcal{N}\!\left(\mathbf{x}^{(k)};; \bW\mathbf{x}^{(k)},; \bSig\right)
+\]
+
+
+
+
+Solving for  $\mathbf{x}$:
+$$\mathbf{x} = (I - W)^{-1}\boldsymbol{\varepsilon} \implies \mathbf{x} \sim \mathcal{N}!\left(\mathbf{0},; (I-W)^{-T}\Sigma(I-W)^{-1}\right)$$
+
+the log-likelihood factorises node-by-node thanks to the DAG structure:
+$$\log p(X \mid W, \Sigma) = \sum_{i=1}^{n} \sum_{k=1}^{m} \log \mathcal{N}!\left(x_i^{(k)};; W_{i,\mathrm{pa}(i)}, \mathbf{x}_{\mathrm{pa}(i)}^{(k)},; \sigma_i^2\right)$$
+where $\mathrm{pa}(i)$ denotes the parents of node $i$ in the DAG.
+
+Bayesian score
+To marginalise over the parameters $(W, \Sigma)$, we place standard Gaussian priors on the edge weights and inverse-Gamma priors on the noise variances (the conjugate pair):
+$$W_{ij} \sim \mathcal{N}(0, \lambda^{-1}), \quad \sigma_i^2 \sim \text{Inv-Gamma}(\alpha_0, \beta_0)$$
+Because the DAG factorises, the Bayesian score also factorises:
+$$\log p(X \mid \mathcal{G}) = \sum_{i=1}^{n} \log p!\left(X_i \mid X_{\mathrm{pa}(i)}\right)$$
+Each local score $\log p(X_i \mid X_{\mathrm{pa}(i)})$ is obtained by closed-form marginalisation, yielding a Bayesian Gaussian equivalent (BGe) score. Let $k_i = |\mathrm{pa}(i)|$ be the number of parents of node $i$. Then:
+\[
+    \log p(X_i \mid X_{\mathrm{pa}(i)}) = \frac{1}{2}\log\frac{\lambda^{k_i}}{\lambda^{k_i+1}} + \log\frac{\Gamma(\alpha_0 + m/2)}{\Gamma(\alpha_0)} - \frac{m}{2}\log(2\pi) + \alpha_0\log\beta_0 - \left(\alpha_0 + \frac{m}{2}\right)\log\hat{\beta}_i
+\]
+where the posterior shape parameter is:
+$$\hat{\beta}i = \beta_0 + \frac{1}{2}\left(\mathbf{x}i^\top \mathbf{x}i - \mathbf{x}i^\top X{\mathrm{pa}(i)}\left(X{\mathrm{pa}(i)}^\top X{\mathrm{pa}(i)} + \lambda I\right)^{-1} X{\mathrm{pa}(i)}^\top \mathbf{x}_i\right)$$
+This term captures the residual sum of squares after regressing $x_i$ on its parents, regularised by the prior precision $\lambda$.
+
+
+Let me visualise the full scoring pipeline:---
+Key intuitions
+The prior precision $\lambda$ acts as ridge regularisation in the local regression. As $\lambda \to 0$ (flat prior), the Bayesian score approaches the MLE log-likelihood. Larger $\lambda$ penalises complex parent sets more heavily.
+The posterior $\hat{\beta}_i$ is the updated residual scale after seeing the data. If $x_i$ is well-explained by its parents, $\hat{\beta}_i$ stays close to $\beta_0$, yielding a high score. Poor-fitting parent sets inflate $\hat{\beta}_i$, reducing the score.
+Factorisation means the total Bayesian score is just a sum of $n$ independent local scores — one per node — each computable in $O(k_i^3)$ time (matrix inversion over the parent set). This makes the score modular and efficient for structure search algorithms.
+
+Would you like me to derive the score for a specific DAG topology (e.g. a chain $x_1 \to x_2 \to \cdots \to x_n$), or extend this to the case with observed data?
+
+
+
+Great choice. The key challenge is that optimising over DAGs is combinatorially hard — the DAG constraint (acyclicity) is discrete. The NOTEARS framework (Zheng et al., 2018) resolves this by encoding acyclicity as a smooth algebraic constraint, enabling continuous optimisation.
+
+NOTEARS formulation
+The acyclicity constraint exploits the following result: a matrix $W$ is a DAG if and only if:
+$$h(W) = \mathrm{tr}\left(e^{W \circ W}\right) - n = 0$$
+where $\circ$ denotes elementwise squaring and the matrix exponential counts directed cycles of all lengths — it equals zero iff no cycles exist.
+
+Augmented Lagrangian problem
+We maximise the sparse Bayesian score subject to $h(W) = 0$, reformulated as a minimisation via the augmented Lagrangian:
+$$\min_{W}; \mathcal{L}(W) = \underbrace{-\sum_{i=1}^{n}\log p(X_i \mid X_{\mathrm{pa}(i)}; W)}{\text{negative BGe score}} + \underbrace{\gamma |W|1}{\text{sparsity}} + \underbrace{\alpha, h(W) + \frac{\rho}{2} h(W)^2}{\text{acyclicity penalty}}$$
+where $\gamma$ controls sparsity, $\alpha$ is the Lagrange multiplier, and $\rho$ is the penalty coefficient, both updated across outer iterations.
+
+Gradient of the acyclicity constraint
+The gradient of $h(W)$ with respect to $W$ is:
+$$\nabla_W h(W) = 2W \circ e^{W \circ W} \qquad \text{(elementwise)}$$
+which is cheap to compute and differentiable everywhere — enabling standard gradient-based optimisers (L-BFGS, Adam).
+
+Full algorithm---
+Update equations
+At each outer iteration $t$, after the inner minimisation converges:
+$$\alpha^{(t+1)} = \alpha^{(t)} + \rho^{(t)} \cdot h(W^{(t)})$$ $$\rho^{(t+1)} = \mu \cdot \rho^{(t)}, \qquad \mu > 1$$
+The Lagrange multiplier $\alpha$ accumulates the a
+cyclicity violation, while $\rho$ grows geometrically to force $h(W) \to 0$.
+
+Complete objective gradient
+The full gradient passed to L-BFGS at each inner step is:
+$$\nabla_W \mathcal{L} = \underbrace{-\nabla_W \sum_i \log p(X_i \mid X_{\mathrm{pa}(i)}; W)}{\text{negative BGe gradient}} + \underbrace{\gamma \cdot \mathrm{sign}(W)}{\ell_1\text{ sparsity}} + \underbrace{\left(\alpha + \rho, h(W)\right) \cdot 2W \circ e^{W \circ W}}_{\text{acyclicity}}$$
+The BGe gradient w.r.t. $W_i$ (the $i$-th row of $W$, corresponding to the parents of $x_i$) is:
+$$\nabla_{W_i} \log p(X_i \mid X_{\mathrm{pa}(i)}) = \frac{\alpha_0 + m/2}{\hat{\beta}i} \cdot \left(X{\mathrm{pa}(i)}^\top X_{\mathrm{pa}(i)} + \lambda I\right)^{-1} X_{\mathrm{pa}(i)}^\top \mathbf{x}_i$$
+
+Complexity and practical notes
+The dominant cost per gradient evaluation is computing $e^{W \circ W}$, which costs $O(n^3)$ via eigendecomposition. For large $n$, this can be approximated by truncating the matrix exponential series:
+$$e^{W \circ W} \approx \sum_{k=0}^{K} \frac{(W \circ W)^k}{k!}$$
+with $K = n$ terms sufficient to detect all cycles.
+
+Would you like me to implement this in Python (with NumPy/SciPy), or derive the closed-form BGe gradient more explicitly for the implementation?
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+DAG structure G
+adjacency matrix W
+
+Factorise score
+sum over nodes i = 1...n
+
+Local regression
+x_i on pa(i), ridge λ
+
+Inv-Gamma prior
+σ²_i ~ IG(α₀, β₀
+
+Gaussian prior
+W_ij ~ N(0, λ⁻¹)
+
+Marginalise over (W, Σ)
+closed form via conjugacy
+
+BGe local score
+log p(X_i | X_pa(i)) via β̂_i
+sum → log p(X | G)
+
+
+
+Let me visualise the full scoring pipeline:---
+Key intuitions
+The prior precision $\lambda$ acts as ridge regularisation in the local regression. As $\lambda \to 0$ (flat prior), the Bayesian score approaches the MLE log-likelihood. Larger $\lambda$ penalises complex parent sets more heavily.
+The posterior $\hat{\beta}_i$ is the updated residual scale after seeing the data. If $x_i$ is well-explained by its parents, $\hat{\beta}_i$ stays close to $\beta_0$, yielding a high score. Poor-fitting parent sets inflate $\hat{\beta}_i$, reducing the score.
+Factorisation means the total Bayesian score is just a sum of $n$ independent local scores — one per node — each computable in $O(k_i^3)$ time (matrix inversion over the parent set). This makes the score modular and efficient for structure search algorithms.
+
+Would you like me to derive the score for a specific DAG topology (e.g. a chain $x_1 \to x_2 \to \cdots \to x_n$), or extend this to the case with observed data?
+
+
+\end{document}

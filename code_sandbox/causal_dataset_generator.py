@@ -8,6 +8,8 @@ class CausalDatasetGenerator:
     def __init__(self, adj):
         self.adj = np.array(adj)
         self.n = len(adj)
+        if self.adj.shape != (self.n, self.n):
+            raise ValueError("adj must be a square adjacency matrix")
 
     # ---------------------------------------------------
     # traversal order
@@ -81,6 +83,47 @@ class CausalDatasetGenerator:
                 equations[j] = f"X{j} = {eq} + ε{j}"
 
         return equations
+
+    # ---------------------------------------------------
+    # linear SCM / model representation
+    # ---------------------------------------------------
+    def build_linear_model(self, weights=None, biases=None, include_noise=True):
+
+        if weights is None:
+            coef_matrix = self.adj.astype(float)
+        else:
+            weights = np.array(weights, dtype=float)
+            if weights.shape != self.adj.shape:
+                raise ValueError("weights must match the adjacency matrix shape")
+            coef_matrix = np.where(self.adj != 0, weights, 0.0)
+
+        if biases is None:
+            intercepts = np.zeros(self.n, dtype=float)
+        else:
+            intercepts = np.array(biases, dtype=float)
+            if intercepts.shape != (self.n,):
+                raise ValueError("biases must be a vector of length n")
+
+        equations = {}
+
+        for j in range(self.n):
+            parents = [i for i in range(self.n) if self.adj[i][j] != 0]
+            terms = [f"{coef_matrix[i, j]:g}*X{i}" for i in parents]
+
+            if intercepts[j] != 0:
+                terms.append(f"{intercepts[j]:g}")
+
+            if include_noise:
+                terms.append(f"ε{j}")
+
+            rhs = " + ".join(terms) if terms else ("ε%d" % j if include_noise else "0")
+            equations[j] = f"X{j} = {rhs}"
+
+        return {
+            "coefficient_matrix": coef_matrix,
+            "intercepts": intercepts,
+            "equations": equations,
+        }
 
     # ---------------------------------------------------
     # nonlinear causal function

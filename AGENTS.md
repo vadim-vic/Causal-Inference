@@ -13,7 +13,7 @@ This guide helps AI agents understand and contribute effectively to the Causal I
 
 ## Architecture Patterns
 
-### 1. Structural Causal Models (SCMs) and DAGs
+### 1. Structural Causal Models (SCMs) and DAGs[
 
 The project heavily uses Directed Acyclic Graphs (DAGs) to represent causal relationships.
 
@@ -23,7 +23,7 @@ The project heavily uses Directed Acyclic Graphs (DAGs) to represent causal rela
 - Builds symbolic structural equations via `build_structural_equations(nonlinear=True/False)`
 - Generates synthetic datasets with `generate_dataset_from_dag(n_samples, nonlinear)`
 - Supports both linear mechanisms (`w_i*X_i`) and nonlinear (`tanh()`, `sin()`, `sigmoid()`, `square()`)
-
+]()
 **Example Usage Pattern**:
 ```python
 # Define causal graph as adjacency matrix
