@@ -2,19 +2,138 @@
 \usepackage{text_style}
 \title{Likelihood on the CP-DAG in causal discovery}
 \author{IA pour la Science}
-\date{25 March 2026}
+\date{6 April 2026}
 \begin{document}
 \maketitle
 \begin{abstract}
 For a given dataset of observations maximize the likelihood of the causal graph that generates the reconstruction data.
-Estimate the likelihood of the DAG in the linear causal model. Use Markov equivalence classes of DAGs.
+Estimate the likelihood of the DAG in the linear causal model.
+Use Markov equivalence classes of DAGs.
 \end{abstract}
 
-There given~$m$ observations $\bD = \{\mathbf{x}_i\in\mathbb{R}^n\}$ of a random variable~$X$.
-The model is
-|\[\hat{\bx} = \bW\mathbf{x} + \boldsymbol{\varepsilon}, \qquad \boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{0}, \bSig)
+There given~$m$ observations $\mathbf{x}\in\mathbb{R}^n$ %$\bD = \{\mathbf{x}_i\in\mathbb{R}^n\}$
+of a random variable~$X$.
+The structural causal model is
+\begin{equation}
+    \hat{\bx} = \bW\mathbf{x} + \boldsymbol{\varepsilon}, \qquad \boldsymbol{\varepsilon} \sim \mathcal{N}(\mathbf{b}, \bSig),
+    \label{eq:lin_scm}
+\end{equation}
+$\bSig = \mathrm{diag}(\sigma_1^2, \dots, \sigma_n^2)$ is the diagonal noise covariance.
+Denote by~$f$ the model~\eqref{eq:lin_scm} and its parameters $\bw = (\bW, \mathbf{b})$. %text(vec)
+The directed acyclic graph~$G$ defines the structure of the model~$f$, so that for
+\[
+    \fG \defeq f(\mathbf{x}; \bw, G): \bx \mapsto \hat{\bx}
 \]
-where~$\bSig = \mathrm{diag}(\sigma_1^2, \dots, \sigma_n^2)$ is the diagonal noise covariance.
+a model parameter $w_{j} = 0$ if the corresponded element of adjacency matrix~$\bG$ is zero.
+
+The problem is to estimate the most probable DAG structure $p(G\mid X)$ given
+%the data $\bD$
+the observed variable $X$ and the model $f$:
+\begin{equation}
+    p(G \mid X, \fG) = p(X \mid \fG) p(G) \to \max_{G},
+    \label{eq:bayes_score}
+\end{equation}
+where $p(G)$ is a prior over DAGs and $p(X \mid \fG)$ is the likelihood of the data given the DAG structure.
+
+The term $p(X \mid \fG)$ is the marginal likelihood of the data given the DAG structure, obtained by integrating out the parameters $\bw$:
+\begin{equation}
+    p(X \mid \fG) = \int p(X \mid \bw, \fG) p(\bw \mid \fG) d\bw
+    \label{eq:marginal_likelihood}
+\end{equation}
+
+where $p(\bw \mid \fG)$ is the prior over the parameters given the DAG structure.
+
+Assume the distribution of the model parameters $p(\bw \mid \fG) = \cN(\bmu, \bA)$ and
+with the assumption from~\eqref{eq:lin_scm} rewrite the integrated part from likelihood term~\eqref{eq:marginal_likelihood} as:
+\begin{equation}
+    p(\bw \mid \bx, \fG) = \frac{1}{2} \sum_i (\bx_i - \hat{\bx}_i)\T \bSig^{-1} (\bx_i - \hat{\bx}_i)
+    + \frac{1}{2} (\bw - \bmu)\T \bA^{-1} (\bw - \bmu).
+    \label{eq:likelihood_prior}
+\end{equation}
+The parameters of the prior~$\bmu, \bA$ and covariance matrix~$\bSig$ is estimated during the optimization algorithm~\ref{alg:one}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fig_dir_gs}
+    \caption{The Dirichlet and Gumbel-Softmax distributions for different values of the temperature $\tau$. As $\tau \to 0$ the density concentrates near the vertices of the simplex (one-hot vectors).
+As $\tau=\lambda_\text{temp}$ increases, it becomes smoother.}
+    \label{fig:gumbel_softmax}
+\end{figure}
+
+Assume several independent hypotheses of the graph~$G$ distribution over the set of DAGs:
+\begin{enumerate}[1)]
+    \item $p(G) = \text{const}$, the uniform prior,
+    \item $p(G) \propto e^{-\gamma |G|}$, a sparsity-inducing prior,
+    \item $p(G) \propto e^{-\gamma h(G)}$, where $h(G)$ is a smooth acyclicity constraint,% (NOTEARS),
+    \item $p(G)$ is a Dirichlet distribution
+    \[ \mathrm{Dir}(\mathbf{y} \mid \boldsymbol{\pi}) = \frac{\Gamma \left(\sum_{i=1}^k \pi_i\right)}
+    {\prod_{i=1}^k \Gamma(\pi_i)}\prod_{i=1}^k y_i^{\pi_i - 1},
+    \]
+    \item $p(G) \propto \text{GS}(\boldsymbol{\pi},\tau)$, the concrete (relaxed) Gumbel-Softmax distribution
+    \[
+    p(\mathbf{y} \mid \boldsymbol{\pi}, \tau) = \Gamma(k),\tau^{k-1}
+    \left( \sum_{i=1}^{k} \frac{\pi_i}{y_i^{\tau}} \right)^{-k}\prod_{i=1}^{k} \frac{\pi_i}{y_i^{\tau+1}}.
+    \]
+\end{enumerate}
+The last two distributions have the parameters $\boldsymbol{\pi} = (\pi_1, \dots, \pi_i > 0, \dots, \pi_k)$, are the unnormalized log-probabilities of edges of the simplex
+\[
+\mathbf{y} \in \Delta^{k-1} = \left\{ \mathbf{y} \in \mathbb{R}^k : y_i > 0, \sum_{i=1}^{k} y_i = 1 \right\}
+\]
+and $\tau$ is the temperature controlling the smoothness of the distribution.
+Figure~\ref{fig:gumbel_softmax} illustrates the effect of~$\tau$.
+The Gamma function $\Gamma(k)$ has $k$ categories, edges of the graph $G$.
+This is a continuous distribution on the simplex so the change $d\by$ is computable.
+
+State the optimization problem using \label{eq:likelihood_prior} and the uniform prior over DAGs:
+\begin{equation}
+    \min_{G} \int p(\bw \mid \bx, \fG) d\bw
+    \label{eq:optimization_problem}
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{fig_cube}
+    \caption{ The restrictions to the structure parameters. Examples for some structure parameter.}
+    \label{fig:cube}
+\end{figure}
+
+
+
+\clearpage
+
+
+and a uniform prior over DAGs, so that $p(G) = \text{const}$ and we can focus on maximizing the likelihood term $p(X \mid \fG)$.
+For the linear Gaussian SCM, the likelihood of the data given the parameters $(\bW, \bSig)$ is:
+\[
+p(X \mid \bW, \bSig) = \prod_{k=1}^{m} p\left(\mathbf{x}^{(k)} \mid \bW, \bSig\right) = \prod_{k=1}^{m} \mathcal{N\!\left(\mathbf{x}^{(k)};; \bW\mathbf{x}^{(k)},; \bSig\right)}
+\]
+
+
+
+
+The likelihood of the data given the DAG structure is obtained by marginalising over the parameters $\bw$:
+\[
+p(\bD \mid G, f) = \int p(\bD \mid \bw, G, f) p(\bw \mid G, f) d\bw = \int p(\bD \mid \bw, G) p(\bw \mid G) d\bw
+\]
+where we have dropped the explicit dependence on $f$ for brevity.
+
+
+, where each node corresponds to a variable $x_i$ and directed edges represent causal relationships. We denote the set of variables by~$X$
+
+
+and by~$\mathcal{G}$ the DAG structure of the model (the zero pattern of $\bW$).
+
+
 The dependence between the variables is described by the $n \times n$ weighted adjacency matrix $\bW$  of the DAG.
 An element $W_{ij} \neq 0$ iff $j \to i$ is an edge.
 
