@@ -11,6 +11,7 @@ Estimate the likelihood of the DAG in the linear causal model.
 Use Markov equivalence classes of DAGs.
 \end{abstract}
 
+\section{Problem statement for graph optimization}
 There given~$m$ observations $\mathbf{x}\in\mathbb{R}^n$ %$\bD = \{\mathbf{x}_i\in\mathbb{R}^n\}$
 of a random variable~$X$.
 The structural causal model is
@@ -40,7 +41,6 @@ The term $p(X \mid \fG)$ is the marginal likelihood of the data given the DAG st
     p(X \mid \fG) = \int p(X \mid \bw, \fG) p(\bw \mid \fG) d\bw
     \label{eq:marginal_likelihood}
 \end{equation}
-
 where $p(\bw \mid \fG)$ is the prior over the parameters given the DAG structure.
 
 Assume the distribution of the model parameters $p(\bw \mid \fG) = \cN(\bmu, \bA)$ and
@@ -50,11 +50,12 @@ with the assumption from~\eqref{eq:lin_scm} rewrite the integrated part from lik
     + \frac{1}{2} (\bw - \bmu)\T \bA^{-1} (\bw - \bmu).
     \label{eq:likelihood_prior}
 \end{equation}
-The parameters of the prior~$\bmu, \bA$ and covariance matrix~$\bSig$ is estimated during the optimization algorithm~\ref{alg:one}.
+The parameters of the prior~$\bmu, \bA$ and covariance matrix~$\bSig$ is estimated during the optimization algorithm. %FIXIT~\ref{alg:one}.
+The covariance matrix~$\bA$ plays its role in the sampling of the nodes of the graph~$G$.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\textwidth]{fig_dir_gs}
+    \includegraphics[width=0.8\textwidth]{fig_dir_gs}
     \caption{The Dirichlet and Gumbel-Softmax distributions for different values of the temperature $\tau$. As $\tau \to 0$ the density concentrates near the vertices of the simplex (one-hot vectors).
 As $\tau=\lambda_\text{temp}$ increases, it becomes smoother.}
     \label{fig:gumbel_softmax}
@@ -84,178 +85,158 @@ Figure~\ref{fig:gumbel_softmax} illustrates the effect of~$\tau$.
 The Gamma function $\Gamma(k)$ has $k$ categories, edges of the graph $G$.
 This is a continuous distribution on the simplex so the change $d\by$ is computable.
 
-State the optimization problem using \label{eq:likelihood_prior} and the uniform prior over DAGs:
+State the optimization problem
 \begin{equation}
-    \min_{G} \int p(\bw \mid \bx, \fG) d\bw
+    \loss (\bw; \bx, \fG)  = \loss_\bx + \loss_\bw + \loss_G \to \min\limits_{G\in\mathcal{G}}
     \label{eq:optimization_problem}
 \end{equation}
-
-
-
-
-
-
-
-
-
-
+using \eqref{eq:likelihood_prior} and the listed above prior over DAGs.
+The problem~\eqref{eq:optimization_problem} includes the bayesian hyperparameters:
+\begin{itemize}
+    \item[] the diagonal covariance matrix $\bSig$ controls the noise level in the data,
+    \item[] the mean and covariance $\bmu, \bA$ control the prior over parameters $\bw$,
+    \item[] $\boldsymbol{\pi}$ controls the unnormalized log-probabilities of edges of the graph,
+    \item[] $\gamma$ controls the sparsity of the graph,
+    \item[] $\tau$ controls the smoothness of the distribution over graphs.
+\end{itemize}
+The plate notation of the probabilistic model is shown in Figure~\ref{fig:plate}.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\textwidth]{fig_cube}
+    \begin{tikzpicture}
+        % Nodes (left side)
+        \node[latent] (s) {$\boldsymbol{\pi, \tau}$};
+        \node[latent, right=of s] (Gamma) {$G$};
+        \node[latent, below=of s] (A) {$\bA,\bmu$};
+        \node[latent, right=of A] (W) {$\bw$};
+        % Nodes inside plate (gray shaded)
+        \node[latent, fill=gray!30, right=3cm of Gamma] (xi) {$\bx_i$};
+        \node[latent, fill=gray!30, below=of xi] (yi) {$\hat\bx_i$};
+        % Edges
+        \edge {s} {Gamma};
+        \edge {Gamma} {W};
+        \edge {A} {W};
+        \edge {Gamma} {yi};
+        \edge {W} {yi};
+        \edge {xi} {yi};
+        % Plate
+        \plate {plate1} {(xi)(yi)} {$i = 1, \dots, m$};
+        \end{tikzpicture}
+    \caption{The plate notation of the causal structure model.
+    The nodes $\bx_i$ and $\hat\bx_i$ are observed and reconstructed variables.
+    The parameters $\boldsymbol{\pi}, \tau$ control the distribution over DAGs.
+    The hyperparameters $\bA, \bmu$ control the prior over the model parameters $\bw$.}
+    \label{fig:plate}
+\end{figure}
+
+\section{MCMC sampling of the DAG structure}
+The generic sampling procedure for the DAG structure includes the estimation of the
+parameters and hyperparameter of the structure causal model.
+\begin{enumerate}
+    \item Sample the DAG structure $G$ from the prior distribution $p(G)$.
+    \item Check its admissibility  and the acyclicity constraint $h(G) = 0$.
+    \item Construct the corresponding structure causal model $f_G$.
+    \item Use the prior parameters $\bA, \bmu$.
+    \item Optimize the model parameters $\bw$ by minimizing the loss function $\loss_x$.
+    \item Sample subsets of the data $\bx$ to estimate new hyperparameters~$\bSig, \bA, \bmu$.
+    \item Compute the likelihood $\loss =\loss_\bx + \loss_\bw + \loss_G$.
+    \item Correct the distribution of the DAG structure $G$ (by accepting or rejecting it based on the likelihood $\loss$).
+    \item Repeat the procedure until convergence of loss $\loss$.
+\end{enumerate}
+
+\subsection*{Genetic sampling algorithm}
+The Genetic algorithm as a simple heuristical replacement of the MCMC sampling.
+Introduce the indicator vector $\ba \mapsto G$ that restores an admissible graph structure.
+This vector is a vertex in the binary cube $\ba \in \{0, 1\}^d$,
+where $d$ is the number of possible edges in the graph.
+For a graph with $n$ nodes $d \leq \frac{1}{2}n(n-1)$.
+The genetic algorithm includes the following steps:
+\begin{enumerate}
+    \item There is a are set of binary vectors
+    \[
+      \{\ba_1, \dots, \ba_P \}, \ba\in\{0,1\}^d.
+    \]
+    \item Get two uniformly random vectors $\ba_p, \ba_q$, their indexes $p, q \in \{1,\dots,P\}$.
+    \item Choose a random number $v \in \{1, \dots, n-1\}$.
+    \item Split both vectors and change their parts:
+    \[
+        [a_{p,1}, \dots, a_{p,v} \mid a_{q,v+1}, \dots, a_{q,n}] \to \ba^\prime_p,
+    \]
+    \[
+        [a_{q,1}, \dots, a_{q,v} \mid a_{p,v+1}, \dots, a_{p,n}] \to \ba^\prime_q.
+    \]
+    \item Choose random numbers $r_1, \dots, r_Q \in \{1, \dots, n\}$.
+    \item Invert positions $r_1, \dots, r_Q$ of the vectors $\ba^\prime_p,\ba^\prime_q$.
+    \item Repeat $P/2$ times the items 2--6.
+    \item Evaluate the obtained models, compute the loss $\loss$.
+    \item Keep the best $P$ vectors $\ba$ with the lowest loss $\loss$ and discard the rest.
+\end{enumerate}
+Repeat the algorithm until convergence of the loss $\loss$ or a fixed number of iterations.
+Here $P, Q$ are the heuristic parameters of the algorithm.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig_cube}
     \caption{ The restrictions to the structure parameters. Examples for some structure parameter.}
     \label{fig:cube}
 \end{figure}
 
-
-
-\clearpage
-
-
-and a uniform prior over DAGs, so that $p(G) = \text{const}$ and we can focus on maximizing the likelihood term $p(X \mid \fG)$.
-For the linear Gaussian SCM, the likelihood of the data given the parameters $(\bW, \bSig)$ is:
+\subsection*{MCMC sampling algorithm}
+To sample graphs~$\bw_0 = \{\bw \mid \bw \sim p(\bw|\boldsymbol{\pi})\}$ that deliver models with the best likelihood,
+use Metropolis-Hastings sampling version of the Markov Chain Monte Carlo sampling algorithm.
+The basic idea of the algorithm is to generate a sample such that the sample  forms a Markov chain.
+Each element $\bw_{t+1}$ of the sample depends on the previous element $\bw_t$ of the sample  only.
+Denote by $Q(\bw \mid \bw^\prime)$ an auxiliary distribution $Q(\bw\mid \bw^\prime)$.
+Choose an initial element $\bw_0$ and assign $\bW_0 = \{\bw_0\}$.
+Then let an element $\bw_t$ be chosen according  to the distribution $Q(\bw^\prime\mid\bw_t)$.
+The next element $\bw^\prime$ is generated randomly.
+Then the algorithm computes the acceptance ratio $a$:
 \[
-p(X \mid \bW, \bSig) = \prod_{k=1}^{m} p\left(\mathbf{x}^{(k)} \mid \bW, \bSig\right) = \prod_{k=1}^{m} \mathcal{N\!\left(\mathbf{x}^{(k)};; \bW\mathbf{x}^{(k)},; \bSig\right)}
+    a = \min\limits_{\bw^\prime\in\mathbb{R}^n}\left(
+    \frac{p(D\mid\bw^{\prime}, B_0)\quad Q(\bw_t\mid\bw^\prime)}
+    {p(D\mid\bw_t, B_0)\quad Q(\bw^\prime\mid \bw_t)}, 1\right).
 \]
 
-
-
-
-The likelihood of the data given the DAG structure is obtained by marginalising over the parameters $\bw$:
+The algorithm accepts the candidate $\bw^\prime$ with the probability $a$,
 \[
-p(\bD \mid G, f) = \int p(\bD \mid \bw, G, f) p(\bw \mid G, f) d\bw = \int p(\bD \mid \bw, G) p(\bw \mid G) d\bw
+    \bw_{t+1} = \bw^\prime, \qquad, W_0 := W_0 \cup \bw^\prime.
 \]
-where we have dropped the explicit dependence on $f$ for brevity.
-
-
-, where each node corresponds to a variable $x_i$ and directed edges represent causal relationships. We denote the set of variables by~$X$
-
-
-and by~$\mathcal{G}$ the DAG structure of the model (the zero pattern of $\bW$).
-
-
-The dependence between the variables is described by the $n \times n$ weighted adjacency matrix $\bW$  of the DAG.
-An element $W_{ij} \neq 0$ iff $j \to i$ is an edge.
-
-The likelihood of the data given the parameters $(\bW, \bSig)$ is:
+Otherwise, the algorithm rejects the candidate and puts $\bw_{t+1} = \bw_t$,
 \[
-p(X \mid \bW, \bSig) = \prod_{k=1}^{m} p\left(\mathbf{x}^{(k)} \mid \bW, \bSig\right) = \prod_{k=1}^{m} \mathcal{N}\!\left(\mathbf{x}^{(k)};; \bW\mathbf{x}^{(k)},; \bSig\right)
+\bw_{t+1} =
+\begin{cases}
+\bw^\prime, \quad\text{with the probability}\quad a,
+\bw_t, \quad\text{with the probability} (1-a).
+\end{cases}
 \]
-
-
-
-
-Solving for  $\mathbf{x}$:
-$$\mathbf{x} = (I - W)^{-1}\boldsymbol{\varepsilon} \implies \mathbf{x} \sim \mathcal{N}!\left(\mathbf{0},; (I-W)^{-T}\Sigma(I-W)^{-1}\right)$$
-
-the log-likelihood factorises node-by-node thanks to the DAG structure:
-$$\log p(X \mid W, \Sigma) = \sum_{i=1}^{n} \sum_{k=1}^{m} \log \mathcal{N}!\left(x_i^{(k)};; W_{i,\mathrm{pa}(i)}, \mathbf{x}_{\mathrm{pa}(i)}^{(k)},; \sigma_i^2\right)$$
-where $\mathrm{pa}(i)$ denotes the parents of node $i$ in the DAG.
-
-Bayesian score
-To marginalise over the parameters $(W, \Sigma)$, we place standard Gaussian priors on the edge weights and inverse-Gamma priors on the noise variances (the conjugate pair):
-$$W_{ij} \sim \mathcal{N}(0, \lambda^{-1}), \quad \sigma_i^2 \sim \text{Inv-Gamma}(\alpha_0, \beta_0)$$
-Because the DAG factorises, the Bayesian score also factorises:
-$$\log p(X \mid \mathcal{G}) = \sum_{i=1}^{n} \log p!\left(X_i \mid X_{\mathrm{pa}(i)}\right)$$
-Each local score $\log p(X_i \mid X_{\mathrm{pa}(i)})$ is obtained by closed-form marginalisation, yielding a Bayesian Gaussian equivalent (BGe) score. Let $k_i = |\mathrm{pa}(i)|$ be the number of parents of node $i$. Then:
+Let the auxiliary distribution $Q(\bw \mid \bw^\prime)$ be normal:
 \[
-    \log p(X_i \mid X_{\mathrm{pa}(i)}) = \frac{1}{2}\log\frac{\lambda^{k_i}}{\lambda^{k_i+1}} + \log\frac{\Gamma(\alpha_0 + m/2)}{\Gamma(\alpha_0)} - \frac{m}{2}\log(2\pi) + \alpha_0\log\beta_0 - \left(\alpha_0 + \frac{m}{2}\right)\log\hat{\beta}_i
+    Q(\bw \mid \bw^\prime) = Q(\bw^\prime \mid \bw) = \frac{1}{(2\pi\alpha^{-1})^{n/2}} \exp\left(-\frac{\alpha}{2}(\bw - \bw^\prime)\T (\bw - \bw^\prime)\right).
 \]
-where the posterior shape parameter is:
-$$\hat{\beta}i = \beta_0 + \frac{1}{2}\left(\mathbf{x}i^\top \mathbf{x}i - \mathbf{x}i^\top X{\mathrm{pa}(i)}\left(X{\mathrm{pa}(i)}^\top X{\mathrm{pa}(i)} + \lambda I\right)^{-1} X{\mathrm{pa}(i)}^\top \mathbf{x}_i\right)$$
-This term captures the residual sum of squares after regressing $x_i$ on its parents, regularised by the prior precision $\lambda$.
+That is, the function $Q(\bw \mid \bw^\prime)$ is symmetric and
+the acceptance ratio $a$ simplifies to
+\[
+    a = \min\limits_{\bw^\prime\in\mathbb{R}^n}\left(
+    \frac{p(D\mid\bw^{\prime}, B_0)}{p(D\mid\bw_t, B_0)}, 1\right).
+\]
+The initial element $\bw_0$ is chosen randomly from the distribution $p(\bw \mid \boldsymbol{\pi})$.
 
-
-Let me visualise the full scoring pipeline:---
-Key intuitions
-The prior precision $\lambda$ acts as ridge regularisation in the local regression. As $\lambda \to 0$ (flat prior), the Bayesian score approaches the MLE log-likelihood. Larger $\lambda$ penalises complex parent sets more heavily.
-The posterior $\hat{\beta}_i$ is the updated residual scale after seeing the data. If $x_i$ is well-explained by its parents, $\hat{\beta}_i$ stays close to $\beta_0$, yielding a high score. Poor-fitting parent sets inflate $\hat{\beta}_i$, reducing the score.
-Factorisation means the total Bayesian score is just a sum of $n$ independent local scores — one per node — each computable in $O(k_i^3)$ time (matrix inversion over the parent set). This makes the score modular and efficient for structure search algorithms.
-
-Would you like me to derive the score for a specific DAG topology (e.g. a chain $x_1 \to x_2 \to \cdots \to x_n$), or extend this to the case with observed data?
-
-
-
-Great choice. The key challenge is that optimising over DAGs is combinatorially hard — the DAG constraint (acyclicity) is discrete. The NOTEARS framework (Zheng et al., 2018) resolves this by encoding acyclicity as a smooth algebraic constraint, enabling continuous optimisation.
-
-NOTEARS formulation
-The acyclicity constraint exploits the following result: a matrix $W$ is a DAG if and only if:
-$$h(W) = \mathrm{tr}\left(e^{W \circ W}\right) - n = 0$$
-where $\circ$ denotes elementwise squaring and the matrix exponential counts directed cycles of all lengths — it equals zero iff no cycles exist.
-
-Augmented Lagrangian problem
-We maximise the sparse Bayesian score subject to $h(W) = 0$, reformulated as a minimisation via the augmented Lagrangian:
-$$\min_{W}; \mathcal{L}(W) = \underbrace{-\sum_{i=1}^{n}\log p(X_i \mid X_{\mathrm{pa}(i)}; W)}{\text{negative BGe score}} + \underbrace{\gamma |W|1}{\text{sparsity}} + \underbrace{\alpha, h(W) + \frac{\rho}{2} h(W)^2}{\text{acyclicity penalty}}$$
-where $\gamma$ controls sparsity, $\alpha$ is the Lagrange multiplier, and $\rho$ is the penalty coefficient, both updated across outer iterations.
-
-Gradient of the acyclicity constraint
-The gradient of $h(W)$ with respect to $W$ is:
-$$\nabla_W h(W) = 2W \circ e^{W \circ W} \qquad \text{(elementwise)}$$
-which is cheap to compute and differentiable everywhere — enabling standard gradient-based optimisers (L-BFGS, Adam).
-
-Full algorithm---
-Update equations
-At each outer iteration $t$, after the inner minimisation converges:
-$$\alpha^{(t+1)} = \alpha^{(t)} + \rho^{(t)} \cdot h(W^{(t)})$$ $$\rho^{(t+1)} = \mu \cdot \rho^{(t)}, \qquad \mu > 1$$
-The Lagrange multiplier $\alpha$ accumulates the a
-cyclicity violation, while $\rho$ grows geometrically to force $h(W) \to 0$.
-
-Complete objective gradient
-The full gradient passed to L-BFGS at each inner step is:
-$$\nabla_W \mathcal{L} = \underbrace{-\nabla_W \sum_i \log p(X_i \mid X_{\mathrm{pa}(i)}; W)}{\text{negative BGe gradient}} + \underbrace{\gamma \cdot \mathrm{sign}(W)}{\ell_1\text{ sparsity}} + \underbrace{\left(\alpha + \rho, h(W)\right) \cdot 2W \circ e^{W \circ W}}_{\text{acyclicity}}$$
-The BGe gradient w.r.t. $W_i$ (the $i$-th row of $W$, corresponding to the parents of $x_i$) is:
-$$\nabla_{W_i} \log p(X_i \mid X_{\mathrm{pa}(i)}) = \frac{\alpha_0 + m/2}{\hat{\beta}i} \cdot \left(X{\mathrm{pa}(i)}^\top X_{\mathrm{pa}(i)} + \lambda I\right)^{-1} X_{\mathrm{pa}(i)}^\top \mathbf{x}_i$$
-
-Complexity and practical notes
-The dominant cost per gradient evaluation is computing $e^{W \circ W}$, which costs $O(n^3)$ via eigendecomposition. For large $n$, this can be approximated by truncating the matrix exponential series:
-$$e^{W \circ W} \approx \sum_{k=0}^{K} \frac{(W \circ W)^k}{k!}$$
-with $K = n$ terms sufficient to detect all cycles.
-
-Would you like me to implement this in Python (with NumPy/SciPy), or derive the closed-form BGe gradient more explicitly for the implementation?
-
-
-
-
-
-
-
-
-
-
-
-\end{document}
-
-DAG structure G
-adjacency matrix W
-
-Factorise score
-sum over nodes i = 1...n
-
-Local regression
-x_i on pa(i), ridge λ
-
-Inv-Gamma prior
-σ²_i ~ IG(α₀, β₀
-
-Gaussian prior
-W_ij ~ N(0, λ⁻¹)
-
-Marginalise over (W, Σ)
-closed form via conjugacy
-
-BGe local score
-log p(X_i | X_pa(i)) via β̂_i
-sum → log p(X | G)
-
-
-
-Let me visualise the full scoring pipeline:---
-Key intuitions
-The prior precision $\lambda$ acts as ridge regularisation in the local regression. As $\lambda \to 0$ (flat prior), the Bayesian score approaches the MLE log-likelihood. Larger $\lambda$ penalises complex parent sets more heavily.
-The posterior $\hat{\beta}_i$ is the updated residual scale after seeing the data. If $x_i$ is well-explained by its parents, $\hat{\beta}_i$ stays close to $\beta_0$, yielding a high score. Poor-fitting parent sets inflate $\hat{\beta}_i$, reducing the score.
-Factorisation means the total Bayesian score is just a sum of $n$ independent local scores — one per node — each computable in $O(k_i^3)$ time (matrix inversion over the parent set). This makes the score modular and efficient for structure search algorithms.
-
-Would you like me to derive the score for a specific DAG topology (e.g. a chain $x_1 \to x_2 \to \cdots \to x_n$), or extend this to the case with observed data?
-
-
+\subsection*{Direct optimization of the DAG structure}
+The continuous optimization of the DAG structure requires two-step procedure:
+\begin{enumerate}
+    \item Given some parameters~$\bw$ construct a linear approximation of the model $f$.
+    \item Make a gradient step to optimize the graph structure
+    \[
+        \nabla_\ba = \frac{\partial \loss}{\partial \ba} = \frac{\partial \loss}{\partial {\bx}} \cdot \frac{\partial {\bx}}{\partial \ba}.
+    \]
+    \item Update the structure parameters $\ba$.
+    \item Make several steps of the optimization of the model parameters $\bw$,
+    \[
+        \nabla_\bw = \frac{\partial \loss}{\partial \bw} = \frac{\partial \loss}{\partial {\bx}} \cdot \frac{\partial {\bx}}{\partial \bw}.
+    \]
+\end{enumerate}
+For a linear mode this algorithm is equivalent to the quadratic optimization problem
+\[
+    \min_\ba\loss(\bw; \bx, \fG) = \lambda \ba\T \mathbf{Q} \ba + (1-\lambda) \mathbf{x}\T \ba.
+\]
 \end{document}

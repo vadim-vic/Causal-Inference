@@ -2,12 +2,14 @@
 
 ## List of Contents
 ### Texts 
+- Likelihood on the CP-DAG in causal discovery [pdf](/slides/text_dag_likelihood.pdf)
 - (Draft of the paper) Causal discovery with parameter analysis [pdf](/slides/text_causal_paper.pdf)
 - Direct and indirect causes in the time series [pdf](/slides/text_causal_graph.pdf)
 - Causal inference in latent space [pdf](/slides/text_causal_latent.pdf) 
 
 ### Code
-1. Parameter estimation sandbox [the folder](../code_posterior)
+1. MCMC and likelihood of causal graphs [notebook](../code_posterior/causal_graph_likelihood.ipynb)
+2. Parameter estimation sandbox [the folder](../code_posterior)
 2. Causal inference sandbox [the folder](../code_sandbox)
 
 ### Slides
@@ -25,6 +27,9 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 - Convergent cross mapping short introduction [pdf](slides/intro_CCM.pdf)
 - Causal inference for domain localization and dimensionality reduction [pdf](slides/draft_Causal_Inference.pdf) 
 - Code examples for causal inference for 1) [sk-learn](code_sandbox/causal_bayes_sk-learn.py) 2) [pytorch](code_sandbox/causal_bayes_torch.py)
+
+## Collection on causal inference for symbolic regression
+
 
 ## General references
 ### Team publications
