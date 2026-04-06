@@ -1,5 +1,4 @@
 # Causal inference for time series and text data
-
 ## List of Contents
 ### Texts 
 - Likelihood on the CP-DAG in causal discovery [pdf](/slides/text_dag_likelihood.pdf)
@@ -29,6 +28,10 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 - Code examples for causal inference for 1) [sk-learn](code_sandbox/causal_bayes_sk-learn.py) 2) [pytorch](code_sandbox/causal_bayes_torch.py)
 
 ## Collection on causal inference for symbolic regression
+1. [Optimal spanning tree reconstruction in symbolic regression](https://arxiv.org/abs/2406.18612), 2024
+2. [Tommi Jaakkola — Scaling structured prediction](https://www.youtube.com/watch?v=LbsBguCUFEc),2012
+3. [Deep learning for symbolic mathematics](https://arxiv.org/abs/1912.01412), 2019
+4. 
 
 
 ## General references

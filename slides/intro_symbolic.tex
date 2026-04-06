@@ -1,0 +1,42 @@
+% Simple Beamer Template
+\documentclass{beamer}
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{footline}[page number]
+\usepackage{amsmath}
+\newcommand{\T}{^{\mathsf{T}}}
+%\usepackage{array,tabularx,tabulary,booktabs}
+%\usepackage{longtable}
+%\usepackage{multirow}
+
+\title{Causal Symbolic regression and structure learning}
+\author{IA pour la Science}
+\date{April $6^\text{th}$, 2026}
+
+\begin{document}
+\begin{frame}
+  \titlepage
+\end{frame}
+%=============================================
+\begin{frame}{Causal structure learning with symbolic regression}
+
+The goal is to learn to search a model of optimal structure.
+
+\medskip
+{\color{blue}The structure must be admissible:}
+    \begin{enumerate}
+        \item An acyclic directed graph with given number of roots and leafs.
+        \item Its nodes are operations from a given set.
+        \item It must fit the data and respect statistical assumptions about the data.
+    \end{enumerate}
+
+\medskip
+{\color{blue}Two main approaches are:}
+    \begin{enumerate}
+        \item Symbolic regression is another computationally complex genetic algorithm.
+        \item Structure learning shows difficulties in delivering admissible structures of models.
+    \end{enumerate}
+
+The slides below lists variants of problem statement and methods to solve it.
+\end{frame}
+%=============================================
+\end{document}
