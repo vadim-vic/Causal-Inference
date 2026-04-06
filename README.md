@@ -9,9 +9,10 @@
 ### Code
 1. MCMC and likelihood of causal graphs [notebook](../code_posterior/causal_graph_likelihood.ipynb)
 2. Parameter estimation sandbox [the folder](../code_posterior)
-2. Causal inference sandbox [the folder](../code_sandbox)
+3. Causal inference sandbox [the folder](../code_sandbox)
 
 ### Slides
+- Causal structure learning with symbolic regression[pdf](/slides/intro_symbolic.pdf)
 - Causal graphs and optimization [pdf](/slides/intro_CovW.pdf)
 - Causal inference in latent space [pdf](/slides/text_causal_latent.pdf)
 - Bayesian structure of a model as a causal graph [pdf](/slides/intro_Gamma.pdf)
