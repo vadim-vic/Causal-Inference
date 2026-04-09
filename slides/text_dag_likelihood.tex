@@ -182,61 +182,137 @@ Here $P, Q$ are the heuristic parameters of the algorithm.
 \end{figure}
 
 \subsection*{MCMC sampling algorithm}
-To sample graphs~$\bw_0 = \{\bw \mid \bw \sim p(\bw|\boldsymbol{\pi})\}$ that deliver models with the best likelihood,
+To sample graphs~$\ba_0 = \{\ba \mid \ba \sim p(\ba|\boldsymbol{\pi})\}$ that deliver models with the best likelihood,
 use Metropolis-Hastings sampling version of the Markov Chain Monte Carlo sampling algorithm.
 The basic idea of the algorithm is to generate a sample such that the sample  forms a Markov chain.
-Each element $\bw_{t+1}$ of the sample depends on the previous element $\bw_t$ of the sample  only.
-Denote by $Q(\bw \mid \bw^\prime)$ an auxiliary distribution $Q(\bw\mid \bw^\prime)$.
-Choose an initial element $\bw_0$ and assign $\bW_0 = \{\bw_0\}$.
-Then let an element $\bw_t$ be chosen according  to the distribution $Q(\bw^\prime\mid\bw_t)$.
-The next element $\bw^\prime$ is generated randomly.
+Each element $\ba_{t+1}$ of the sample depends on the previous element $\ba_t$ of the sample  only.
+Denote by $Q(\ba \mid \ba^\prime)$ an auxiliary distribution $Q(\ba\mid \ba^\prime)$.
+Choose an initial element $\ba_0$ and assign $\ba_0 = \{\ba_0\}$.
+Then let an element $\ba_t$ be chosen according  to the distribution $Q(\ba^\prime\mid\ba_t)$.
+The next element $\ba^\prime$ is generated randomly.
 Then the algorithm computes the acceptance ratio $a$:
 \[
-    a = \min\limits_{\bw^\prime\in\mathbb{R}^n}\left(
-    \frac{p(D\mid\bw^{\prime}, B_0)\quad Q(\bw_t\mid\bw^\prime)}
-    {p(D\mid\bw_t, B_0)\quad Q(\bw^\prime\mid \bw_t)}, 1\right).
+    a = \min\limits_{\ba^\prime\in\mathbb{R}^n}\left(
+    \frac{p(D\mid\ba^{\prime}, B_0)\quad Q(\ba_t\mid\ba^\prime)}
+    {p(D\mid\ba_t, B_0)\quad Q(\ba^\prime\mid \ba_t)}, 1\right).
 \]
 
-The algorithm accepts the candidate $\bw^\prime$ with the probability $a$,
+The algorithm accepts the candidate $\ba^\prime$ with the probability $a$,
 \[
-    \bw_{t+1} = \bw^\prime, \qquad, W_0 := W_0 \cup \bw^\prime.
+    \ba_{t+1} = \ba^\prime, \qquad, W_0 := W_0 \cup \ba^\prime.
 \]
-Otherwise, the algorithm rejects the candidate and puts $\bw_{t+1} = \bw_t$,
+Otherwise, the algorithm rejects the candidate and puts $\ba_{t+1} = \ba_t$,
 \[
-\bw_{t+1} =
+\ba_{t+1} =
 \begin{cases}
-\bw^\prime, \quad\text{with the probability}\quad a,
-\bw_t, \quad\text{with the probability} (1-a).
+\ba^\prime, \quad\text{with the probability}\quad a,
+\ba_t, \quad\text{with the probability} (1-a).
 \end{cases}
 \]
-Let the auxiliary distribution $Q(\bw \mid \bw^\prime)$ be normal:
+Let the auxiliary distribution $Q(\ba \mid \ba^\prime)$ be normal (it is pretty simplified case; replace to uniform, Dirichlet or Gumbel-Softmax distribution):
 \[
-    Q(\bw \mid \bw^\prime) = Q(\bw^\prime \mid \bw) = \frac{1}{(2\pi\alpha^{-1})^{n/2}} \exp\left(-\frac{\alpha}{2}(\bw - \bw^\prime)\T (\bw - \bw^\prime)\right).
+    Q(\ba \mid \ba^\prime) = Q(\ba^\prime \mid \ba) = \frac{1}{(2\pi\alpha^{-1})^{n/2}} \exp\left(-\frac{\alpha}{2}(\ba - \ba^\prime)\T (\ba - \ba^\prime)\right).
 \]
-That is, the function $Q(\bw \mid \bw^\prime)$ is symmetric and
+That is, the function $Q(\ba \mid \ba^\prime)$ is symmetric and
 the acceptance ratio $a$ simplifies to
 \[
-    a = \min\limits_{\bw^\prime\in\mathbb{R}^n}\left(
-    \frac{p(D\mid\bw^{\prime}, B_0)}{p(D\mid\bw_t, B_0)}, 1\right).
+    a = \min\limits_{\ba^\prime\in\mathbb{R}^n}\left(
+    \frac{p(D\mid\ba^{\prime}, B_0)}{p(D\mid\ba_t, B_0)}, 1\right).
 \]
-The initial element $\bw_0$ is chosen randomly from the distribution $p(\bw \mid \boldsymbol{\pi})$.
+The initial element $\ba_0$ is chosen randomly from the distribution $p(\ba \mid \boldsymbol{\pi})$.
 
-\subsection*{Direct optimization of the DAG structure}
-The continuous optimization of the DAG structure requires two-step procedure:
+\subsection*{Direct optimization of the CP-DAG structure}
+There are two ways control the model superposition and the DAG structure:
+1) direct intervention into the model structure (for example assert a linear model parameter to 0, or apply identical transformation),
+and 2) control the model structure via the loss function (ridge or lasso regularization).
+
+The problem of continuous optimization of the CP-DAG structure includes:
 \begin{enumerate}
-    \item Given some parameters~$\bw$ construct a linear approximation of the model $f$.
-    \item Make a gradient step to optimize the graph structure
+    \item An auxiliary linear space~$\ba$ that continuously controls the model structure via
     \[
-        \nabla_\ba = \frac{\partial \loss}{\partial \ba} = \frac{\partial \loss}{\partial {\bx}} \cdot \frac{\partial {\bx}}{\partial \ba}.
+        \frac{\partial \loss}{\partial \ba} = \frac{\partial \loss}{\partial {\bx}} \cdot \frac{\partial {\bx}}{\partial \ba}.
     \]
-    \item Update the structure parameters $\ba$.
-    \item Make several steps of the optimization of the model parameters $\bw$,
+    \item The mapping to the CP-DAG structure $G$ that restores an admissible graph structure
     \[
-        \nabla_\bw = \frac{\partial \loss}{\partial \bw} = \frac{\partial \loss}{\partial {\bx}} \cdot \frac{\partial {\bx}}{\partial \bw}.
+    \ba \mapsto G|_\text{CP} \mapsto \fG(\bw): \bx \mapsto \hat{\bx}.
+    \]
+    \item Since the model has its parameters $\bw$,
+    the optimization of the structure~$\ba$ is performed
+    along with the optimization of the model parameters $\bw$.
+    \item The optimized parameters $\bw$ are used to estimate the bayesian hyperparameters~$\bA,\bSig$.
+    \item The analysis of the hyperparameters corrects the model structure
+    \[
+        \bA, \bSig \longrightarrow G.
     \]
 \end{enumerate}
+
+The continuous optimization of the DAG structure requires two-step procedure:
+simple gradient descent step~\eqref{eq:structure_gradient_step} for the structure parameters~$\ba$
+\begin{equation}
+    \ba_{t+1} = \ba_t - \eta^2 \, \frac{1}{|B_t|} \sum_{(x_i) \in B_t} \nabla_\ba \loss\bigl(\fG(\ba_t; \bw,\bx_i), \bGam,\bA(\ba_t), \bSig\bigr)
+    \label{eq:structure_gradient_step}
+\end{equation}
+and the stochastic gradient descent~\eqref{eq:model_gradient_step} step for the model parameters~$\bw$,
+\begin{equation}
+    \bw_{t+1} = \bw_t - \eta^2 \, \frac{1}{|B_t|} \sum_{(\bx_i) \in B_t} \nabla_\bw \loss(\bw_t; x_i)
+    \label{eq:model_gradient_step}
+\end{equation}
+with estimation of the Bayesian hyperparameters
+\begin{equation}
+    \bA, \bSig \quad\text{estimated with}\quad \loss(\bw)\quad\text{by cross-validation}.
+    \label{eq:hyperparameter_estimation}
+\end{equation}
+
+\paragraph{The algorithm} of the continuous optimization of the DAG structure:
+\begin{enumerate}
+    \item There given the observations $\{\bx_i\}=\bigcup_{t}B_t$, and the initial DAG $G$ and the model $\fG$
+    (possible excessive).
+    \item With roughly optimized parameters $\bw$, estimate the initial Bayesian hyperparameters $\bA, \bSig$.
+    \item Make (extreme) SVD of the covariance matrix and construct the space for $\ba$.
+    \item Make a gradient step to optimize the graph structure
+    \[
+        \nabla_\ba = \frac{\partial \loss}{\partial \ba}.
+    \]
+    \item Update or \textbf{sample} (perturbate) the structure $\bGam$.
+    \item Check the CP-DAG structure and update the model (both algebraic structure and statical hypothesises)
+    \[
+        \ba \mapsto G|_\text{CP} \mapsto \fG(\bw).
+    \]
+    \item Make several steps of the optimization of the model parameters $\bw$,
+    \[
+        \nabla_\bw = \frac{\partial \loss}{\partial \bw}.
+    \]
+    \item Estimate the Bayesian hyperparameters $\bA, \bSig$ with the optimized model parameters $\bw$ and the loss $\loss(\bw)$.
+    \item Repeat from the step 4.
+\end{enumerate}
+
+\section{Case for the linear model}
 For a linear mode this algorithm is equivalent to the quadratic optimization problem
+\footnote{Quadratic programming feature selection for multicorrelated signal decoding with partial least squares
+\url{https://doi.org/10.1016/j.eswa.2022.117967}}$^,$
+\footnote{Comprehensive study of feature selection methods to solve multicollinearity problem according to evaluation criteria
+\url{https://doi.org/10.1016/j.eswa.2017.01.048}}
+
+
 \[
     \min_\ba\loss(\bw; \bx, \fG) = \lambda \ba\T \mathbf{Q} \ba + (1-\lambda) \mathbf{x}\T \ba.
 \]
+
+\section{Covariant lasso as a control of the DAG structure}
+Multidimensional lasso instead or together with the normal regularization, covariant elastic net.
+A $d$-dimensional Laplace distribution with mean vector $\bmu$
+and positive-definite scale matrix~$\bA$
+\[
+\loss_\bw = \frac{2}{(2\pi)^{d/2} |\bA|^{1/2}}
+\left( \frac{1}{\sqrt{2}} \sqrt{(\bw - \bmu)^\top \bA^{-1} (\bw - \bmu)} \right)^{\nu}
+K_{\nu}\!\left( \sqrt{2 (\bw - \bmu)^\top \bA^{-1} (\bw - \bmu)} \right),
+\]
+where $\nu = d/2 - 1$ and $K_{\nu}$ is the modified Bessel function of the second kind.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{fig_ridge_lasso}
+    \caption{The ridge and lasso regularization for different values of the covariance matrix~$\bA$.}
+    \label{fig:ridge_lasso}
+\end{figure}
 \end{document}
