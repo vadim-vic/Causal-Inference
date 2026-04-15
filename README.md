@@ -1,6 +1,7 @@
 # Causal inference for time series and text data
 ## List of Contents
 ### Texts 
+- Prize-collecting Steiner tree for symbolic regression [pdf](/slides/text_graph_rewriting.pdf), see [scheme](/slides/intro_model_inference.pdf), [code1](/code_sandbox/opt_pcst.ipynb), [code2](/code_sandbox/opt_symb_repr.ipynb)
 - Likelihood on the CP-DAG in causal discovery [pdf](/slides/text_dag_likelihood.pdf)
 - (Draft of the paper) Causal discovery with parameter analysis [pdf](/slides/text_causal_paper.pdf)
 - Direct and indirect causes in the time series [pdf](/slides/text_causal_graph.pdf)
