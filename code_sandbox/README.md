@@ -29,6 +29,19 @@ Below is a list of notebooks and modules for numerical experiments on causal inf
 12. KNN-based SCM [ipynb](sandbox_scm_knn.ipynb)
 13. KNN-based SCM v2 [ipynb](sandbox_scm_knn_v2.ipynb)
 
+# Prize-collecting Steiner Tree: Algorithms for Reconstructing Superposition Trees Based on PCSTFast
+The experiments presented in the thesis are contained in [opt_pcst.ipynb](opt_pcst.ipynb).
+The file [opt_symb_repr.ipynb](opt_symb_repr.ipynb) also includes functions for generating valid superpositions and code for predicting them.
+See also [opt_feature_generators.py](opt_feature_generators.py) and [opt_time_series.py](opt_time_series.py).
+The PCSTFast algorithm is used to reconstruct superposition matrices, as described in
+1. [A Fast, Adaptive Variant of the Goemans-Williamson Scheme for the Prize-Collecting Steiner Tree Problem](http://people.csail.mit.edu/ludwigs/papers/dimacs14_fastpcst.pdf) by Chinmay Hegde, Piotr Indyk, Ludwig Schmidt // Workshop of the 11th DIMACS Implementation Challenge: Steiner Tree Problems, 2014
+2. [A Nearly-Linear Time Framework for Graph-Structured Sparsity](http://people.csail.mit.edu/ludwigs/papers/icml15_graphsparsity.pdf) Chinmay Hegde, Piotr Indyk, Ludwig Schmidt  ICML, 2015
+The code opt_psct.ipynb is based on the [PCSTFast](https://github.com/fraenkel-lab/pcst_fast)
+The most part of the heuristics in based of solution of thePCST (Prize-Collecting Steiner Tree) are based on the 
+> [A General Approximation Technique For Constrained Forest Problems](https://math.mit.edu/~goemans/PAPERS/GoemansWilliamson-1995-AGeneralApproximationTechniqueForConstrainedForestProblems.pdf)  Michel X. Goemans and David E. Williamson SIAM 1995
+
+
+
 ## See also
 1. For parameter estimation sandbox see [the folder](../code_posterior)
 
