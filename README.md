@@ -1,7 +1,9 @@
 # Causal inference for time series and text data
 ## List of Contents
 ### Texts 
-- Forward and inverse models in causal discovery [pdf](/slides/text_forward_inverse.pdf), see [scheme](/slides/intro_structure_learning_map.pdf)
+
+- Forward and inverse models for the SCM inference [pdf](/slides/text_forward_inverse.pdf)
+- List of models and distributions for the SCM inference [pdf](/slides/text_list_of_models.pdf), see [scheme](/slides/intro_structure_learning_map.pdf)
 - Mixture of models and model comparison [pdf](/slides/text_model_mixture.pdf)
 - Prize-collecting Steiner tree for symbolic regression [pdf](/slides/text_graph_rewriting.pdf), see [scheme](/slides/intro_model_inference.pdf), [code1](/code_sandbox/opt_pcst.ipynb), [code2](/code_sandbox/opt_symb_repr.ipynb)
 - Likelihood of the CP-DAG in causal discovery [pdf](/slides/text_dag_likelihood.pdf)
@@ -35,8 +37,6 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 1. [Optimal spanning tree reconstruction in symbolic regression](https://arxiv.org/abs/2406.18612), 2024
 2. [Tommi Jaakkola — Scaling structured prediction](https://www.youtube.com/watch?v=LbsBguCUFEc),2012
 3. [Deep learning for symbolic mathematics](https://arxiv.org/abs/1912.01412), 2019
-4. 
-
 
 ## General references
 ### Team publications
@@ -90,6 +90,32 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 2. [Py-tetrad](https://github.com/cmu-phil/py-tetrad/tree/main/pytetrad/resources)]
 
 ## Special references 
+
+### Diffusion models for graph generation
+1. Tutorial on Diffusion Models for Imaging and Vision by Stanley Chan [pdf](https://arxiv.org/pdf/2403.18103), 2025 
+2. LayerDAG: A Layerwise Autoregressive Diffusion Model of Directed Acyclic Graphs for System [pdf](https://openreview.net/pdf?id=IsarrieeQA), 
+[presentation](https://iclr.cc/media/PosterPDFs/ICLR%202025/31518.png?t=1744680994.6543481),
+[code](https://github.com/Graph-COM/LayerDAG)
+3. LayerDAG: A Layerwise Autoregressive Diffusion Model of Directed Acyclic Graphs for System [pdf](https://arxiv.org/pdf/2411.02322), ICLR 2025 
+4. DOFLOW: Flow-Based Generative Models for Interventional and Counterfactual Forecasting on Time Series [pdf](https://openreview.net/pdf?id=4IPIhOgVqz), ICLR 2026 
+5. DAG-Aware Variational Autoencoder for Social Propagation Graph Generation [pdf](https://ojs.aaai.org/index.php/AAAI/article/view/28694)
+6. DAG-GAN: Causal Structure Learning with Generative Adversarial Nets [pdf](https://ieeexplore.ieee.org/abstract/document/9414770), 2021 
+7. DAG-GNN: DAG Structure Learning with Graph Neural Networks [pdf](https://proceedings.mlr.press/v97/yu19a.html), 2019 
+8. GRAND: Graph Neural Diffusion [pdf](https://arxiv.org/pdf/2106.10934), 2021
+
+### Interventions
+1. Characterizing and Learning Equivalence Classes of Causal DAGs under Interventions [pdf](https://proceedings.mlr.press/v80/yang18a/yang18a.pdf), 2018
+2. Gradient-based neural DAG learning with interventions [pdf](https://causalrlworkshop.github.io/pdf/CLDM_10.pdf), 2020
+
+### NOTEARS and Continuous optimization for DAGs
+1. DAGs with NO TEARS: Continuous Optimization for Structure Learning [pdf](https://arxiv.org/pdf/1803.01422), 2018 
+2. Optimizing NOTEARS Objectives via Topological Swaps [pdf](https://proceedings.mlr.press/v202/deng23a/deng23a.pdf), 2023
+3. Gradient-based neural DAG learning [pdf](https://arxiv.org/pdf/1906.02226), 2019
+
+### CPDAGs
+1. Statistically Efficient Greedy Equivalence Search [pdf](https://proceedings.mlr.press/v124/chickering20a/chickering20a.pdf), 2020
+2. Improving Bayesian Network Structure Learning in the Presence of Measurement Error [pdf](https://jmlr.org/papers/volume23/20-1319/20-1319.pdf), 2022
+3. DAGMA: Learning DAGs via M-matrices and a Log-Determinant Acyclicity Characterization [pdf](https://arxiv.org/abs/2209.08037), [code](https://github.com/kevinsbello/dagma?tab=readme-ov-files), 2022
 
 ### Generative modeling for causal inference
 1. [Causal EGM: encoding generative modeling](https://causalegm.readthedocs.io/en/latest/tutorial_r.html)
