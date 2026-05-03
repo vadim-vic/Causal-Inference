@@ -2,6 +2,7 @@
 ## List of Contents
 ### Texts 
 
+- Generative models for time series in CI [pdf](/slides/intro_generative_models.pdf) 
 - Forward and inverse models for the SCM inference [pdf](/slides/text_forward_inverse.pdf)
 - List of models and distributions for the SCM inference [pdf](/slides/text_list_of_models.pdf), see [scheme](/slides/intro_structure_learning_map.pdf)
 - Mixture of models and model comparison [pdf](/slides/text_model_mixture.pdf)
