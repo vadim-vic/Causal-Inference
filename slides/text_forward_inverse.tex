@@ -2,9 +2,69 @@
 \usepackage{text_style}
 \title{Forward and inverse problems in model generation}
 \author{IA pour la Science}
-\date{4 May 2026}
+\date{7 May 2026}
 \begin{document}
 \maketitle
+
+Two aspects of the SCM inference were discussed the last week:
+\begin{enumerate}
+\item The inference avoids the  Integer Liner Programming problem by replacing the probabilities of edges
+\[\bGam \in [0,1]^{n\times n} \mapsto \bZ \in \{0,1\}^{n\times n}.\]
+for the adjacency of edges. \emph{NB: it is solved below.}
+\item  The list of variables is not fixed.
+For the set of observable variables $X_1,\dots,X_n$
+the model has to forecast the list of variables $X_1,\dots,X_n, \dots, X_{n^\prime}$.
+By default, the value $n^\prime=0$. \emph{NB: it is under consideration.}
+\end{enumerate}
+
+The foundation model includes the elements of SCM selection:
+\begin{enumerate}[1)]
+\item maximizing likelihood of the DAG at each step,
+\item do-intervention actions each step on the sampled node.
+\end{enumerate}
+
+\subsection*{The foundation model for the SCM inference}
+The main type of the foundation model carries the Riemannian diffusion process.
+
+The diffusion process involves the step~$t$ and two distributions to approximate the distribution of 
+the adjacency matrix~$\bZ$.
+Use the vector form~$\bz = \text{vec}(\bZ)$.
+Denote the training distribution~$q(\bz)$ and the sampling distribution~$p(\bz)$.
+During the model training one has to minimize the distance between two distributions at each step. 
+
+The diffusion process invokes the local structural modeling:
+\[
+\bZ \mapsto f_g \mapsto \eta \mapsto \bw,
+\]
+with $\eta$ is the optimization algorithm that delivers the optimal parameters to the SCM at each step of the diffusion process.
+
+The \emph{fine-tuning} algorithm~$\eta$ optimizes the parameters according to the diagram
+
+% Optimization and inference by an SCM.
+%{\color{red}\footnote*{\color{gray}These notations are equivalent: $x_i, x(i), i\to x$.}}
+\begin{equation*}
+\xymatrix{
+\eta(-\lambda^2\nabla_{\textbf{w}}\loss+\textbf{w}^\prime)\ar[r]^{\qquad \eta} & \hat{\bw}, {\bx} \ar[r]^{f_G} &  \hat{\bx}\ar[r] & \loss(\mathbf{\textbf{w}\mid\bx,\hat{\bx}}) \ar@/_3pc/[lll]\\
+%1 & 2 &  & y\ar[ur] & 5 \\
+(t,s)\ar[r] & i\ar[r] & \bx\ar[ul]\ar[ur] & }
+\end{equation*}
+This diagram reads: the optimization algorithm $\eta$ estimates the SCM parameters~$\bw$ by the gradient of its loss and the previous parameters to solve the problem 
+\begin{equation*}
+\hat{\textbf{w}}= \arg\min \loss(\bw) \quad\text{given}\quad f_G(\hat{\bw},\bx)\mapsto \hat{\bx}.
+\end{equation*}
+The algorithm $\eta$ uses some initial value~$\bw_0$ and a stop-criterion for its iterations.
+
+The 
+
+-
+\end{document}
+
+
+
+
+
+
+
 
 \subsection*{The empirical distribution of the observations}
 $P(X_1,\dots,X_n)$ is the distribution of the observable data.
