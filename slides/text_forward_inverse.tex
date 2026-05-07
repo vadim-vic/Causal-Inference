@@ -1,6 +1,6 @@
 \documentclass[12pt]{article}
 \usepackage{text_style}
-\title{Forward and inverse problems in model generation}
+\title{Forward and inverse processes in model generation}
 \author{IA pour la Science}
 \date{7 May 2026}
 \begin{document}
@@ -24,7 +24,7 @@ The foundation model includes the elements of SCM selection:
 \end{enumerate}
 
 \subsection*{The foundation model for the SCM inference}
-The main type of the foundation model carries the Riemannian diffusion process.
+The main type of the foundation model carries the (Riemannian) diffusion process.
 
 The diffusion process involves the step~$t$ and two distributions to approximate the distribution of 
 the adjacency matrix~$\bZ$.
@@ -44,7 +44,7 @@ The \emph{fine-tuning} algorithm~$\eta$ optimizes the parameters according to th
 %{\color{red}\footnote*{\color{gray}These notations are equivalent: $x_i, x(i), i\to x$.}}
 \begin{equation*}
 \xymatrix{
-\eta(-\lambda^2\nabla_{\textbf{w}}\loss+\textbf{w}^\prime)\ar[r]^{\qquad \eta} & \hat{\bw}, {\bx} \ar[r]^{f_G} &  \hat{\bx}\ar[r] & \loss(\mathbf{\textbf{w}\mid\bx,\hat{\bx}}) \ar@/_3pc/[lll]\\
+\eta(-\lambda^2\nabla_{\textbf{w}}\loss+\textbf{w}^\prime)\ar[r]^{\qquad \eta} & (\hat{\bw}, {\bx}) \ar[r]^{f_G} &  \hat{\bx}\ar[r] & \loss(\mathbf{\textbf{w}\mid\bx,\hat{\bx}}) \ar@/_3pc/[lll]\\
 %1 & 2 &  & y\ar[ur] & 5 \\
 (t,s)\ar[r] & i\ar[r] & \bx\ar[ul]\ar[ur] & }
 \end{equation*}
@@ -54,9 +54,114 @@ This diagram reads: the optimization algorithm $\eta$ estimates the SCM paramete
 \end{equation*}
 The algorithm $\eta$ uses some initial value~$\bw_0$ and a stop-criterion for its iterations.
 
-The 
+\subsection*{A basic diffusion process for the binary adjacent $\bz$}
 
--
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    every node/.style={circle, draw, minimum size=1.2cm},
+    arrow/.style={->, thin},
+    dashedarrow/.style={->, thin, dashed, red}
+]
+
+% Nodes
+\node (xT) {$x_T$};
+\node (dots1) [right=of xT, draw=none] {$\cdots$};
+\node (xt) [right=of dots1] {$x_t$};
+\node (xtm1) [right=of xt] {$x_{t-1}$};
+\node (dots2) [right=of xtm1, draw=none] {$\cdots$};
+\node (x0) [right=of dots2] {$x_0$};
+
+% Forward arrows (top)
+\draw[arrow] (xT) -- (dots1);
+\draw[arrow] (dots1) -- (xt);
+\draw[arrow] (xt) -- node[above] {$p_\theta(x_{t-1} \mid x_t)$} (xtm1);
+\draw[arrow] (xtm1) -- (dots2);
+\draw[arrow] (dots2) -- (x0);
+
+% Reverse / diffusion process (bottom dashed)
+\draw[dashedarrow, bend right=40] (xtm1) to node[below] {$q(x_t \mid x_{t-1})$} (xt);
+\draw[dashedarrow, bend right=60] (xtm1) to node[below] {$q(x_t \mid x_{t-1})$} (xt);
+
+% Unknown reverse
+%\node[draw=none, below=.5cm of xt] (unknown)  {\color{red} $q(x_{t-1} \mid x_t)$ is unknown};
+\end{tikzpicture}
+
+Given the data distribution $\bx_0\sim q(\bx)$ assert:
+\begin{enumerate}[1)]
+\item forward diffusion process $\bx_t = \sqrt{1-\beta_t} \bx_{t-1} + \sqrt{\beta_t} \bz_t$, sampling i.i.d. 
+\[\bz_1,\dots, \bz_T\sim\cN (\boldsymbol{0}, \mathbf{I}),\]
+\item sampling $q(\bx_{t-1}\mid\bx_t)$ and learning the parameters $\bth$ of $f_\text{ai}$: 
+$p_\bth(\bx_{t-1}\mid\bx_t)$,  
+\item reverse diffusion process 
+\[
+p_\bth(\bx_{0:T}) = p(\bx_T) \prod^T_{t=1} p_\bth(\bx_{t-1} \mid \bx_t),
+\]
+\item  slow learning gives
+\[
+p_\bth(\bx_{t-1} \mid \bx_t) = \cN(\bx_{t-1}; \bmu_\bth\bigl(\bx_t, t), \boldsymbol{\Sigma}_\bth(\bx_t, t)\bigr).
+\]
+\end{enumerate}
+
+\subsection*{The do-intervention and SCM sub-modeling}
+
+
+\begin{tikzpicture}[
+    node distance=2.5cm,
+    every node/.style={font=\large},
+    var/.style={circle, draw, minimum size=1.2cm},
+    arrow/.style={->, thick},
+    curved/.style={->, thick, bend left=30},
+]
+
+% Top latent chain
+\node[var] (zt) {$\bz_t$};
+\node[var, right=of zt] (ztm1) {$\bz_{t-1}$};
+
+\node[var, left=of zt] (ztT) {$\dots$};
+\node[var, right=of ztm1] (zt0) {$\dots$};
+\draw[arrow] (ztT) -- (zt);
+\draw[arrow] (ztm1) -- (zt0);
+
+\draw[curved, bend right=40] (zt) to node[below] {$q_\bth(\bz_{t-1}\mid \bz_t)$} (ztm1);
+
+% Curved bidirectional arrows (approximation of sketch)
+\draw[arrow] (zt) to node[above]{$p_\bth(\bz_{t-1}\mid \bz_t)$}(ztm1);
+\draw[curved, bend right=40] (ztm1) to node[above] {$q_\bth(\bz_t\mid \bz_{t-1})$}(zt);
+
+% Middle variables
+\node[var, below=of zt] (wt) {$\bw_t$};
+\node[var, below=of ztm1] (wtm1) {$\bw_{t-1}$};
+
+\draw[arrow] (wt) --  node{\raisebox{-3.5ex}{fine tune}} (wtm1);
+
+% Vertical connections (adjoint operators)
+\draw[arrow] (zt) -- node[left] {$f_g(t)$} (wt);
+\draw[arrow] (ztm1) -- node[right] {$f_g(t-1)$} (wtm1);
+
+% Bottom variables
+\node[var, below=of wt] (xt) {$\bx_t$};
+\node[var, below=of wtm1] (xtm1) {$\bx_{t-1}$};
+
+\draw[arrow] (xt) -- node[above] {$\mathcal{L}$} (xtm1);
+
+% Vertical arrows (forward operators)
+\draw[arrow] (xt) -- node[left] {$\eta$} (wt);
+\draw[arrow, bend right=40] (xt) to node[right] {\raisebox{4.5ex}{$\bA_t^\prime$}} (zt);
+\draw[arrow] (xtm1) -- node[right] {$\eta$} (wtm1);
+\draw[arrow, bend right=40] (xtm1) to node[right] {\raisebox{4.5ex}{$\bA_{t-2}^\prime$}} (ztm1);
+
+
+% Data terms at bottom
+\node[below=1.2cm of xt] (dxt) {$\text{do}(\bx_t)$};
+\node[below=1.2cm of xtm1] (dxtm1) {$\text{do}(\bx_{t-1})$};
+
+\draw[arrow] (dxt) -- (xt);
+\draw[arrow, bend right=40] (wt) to node[left] {\raisebox{4.5ex}{$\bA_t$}} (dxt);
+\draw[arrow] (dxtm1) -- (xtm1);
+\draw[arrow, bend right=40] (wtm1) to node[left] {\raisebox{4.5ex}{$\bA_{t-1}$}} (dxtm1);
+
+\end{tikzpicture}
+
 \end{document}
 
 
