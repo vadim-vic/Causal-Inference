@@ -135,8 +135,8 @@ p_\bth(\bx_{t-1} \mid \bx_t) = \cN(\bx_{t-1}; \bmu_\bth\bigl(\bx_t, t), \boldsym
 \draw[arrow] (wt) --  node{\raisebox{-3.5ex}{fine tune}} (wtm1);
 
 % Vertical connections (adjoint operators)
-\draw[arrow] (zt) -- node[left] {$f_g(t)$} (wt);
-\draw[arrow] (ztm1) -- node[right] {$f_g(t-1)$} (wtm1);
+\draw[arrow] (zt) -- node[left] {$f_G(t)$} (wt);
+\draw[arrow] (ztm1) -- node[right] {$f_G(t-1)$} (wtm1);
 
 % Bottom variables
 \node[var, below=of wt] (xt) {$\bx_t$};
@@ -276,7 +276,7 @@ And the probability of the model on the second level is:
 The parameters of the model $f_G$ has their covariance matrix.
 The prior of the model parameters is
 \[
-    - \ln p(\bw|f_g) = (\bw - \bmu)^{\mathsf{T}} \bA^{-1} (\bw - \bmu).
+    - \ln p(\bw|f_G) = (\bw - \bmu)^{\mathsf{T}} \bA^{-1} (\bw - \bmu).
 \]
 The algorithm of the Bayesian hyperparameters $(\bmu, \bA)$ estimation
 (and their connection between the causality)
