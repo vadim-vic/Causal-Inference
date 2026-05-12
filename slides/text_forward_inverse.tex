@@ -129,8 +129,8 @@ Each step of the diffusion delivers
 
 % Curved bidirectional arrows (approximation of sketch)
 \draw[arrow] (zt) to node[above]{$p_\bth(\bz_{t-1}\mid \bz_t)$}(ztm1);
-\draw[dotted, curved, bend right=40] (ztm1) to node[above] {$q_\bth(\bz_t\mid \bz_{t-1})$}(zt);
-\draw[dotted, curved, bend right=40] (zt) to node[below] {$q_\bth(\bz_{t-1}\mid \bz_t)$} (ztm1);
+\draw[dotted, curved, bend right=40] (ztm1) to node[above] {$q(\bz_t\mid \bz_{t-1})$}(zt);
+\draw[dotted, curved, bend right=40] (zt) to node[below] {$q(\bz_{t-1}\mid \bz_t)$} (ztm1);
 
 % Middle variables
 \node[var, below=2.5cm of zt] (wt) {$\bw_t$};
@@ -177,7 +177,7 @@ Each step of the diffusion delivers
 \item Apply the CI-criterion $\rho(\bA_t)$  to make the intervention $\doc(\bx_t)$.
 \item Make the intervention, sampling $\doc(\bx_t)$ with the intervention parameters $\bA^\prime_t$
 \item Compute the partial residuals $ \bx_{t-1} - \hat{\bx}_{t-1}= \beps_t \mapsto \bx_t$.
-\item Learn the $f_\text{ai}$ parameters by reconstructing $q_\bth(\bz_{t-1} \mid \bz_t)$.
+\item Learn the $f_\text{ai}$ parameters by reconstructing $p_\bth(\bz_{t-1} \mid \bz_t)$.
 \item Go to the step 1 and sample the next adjacency $\bz_{t-1}$.
 \end{enumerate}
 
