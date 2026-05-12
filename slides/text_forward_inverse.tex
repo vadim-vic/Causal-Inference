@@ -105,7 +105,7 @@ p_\bth(\bx_{t-1} \mid \bx_t) = \cN(\bx_{t-1}; \bmu_\bth\bigl(\bx_t, t), \boldsym
 \]
 \end{enumerate}
 
-\subsection*{Coherent generation of submodels with intervention}
+\subsection*{Coherent generation of SCM submodels with do-intervention}
 %\subsection*{The do-intervention and SCM sub-modeling}
 Each step of the diffusion delivers 
 
@@ -126,11 +126,11 @@ Each step of the diffusion delivers
 \draw[arrow] (ztT) -- (zt);
 \draw[arrow] (ztm1) -- (zt0);
 
-\draw[curved, bend right=40] (zt) to node[below] {$q_\bth(\bz_{t-1}\mid \bz_t)$} (ztm1);
 
 % Curved bidirectional arrows (approximation of sketch)
 \draw[arrow] (zt) to node[above]{$p_\bth(\bz_{t-1}\mid \bz_t)$}(ztm1);
-\draw[curved, bend right=40] (ztm1) to node[above] {$q_\bth(\bz_t\mid \bz_{t-1})$}(zt);
+\draw[dotted, curved, bend right=40] (ztm1) to node[above] {$q_\bth(\bz_t\mid \bz_{t-1})$}(zt);
+\draw[dotted, curved, bend right=40] (zt) to node[below] {$q_\bth(\bz_{t-1}\mid \bz_t)$} (ztm1);
 
 % Middle variables
 \node[var, below=2.5cm of zt] (wt) {$\bw_t$};
@@ -150,9 +150,9 @@ Each step of the diffusion delivers
 
 % Vertical arrows (forward operators)
 \draw[arrow] (xt) -- node[left] {$\eta$} (wt);
-\draw[arrow, bend right=40] (xt) to node[left] {\raisebox{-12ex}{$\bA_t^\prime$}} (zt);
+\draw[dotted, arrow, bend right=40] (xt) to node[left] {\raisebox{-12ex}{$\bA_t^\prime$}} (zt);
 \draw[arrow] (xtm1) -- node[right] {$\eta$} (wtm1);
-\draw[arrow, bend right=40] (xtm1) to node[right] {\raisebox{-12ex}{$\bA_{t-1}^\prime$}} (ztm1);
+\draw[dotted, arrow, bend right=40] (xtm1) to node[right] {\raisebox{-12ex}{$\bA_{t-1}^\prime$}} (ztm1);
 
 % Data terms at bottom
 \node[below=1.2cm of xt] (dxt) {$\text{do}(\bx_t)$};
@@ -184,10 +184,10 @@ Each step of the diffusion delivers
 
 
 
-
-
+\vspace{5cm}
+\section*{List of the modules}
 %remove the document; it is OLD!!!!
-\newpage
+%\newpage
 \subsection*{The empirical distribution of the observations}
 $P(X_1,\dots,X_n)$ is the distribution of the observable data.
 Its approximation is given by the Gaussian Process Regression model
