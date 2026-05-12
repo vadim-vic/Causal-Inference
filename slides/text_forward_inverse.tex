@@ -136,7 +136,7 @@ Each step of the diffusion delivers
 \node[var, below=2.5cm of zt] (wt) {$\bw_t$};
 \node[var, below=2.4cm of ztm1] (wtm1) {$\bw_{t-1}$};
 
-\draw[arrow] (wt) --  node{\raisebox{-3.5ex}{fine tune}} (wtm1);
+\draw[arrow] (wt) --  node[above]{{fine tune}} (wtm1);
 
 % Vertical connections (adjoint operators)
 \draw[arrow] (zt) -- node[left] {$f_G(t)$} (wt);
@@ -146,14 +146,13 @@ Each step of the diffusion delivers
 \node[var, below=2.5cm of wt] (xt) {$\bx_t$};
 \node[var, below=2.35cm of wtm1] (xtm1) {$\bx_{t-1}$};
 
-\draw[arrow] (xt) -- node[above] {$\mathcal{L}$} (xtm1);
+\draw[arrow] (xt) -- node[above] {$\mathcal{L}, \beps$} (xtm1);
 
 % Vertical arrows (forward operators)
 \draw[arrow] (xt) -- node[left] {$\eta$} (wt);
-\draw[arrow, bend right=40] (xt) to node[right] {\raisebox{4.5ex}{$\bA_t^\prime$}} (zt);
+\draw[arrow, bend right=40] (xt) to node[left] {\raisebox{-12ex}{$\bA_t^\prime$}} (zt);
 \draw[arrow] (xtm1) -- node[right] {$\eta$} (wtm1);
-\draw[arrow, bend right=40] (xtm1) to node[right] {\raisebox{4.5ex}{$\bA_{t-1}^\prime$}} (ztm1);
-
+\draw[arrow, bend right=40] (xtm1) to node[right] {\raisebox{-12ex}{$\bA_{t-1}^\prime$}} (ztm1);
 
 % Data terms at bottom
 \node[below=1.2cm of xt] (dxt) {$\text{do}(\bx_t)$};
@@ -162,18 +161,22 @@ Each step of the diffusion delivers
 \draw[arrow] (dxt) -- (xt);
 \draw[arrow, bend right=40] (wt) to node[left] {\raisebox{4.5ex}{$\bA_t$}} (dxt);
 \draw[arrow] (dxtm1) -- (xtm1);
-\draw[arrow, bend right=40] (wtm1) to node[left] {\raisebox{4.5ex}{$\bA_{t-1}$}} (dxtm1);
+\draw[arrow, bend right=40] (wtm1) to node[right] {\raisebox{4.5ex}{$\bA_{t-1}$}} (dxtm1);
 
 
 \end{tikzpicture}
 %\end{document}
 \paragraph{The algorithm of SCM inference} includes the U-Net $f_{\text{ai}}(\bth)(\bx,\bz)$ to learn its parameters~$\bth$ and make an inference of the SCM $f_G$ along with its parameters $\bw$. The estimated parameters~$\hat{\bw}$ are inherited at each step~$t$. So that only fine-tuning optimization~$\eta$ goes to minimize $\loss(\bw_{t-1})\mapsto\bw_t$.
 
-%\begin{enumerate}
-%\item
-%\item
-%\item
-%\end{enumerate}
+\begin{enumerate}
+\item 
+\item Fine-tune the SCM parameters $\hat{\bw}_t = \arg\min \loss(\bw \mid \hat{\bw}_{t-1})$ with the initial parameters from the step $t-1$.
+\item Estimate the covairiance $\hat{\bA}^{-1} = \textbf{cov}(\bw)$ using the hessian of $\loss$, the Fisher matrix.
+\item Apply the CI-criterion $\rho(\bA_t)$  to make the intervention $\doc(\bx_t)$.
+\item Make the intervention, sampling $\doc(\bx_t)$ with the intervention parameters $\bA^\prime_t$
+\item Compute the partial residuals $ \bx_{t-1} - \hat{\bx}_{t-1}= \beps_t \mapsto \bx_t$.
+\item Sample the next adjacency $\bz_{t-1}$.
+\end{enumerate}
 
 
 
