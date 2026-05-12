@@ -55,7 +55,7 @@ This diagram reads: the optimization algorithm $\eta$ estimates the SCM paramete
 The algorithm $\eta$ uses some initial value~$\bw_0$ and a stop-criterion for its iterations.
 
 \subsection*{A basic diffusion process for the data}
-The data only, without the binary adjacent $\bz$ for the model $f_G$
+The data~$\bx$ only, without the binary adjacent $\bz$ for the model $f_G$ are sampled and inferred with the generative process below.
 
 \begin{tikzpicture}[
         node distance=1.5cm,
@@ -81,7 +81,7 @@ The data only, without the binary adjacent $\bz$ for the model $f_G$
 % Forward arrows (top)
 \draw[arrow] (xT) -- (dots1);
 \draw[arrow] (dots1) -- (xt);
-\draw[arrow] (xt) to node[below]{$p_\bth(\bz_{t-1}\mid \bz_t)$}(xtm1);
+\draw[arrow] (xt) to node[below]{$p_\bth(\bx_{t-1}\mid \bx_t)$}(xtm1);
 \draw[curved, bend right=60] (xt) to node[below] {$q_\bth(\bx_{t-1} \mid \bx_t)$} (xtm1);
 \draw[curved, bend right=60] (xtm1) to node[above] {$q_\bth(\bx_{t} \mid \bx_{t-1})$} (xt);
 \draw[arrow] (xtm1) -- (dots2);
@@ -91,8 +91,8 @@ The data only, without the binary adjacent $\bz$ for the model $f_G$
 
 Given the data distribution $\bx_0\sim q(\bx)$ assert:
 \begin{enumerate}[1)]
-\item forward diffusion process $\bx_t = \sqrt{1-\beta_t} \bx_{t-1} + \sqrt{\beta_t} \bz_t$, sampling i.i.d. 
-\[\bz_1,\dots, \bz_T\sim\cN (\boldsymbol{0}, \mathbf{I}),\]
+\item forward diffusion process $\bx_t = \sqrt{1-\beta_t} \bx_{t-1} + \sqrt{\beta_t} \bx_t$, sampling i.i.d. 
+\[\bx_1,\dots, \bx_T\sim\cN (\boldsymbol{0}, \mathbf{I}),\]
 \item sampling $q(\bx_{t-1}\mid\bx_t)$ and learning the parameters $\bth$ of $f_\text{ai}$: 
 $p_\bth(\bx_{t-1}\mid\bx_t)$,  
 \item reverse diffusion process 
@@ -166,16 +166,19 @@ Each step of the diffusion delivers
 
 \end{tikzpicture}
 %\end{document}
-\paragraph{The algorithm of SCM inference} includes the U-Net $f_{\text{ai}}(\bth)(\bx,\bz)$ to learn its parameters~$\bth$ and make an inference of the SCM $f_G$ along with its parameters $\bw$. The estimated parameters~$\hat{\bw}$ are inherited at each step~$t$. So that only fine-tuning optimization~$\eta$ goes to minimize $\loss(\bw_{t-1})\mapsto\bw_t$.
+\paragraph{The algorithm of SCM inference} includes the U-Net $f_{\text{ai}}(\bth)(\bx,\bz)$ to learn its parameters~$\bth$ and make an inference of the SCM $f_G$ along with its parameters $\bw$. The estimated parameters~$\hat{\bw}$ are inherited at each step~$t$. So that only fine-tuning optimization~$\eta$ goes to minimize $\loss(\bw_{t-1})\mapsto\bw_t$. %The data collections $\{\bX\}$ (denoted here by one sample $\bx$) couples the stricture $\bz$ with a transformer $(\bX,\bz)$. 
+(The dataset refers to the stricture  $(\bX,\bz)$ with a transformer.) 
 
 \begin{enumerate}
-\item 
-\item Fine-tune the SCM parameters $\hat{\bw}_t = \arg\min \loss(\bw \mid \hat{\bw}_{t-1})$ with the initial parameters from the step $t-1$.
+\item Sample a new SCM adjacency $\bz_t$.
+\item Construct the new model $f_G$ and its initial parameters $\bw_t$ from the step $t-1$.
+\item Fine-tune the SCM parameters $\hat{\bw}_t = \arg\min \loss(\bw_t \mid \hat{\bw}_{t-1})$ with the initial parameters.
 \item Estimate the covairiance $\hat{\bA}^{-1} = \textbf{cov}(\bw)$ using the hessian of $\loss$, the Fisher matrix.
 \item Apply the CI-criterion $\rho(\bA_t)$  to make the intervention $\doc(\bx_t)$.
 \item Make the intervention, sampling $\doc(\bx_t)$ with the intervention parameters $\bA^\prime_t$
 \item Compute the partial residuals $ \bx_{t-1} - \hat{\bx}_{t-1}= \beps_t \mapsto \bx_t$.
-\item Sample the next adjacency $\bz_{t-1}$.
+\item Learn the $f_\text{ai}$ parameters by reconstructing $q_\bth(\bz_{t-1} \mid \bz_t)$.
+\item Go to the step 1 and sample the next adjacency $\bz_{t-1}$.
 \end{enumerate}
 
 
