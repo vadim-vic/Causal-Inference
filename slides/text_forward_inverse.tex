@@ -82,8 +82,8 @@ The data~$\bx$ only, without the binary adjacent $\bz$ for the model $f_G$ are s
 \draw[arrow] (xT) -- (dots1);
 \draw[arrow] (dots1) -- (xt);
 \draw[arrow] (xt) to node[below]{$p_\bth(\bx_{t-1}\mid \bx_t)$}(xtm1);
-\draw[curved, bend right=60] (xt) to node[below] {$q_\bth(\bx_{t-1} \mid \bx_t)$} (xtm1);
-\draw[curved, bend right=60] (xtm1) to node[above] {$q_\bth(\bx_{t} \mid \bx_{t-1})$} (xt);
+\draw[curved, bend right=60] (xt) to node[below] {$q(\bx_{t-1} \mid \bx_t)$} (xtm1);
+\draw[curved, bend right=60] (xtm1) to node[above] {$q(\bx_{t} \mid \bx_{t-1})$} (xt);
 \draw[arrow] (xtm1) -- (dots2);
 \draw[arrow] (dots2) -- (x0);
 
@@ -107,8 +107,9 @@ p_\bth(\bx_{t-1} \mid \bx_t) = \cN(\bx_{t-1}; \bmu_\bth\bigl(\bx_t, t), \boldsym
 
 \subsection*{Coherent generation of SCM submodels with do-intervention}
 %\subsection*{The do-intervention and SCM sub-modeling}
-Each step of the diffusion delivers 
+Each step of the diffusion delivers a set of submodels to reconstruct. The dotted lines of the diagram are sampling; the rest are inference or optimization.
 
+\bigskip
 \begin{tikzpicture}[
     node distance=2.5cm,
     every node/.style={font=\large},
@@ -121,22 +122,25 @@ Each step of the diffusion delivers
 \node[var] (zt) {$\bz_t$};
 \node[var, right=of zt] (ztm1) {$\bz_{t-1}$};
 
-\node[var, left=of zt] (ztT) {$\dots$};
-\node[var, right=of ztm1] (zt0) {$\dots$};
-\draw[arrow] (ztT) -- (zt);
-\draw[arrow] (ztm1) -- (zt0);
-
+\node[left= 1cm of zt] (ztTm1) {$\dots$};
+\node[var, left= 2cm of zt] (ztT) {$\bz_T$};
+\node[right= 1cm of ztm1] (ztm0) {$\dots$};
+\node[var, right= 2cm of ztm1] (zt0) {$\bz_0$};
+\draw[arrow] (ztTm1) -- (zt);
+\draw[arrow] (ztm1) -- (ztm0);
 
 % Curved bidirectional arrows (approximation of sketch)
 \draw[arrow] (zt) to node[above]{$p_\bth(\bz_{t-1}\mid \bz_t)$}(ztm1);
-\draw[dotted, curved, bend right=40] (ztm1) to node[above] {$q(\bz_t\mid \bz_{t-1})$}(zt);
+\draw[dotted, curved, bend right=40] (ztm1) to node[above] 
+	{$q(\bz_t\mid \bz_{t-1})\underbrace{q(\bz_{t-1}\mid \bA_{t-1})}_{\text{MC/M-H prior}}$}(zt);
 \draw[dotted, curved, bend right=40] (zt) to node[below] {$q(\bz_{t-1}\mid \bz_t)$} (ztm1);
 
 % Middle variables
 \node[var, below=2.5cm of zt] (wt) {$\bw_t$};
 \node[var, below=2.4cm of ztm1] (wtm1) {$\bw_{t-1}$};
 
-\draw[arrow] (wt) --  node[above]{{fine tune}} (wtm1);
+\draw[arrow] (wtm1) --  node[above]{{\small fine tune} $\loss$} (wt);
+%\draw[dotted, curved, bend right=40] (wt) to node[below] {$q_\bw(\bw_{t-1}\mid \bw_t)$} (wtm1); FIXIT TODO
 
 % Vertical connections (adjoint operators)
 \draw[arrow] (zt) -- node[left] {$f_G(t)$} (wt);
@@ -146,7 +150,7 @@ Each step of the diffusion delivers
 \node[var, below=2.5cm of wt] (xt) {$\bx_t$};
 \node[var, below=2.35cm of wtm1] (xtm1) {$\bx_{t-1}$};
 
-\draw[arrow] (xt) -- node[above] {$\mathcal{L}, \beps$} (xtm1);
+\draw[arrow] (xtm1) -- node[above] {$\beps$} (xt);
 
 % Vertical arrows (forward operators)
 \draw[arrow] (xt) -- node[left] {$\eta$} (wt);
@@ -162,7 +166,6 @@ Each step of the diffusion delivers
 \draw[arrow, bend right=40] (wt) to node[left] {\raisebox{4.5ex}{$\bA_t$}} (dxt);
 \draw[arrow] (dxtm1) -- (xtm1);
 \draw[arrow, bend right=40] (wtm1) to node[right] {\raisebox{4.5ex}{$\bA_{t-1}$}} (dxtm1);
-
 
 \end{tikzpicture}
 %\end{document}
@@ -180,9 +183,6 @@ Each step of the diffusion delivers
 \item Learn the $f_\text{ai}$ parameters by reconstructing $p_\bth(\bz_{t-1} \mid \bz_t)$.
 \item Go to the step 1 and sample the next adjacency $\bz_{t-1}$.
 \end{enumerate}
-
-
-
 
 \vspace{5cm}
 \section*{List of the modules}
