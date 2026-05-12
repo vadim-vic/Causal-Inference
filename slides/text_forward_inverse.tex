@@ -54,36 +54,39 @@ This diagram reads: the optimization algorithm $\eta$ estimates the SCM paramete
 \end{equation*}
 The algorithm $\eta$ uses some initial value~$\bw_0$ and a stop-criterion for its iterations.
 
-\subsection*{A basic diffusion process for the binary adjacent $\bz$}
+\subsection*{A basic diffusion process for the data}
+The data only, without the binary adjacent $\bz$ for the model $f_G$
 
 \begin{tikzpicture}[
-    node distance=1.5cm,
-    every node/.style={circle, draw, minimum size=1.2cm},
-    arrow/.style={->, thin},
-    dashedarrow/.style={->, thin, dashed, red}
+        node distance=1.5cm,
+    every node/.style=,
+    var/.style={circle, draw, minimum size=1.2cm},
+    arrow/.style={->, thick},
+    curved/.style={->, thick, bend left=30},
 ]
+%    node distance=1.5cm,
+%   every node/.style={circle, draw, minimum size=1.2cm},
+%    arrow/.style={->, thin},
+%    dashedarrow/.style={->, thin, dashed, red}
+
 
 % Nodes
-\node (xT) {$x_T$};
+\node (xT) {$\bx_T$};
 \node (dots1) [right=of xT, draw=none] {$\cdots$};
-\node (xt) [right=of dots1] {$x_t$};
-\node (xtm1) [right=of xt] {$x_{t-1}$};
+\node (xt) [right=of dots1] {$\bx_t$};
+\node (xtm1) [right=2.5cm of xt] {$\bx_{t-1}$};
 \node (dots2) [right=of xtm1, draw=none] {$\cdots$};
-\node (x0) [right=of dots2] {$x_0$};
+\node (x0) [right=of dots2] {$\bx_0$};
 
 % Forward arrows (top)
 \draw[arrow] (xT) -- (dots1);
 \draw[arrow] (dots1) -- (xt);
-\draw[arrow] (xt) -- node[above] {$p_\theta(x_{t-1} \mid x_t)$} (xtm1);
+\draw[arrow] (xt) to node[below]{$p_\bth(\bz_{t-1}\mid \bz_t)$}(xtm1);
+\draw[curved, bend right=60] (xt) to node[below] {$q_\bth(\bx_{t-1} \mid \bx_t)$} (xtm1);
+\draw[curved, bend right=60] (xtm1) to node[above] {$q_\bth(\bx_{t} \mid \bx_{t-1})$} (xt);
 \draw[arrow] (xtm1) -- (dots2);
 \draw[arrow] (dots2) -- (x0);
 
-% Reverse / diffusion process (bottom dashed)
-\draw[dashedarrow, bend right=40] (xtm1) to node[below] {$q(x_t \mid x_{t-1})$} (xt);
-\draw[dashedarrow, bend right=60] (xtm1) to node[below] {$q(x_t \mid x_{t-1})$} (xt);
-
-% Unknown reverse
-%\node[draw=none, below=.5cm of xt] (unknown)  {\color{red} $q(x_{t-1} \mid x_t)$ is unknown};
 \end{tikzpicture}
 
 Given the data distribution $\bx_0\sim q(\bx)$ assert:
@@ -102,8 +105,9 @@ p_\bth(\bx_{t-1} \mid \bx_t) = \cN(\bx_{t-1}; \bmu_\bth\bigl(\bx_t, t), \boldsym
 \]
 \end{enumerate}
 
-\subsection*{The do-intervention and SCM sub-modeling}
-
+\subsection*{Coherent generation of submodels with intervention}
+%\subsection*{The do-intervention and SCM sub-modeling}
+Each step of the diffusion delivers 
 
 \begin{tikzpicture}[
     node distance=2.5cm,
@@ -129,8 +133,8 @@ p_\bth(\bx_{t-1} \mid \bx_t) = \cN(\bx_{t-1}; \bmu_\bth\bigl(\bx_t, t), \boldsym
 \draw[curved, bend right=40] (ztm1) to node[above] {$q_\bth(\bz_t\mid \bz_{t-1})$}(zt);
 
 % Middle variables
-\node[var, below=of zt] (wt) {$\bw_t$};
-\node[var, below=of ztm1] (wtm1) {$\bw_{t-1}$};
+\node[var, below=2.5cm of zt] (wt) {$\bw_t$};
+\node[var, below=2.4cm of ztm1] (wtm1) {$\bw_{t-1}$};
 
 \draw[arrow] (wt) --  node{\raisebox{-3.5ex}{fine tune}} (wtm1);
 
@@ -139,8 +143,8 @@ p_\bth(\bx_{t-1} \mid \bx_t) = \cN(\bx_{t-1}; \bmu_\bth\bigl(\bx_t, t), \boldsym
 \draw[arrow] (ztm1) -- node[right] {$f_G(t-1)$} (wtm1);
 
 % Bottom variables
-\node[var, below=of wt] (xt) {$\bx_t$};
-\node[var, below=of wtm1] (xtm1) {$\bx_{t-1}$};
+\node[var, below=2.5cm of wt] (xt) {$\bx_t$};
+\node[var, below=2.35cm of wtm1] (xtm1) {$\bx_{t-1}$};
 
 \draw[arrow] (xt) -- node[above] {$\mathcal{L}$} (xtm1);
 
@@ -148,7 +152,7 @@ p_\bth(\bx_{t-1} \mid \bx_t) = \cN(\bx_{t-1}; \bmu_\bth\bigl(\bx_t, t), \boldsym
 \draw[arrow] (xt) -- node[left] {$\eta$} (wt);
 \draw[arrow, bend right=40] (xt) to node[right] {\raisebox{4.5ex}{$\bA_t^\prime$}} (zt);
 \draw[arrow] (xtm1) -- node[right] {$\eta$} (wtm1);
-\draw[arrow, bend right=40] (xtm1) to node[right] {\raisebox{4.5ex}{$\bA_{t-2}^\prime$}} (ztm1);
+\draw[arrow, bend right=40] (xtm1) to node[right] {\raisebox{4.5ex}{$\bA_{t-1}^\prime$}} (ztm1);
 
 
 % Data terms at bottom
@@ -160,17 +164,24 @@ p_\bth(\bx_{t-1} \mid \bx_t) = \cN(\bx_{t-1}; \bmu_\bth\bigl(\bx_t, t), \boldsym
 \draw[arrow] (dxtm1) -- (xtm1);
 \draw[arrow, bend right=40] (wtm1) to node[left] {\raisebox{4.5ex}{$\bA_{t-1}$}} (dxtm1);
 
+
 \end{tikzpicture}
+%\end{document}
+\paragraph{The algorithm of SCM inference} includes the U-Net $f_{\text{ai}}(\bth)(\bx,\bz)$ to learn its parameters~$\bth$ and make an inference of the SCM $f_G$ along with its parameters $\bw$. The estimated parameters~$\hat{\bw}$ are inherited at each step~$t$. So that only fine-tuning optimization~$\eta$ goes to minimize $\loss(\bw_{t-1})\mapsto\bw_t$.
 
-\end{document}
+%\begin{enumerate}
+%\item
+%\item
+%\item
+%\end{enumerate}
 
 
 
 
 
 
-
-
+%remove the document; it is OLD!!!!
+\newpage
 \subsection*{The empirical distribution of the observations}
 $P(X_1,\dots,X_n)$ is the distribution of the observable data.
 Its approximation is given by the Gaussian Process Regression model
@@ -217,7 +228,7 @@ a collection of the SCM forecasting.
 This collection $\cB$ shows one case of mathematical modeling that results in an interpretable model~$f_G$.
 This model fits samples $\bx_i$ from some local data~$i\in\cB$.
 
-Call a model that forecasts an SCM $\mathcal{F}$ a \emph{foundational model}
+Call a model that forecasts an SCM $\mathcal{F}$ a \emph{foundation model}
 \[
 f_\text{ai}: \bx_\cB \mapsto f_G \in \mathcal{F}.
 \]
