@@ -1,10 +1,56 @@
 \documentclass[12pt]{article}
 \usepackage{text_style}
-\title{Forward and inverse processes in model generation}
+\title{Examples of linear and non-linear models}
 \author{IA pour la Science}
 \date{7 May 2026}
 \begin{document}
 \maketitle
+
+\section{Linear models excluding State-Space models}
+
+List of SCM-model parameters:
+\begin{enumerate}
+\item[] $\bw$ the linear parameters of the model,
+\item[] $\bv$ the non-linear parameters of the model,
+\item[] the covariance (mutual information) of the variables $X_1,\dots,X_n$,
+\item the covariance of the linear part of the parameters $\bw$,
+\item the covariance of the non-linear part of the parameters $\bv$.
+\end{enumerate}
+
+The transformations
+\begin{enumerate}
+    \item only G to f it admissible (there is no conversion from the model to G)
+\end{enumerate}
+
+Architectures of the linear models:
+\begin{enumerate}
+    \item linear model $\hat{\bx}=\bW\T\bx$: a single matrix (2-index) that maps $X_1,\dots,X_n$ to $\hat{X}_1,\dots,\hat{X}_n$,
+    \item generalized linear model $\bsig\circ\bW\T\bx$: non-parametric link function of the linear model,
+    \item special non-linear model $g_1(\bv_i) \circ g_r(\bv_r)(\bx)$: a model with functions $g_i(\bv_i)(X_j)$,
+    \item general non-linear model $\bW\T g_i(\bv_i)(X_j)$ (obsoleted): a linear combination of the  model with functions,
+    \item generalized non-linear model  $\bsig \circ \bW\T g_i(\bv_i)(X_j)$: a non-linear non-parametric transformation of the linear combination
+\end{enumerate}
+
+Optimization:
+\begin{enumerate}
+\item for linear models is MLS,
+\item for non-linear models is Levenberg-Marquardt,
+\item for the non-linear models is Levenberg-Marquardt,
+\item for the rest it will 
+\end{enumerate}
+
+
+Here the notation $\circ$ means the composition of functions.
+It could be replaced by brackets.
+
+
+
+\end{document}
+
+
+
+
+
 
 Two aspects of the SCM inference were discussed the last week:
 \begin{enumerate}
