@@ -1,14 +1,17 @@
 % Simple Beamer Template
 \documentclass{beamer}
+\usepackage{text_style}
+\usepackage{bm}
+\usefonttheme[onlymath]{serif}
 \beamertemplatenavigationsymbolsempty
 \setbeamertemplate{footline}[page number]
-\usepackage{amsmath}
-\newcommand{\T}{^{\mathsf{T}}}
 %\usepackage{array,tabularx,tabulary,booktabs}
 %\usepackage{longtable}
 %\usepackage{multirow}
 
-\title{Causal Symbolic regression and structure learning}
+\usepackage{pdfpages}
+
+\title{Diffusion Processes for Inference of Structural Causal Models}
 \author{Vadim Strijov}%IA pour la Science}
 \date{May $31^\text{th}$, 2026}
 
@@ -17,6 +20,128 @@
   \titlepage
 \end{frame}
 %=============================================
+%\includepdf[pages=1]{/Users/victor/Downloads/intro_ppt_model.pdf}
+\begin{frame}{Inference of Structural Causal Models}
+
+The goal is to infer an SCM-model with optimal
+\begin{enumerate}[1)]
+\item complexity $\loss_\text{C}$,
+\item accuracy $\loss_\bD$,
+\item robustness $\loss_{\text{ci}}$
+\end{enumerate}
+
+The models:
+\begin{enumerate}[1)]
+\item the model $f_{ai}$ maps a dataset $\bD$ to a model $f_G(\bw,\bx)$,
+\item the model $f_G$ maps a sample $\bx\in\bD$ to its forecast $\hat{\bx}$, provided optimal parameters $\hat{\bw}$.
+\end{enumerate}
+\end{frame}
+%=============================================
+\begin{frame}{The graph rewriting}
+
+A graph $G (V,E)$ with the 
+\begin{enumerate}[1)]
+\item coloring function $c(V)$,
+\item weights $\bw(V)$,
+\item probability of the vertices $p(V)$,
+\item probability of the edges $\bZ \in \{0,1\}^{n\times n}$ or $\bGam \in [0,1]^{n\times n}$.
+\end{enumerate}
+
+\bigskip
+The graph $G$ defined the function $f_G(\bw,\bx)\to\hat{\bx}$. 
+
+\bigskip
+There given a graph rewriting rules $G\mapsto G^\prime$ so that each step delivers an admissible graph (admissible means a graph $G$ defines a function $f_G$).
+
+\bigskip
+To produce a sequence of the graphs introduce a vector $\bz = \textbf{vec}(\bZ)$.
+\end{frame}
+
+%=============================================
+\begin{frame}{The graph probability}
+
+Introduce a Metropolis Hastings graph sampling procedure
+
+\end{frame}
+
+%=============================================
+\begin{frame}{The graph probability}
+
+Introduce a Metropolis Hastings graph sampling procedure
+
+\end{frame}
+
+%=============================================
+\begin{frame}{Van der Pol oscillator\footnote{Wikipedia:  Van der Pol oscillator}}%https://en.wikipedia.org/wiki/Van_der_Pol_oscillator}}
+
+\begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{tmp/Van_der_pols_equation_phase_portrait.svg.png}
+        
+        \vspace{0.05cm}
+        \small Phase portrait of van der Pol's equation  $\frac {d^{2}y}{dt^{2}}+\mu (y^{2}-1){\frac {dy}{dt}}+y=0$.
+    \end{column}
+
+    % Right column
+    \begin{column}{0.48\textwidth}
+        \centering
+        
+        \includegraphics[width=0.8\linewidth]{tmp/Attractors-Orbit-18.png}
+        
+        \vspace{0.05cm}
+        \small Randomly chosen initial conditions are attracted to a stable orbit
+        
+        \vspace{0.3cm}
+        
+        \includegraphics[width=0.5\linewidth]{tmp/Van_der_pol_triode.svg.png}
+        
+        \vspace{0.05cm}
+        \small Electrical circuit resulting in a forced Van der Pol oscillator
+    \end{column}
+
+\end{columns}
+
+\end{frame}
+
+
+
+
+\begin{frame}{The van der Pol oscillator model}
+
+{\small
+The forced Van der Pol oscillator:
+\[{d^2x \over dt^2}-\mu(1-x^2){dx \over dt}+x-A \sin(\omega t)= 0,\]
+has two linear and one non-linear parameters: $\mu, A, \omega$,
+where $A$ is the amplitude, of the wave function and $\omega$ is its angular velocity.
+
+The causal graph has four vetrices, the variables: 
+\[
+X_1,X_2,X_3 =\ddot{x}, \dot{x}, x
+\]
+and the time $t$.
+
+An alternative form is a time-independent Hamiltonian by augmenting it to a four-dimensional, $X_1,\dots,X_4$ autonomous dynamical system using an auxiliary second-order nonlinear differential equation:
+\[
+\ddot{x}-\mu(1-x^2)\dot{x}+x=0, \qquad
+\ddot{y}+\mu(1-x^2)\dot{y}+y=0.
+\]
+
+The Hamiltonian 
+\[
+H(x,y,p_x,p_y)=p_xp_y+xy-\mu(1-x^2)yp_y,\]
+where
+\[
+p_x=\dot{y} + \mu(1-x^2)y \quad\text{and}\quad p_y=\dot{x} \]
+are the conjugate momenta corresponding to ''x'' and ''y''.
+}
+\end{frame}
+%=============================================
+\end{document}
+
+%=============================================
+
+
 \begin{frame}{Models}
 
 \end{frame}
