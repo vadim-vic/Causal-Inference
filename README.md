@@ -202,6 +202,9 @@ for causal inference [pdf](slides/intro_Distr.pdf)
 3. [Implicit Reasoning in Deep Time Series Forecasting](https://arxiv.org/abs/2409.10840)
 4. [Towards Accurate Time Series Forecasting via Implicit Decoding](https://neurips.cc/virtual/2025/loc/san-diego/poster/116698)
 
+### Graph rewriting
+1. [Torch.FX: symbolic tracer, an intermediate representation, and Python code generation](https://docs.pytorch.org/docs/main/fx.html)
+2. [Simple PySR example](https://github.com/MilesCranmer/PySR/blob/master/examples/pysr_demo.ipynb)
 
 
 
