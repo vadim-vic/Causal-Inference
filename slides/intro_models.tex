@@ -2,6 +2,7 @@
 \documentclass{beamer}
 \usepackage{text_style}
 \usepackage{bm}
+\usetikzlibrary{positioning}
 \usefonttheme[onlymath]{serif}
 \beamertemplatenavigationsymbolsempty
 \setbeamertemplate{footline}[page number]
@@ -12,10 +13,10 @@
 \usepackage{pdfpages}
 
 \title{Diffusion Processes for Inference of Structural Causal Models}
-\author{Vadim Strijov}%IA pour la Science}
+\author{IA pour la Science}%{Vadim Strijov}%
 \date{May $31^\text{th}$, 2026}
 
-\begin{document}
+\begin{document};
 \begin{frame}
   \titlepage
 \end{frame}
@@ -23,21 +24,22 @@
 %\includepdf[pages=1]{/Users/victor/Downloads/intro_ppt_model.pdf}
 \begin{frame}{Inference of Structural Causal Models}
 
-The goal is to infer an SCM-model with optimal
+The goal is to infer an SCM-model $f_G$ with optimal
 \begin{enumerate}[1)]
 \item complexity $\loss_\text{C}$,
 \item accuracy $\loss_\bD$,
-\item robustness $\loss_{\text{ci}}$
+\item robustness $\loss_{\text{ci}}$.
 \end{enumerate}
 
+\bigskip
 The models:
 \begin{enumerate}[1)]
-\item the model $f_{ai}$ maps a dataset $\bD$ to a model $f_G(\bw,\bx)$,
+\item the model $\fai$ maps a dataset $\bD$ to a model $f_G(\bw,\bx)$,
 \item the model $f_G$ maps a sample $\bx\in\bD$ to its forecast $\hat{\bx}$, provided optimal parameters $\hat{\bw}$.
 \end{enumerate}
 \end{frame}
 %=============================================
-\begin{frame}{The graph rewriting}
+\begin{frame}{The graph generation and rewriting}
 
 A graph $G (V,E)$ with the 
 \begin{enumerate}[1)]
@@ -56,21 +58,194 @@ There given a graph rewriting rules $G\mapsto G^\prime$ so that each step delive
 \bigskip
 To produce a sequence of the graphs introduce a vector $\bz = \textbf{vec}(\bZ)$.
 \end{frame}
-
 %=============================================
-\begin{frame}{The graph probability}
+\begin{frame}{The van der Pol oscillator mathematical model}
 
-Introduce a Metropolis Hastings graph sampling procedure
+The forced Van der Pol oscillator:
+\[{d^2x \over dt^2}-\mu(1-x^2){dx \over dt}+x-A \sin(\omega t)= 0,\]
+has two linear and one non-linear parameters: $\mu, A, \omega$,
+where $A$ is the amplitude, of the wave function and $\omega$ is its angular velocity.
+
+The causal graph has four vetrices, the variables: 
+\[
+X_1,X_2,X_3 \mapsto \ddot{x}, \dot{x}, x
+\]
+and the time $t$.
+
+\begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+        \centering
+        \includegraphics[width=0.8\linewidth]{tmp/Van_der_pol_triode.svg.png} 
+        
+        \small Electrical circuit resulting in a forced Van der Pol oscillator
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \centering
+        \includegraphics[width=0.6\linewidth]{tmp/Attractors-Orbit-18.png}
+        
+        \small Randomly chosen initial conditions are attracted to a stable orbit
+    \end{column}
+\end{columns}
 
 \end{frame}
-
 %=============================================
-\begin{frame}{The graph probability}
+\begin{frame}{Three spaces to oserve the Van der Pol oscillator}%\footnote{Wiki}}%https://en.wikipedia.org/wiki/Van_der_Pol_oscillator}}
 
-Introduce a Metropolis Hastings graph sampling procedure
+\includegraphics[width=0.9\linewidth]{tmp/Vanderpol_time_mu=8.53_A=1.2_T=10.png}
+ 
+{\small Chaotic behaviour in the Van der Pol oscillator with sinusoidal forcing.}% The nonlinear damping parameter is equal to
+% $\mu = 8.53$, while the forcing has amplitude $A = 1.2$ and angular frequency $\omega = 2\pi/10$.}
+
+\begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+        \centering
+        \includegraphics[width=0.7\linewidth]{tmp/Van_der_pols_equation_phase_portrait.svg.png}
+       
+        \small Phase portrait of van der Pol's equation%  $\frac {d^{2}y}{dt^{2}}+\mu (y^{2}-1){\frac {dy}{dt}}+y=0$.
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \centering
+        \includegraphics[width=0.7\linewidth]{tmp/oscillator_power_spectra.png}
+
+		\small Oscillator power spectra with two parameters                
+    \end{column}
+\end{columns}
+\end{frame}
+%=============================================
+\begin{frame}{Alternative form of the van der Pol oscillator model}
+
+An alternative form is a time-independent Hamiltonian by augmenting it to a four-dimensional, $X_1,\dots,X_4$ autonomous dynamical system using an auxiliary second-order nonlinear differential equation:
+\[
+\ddot{x}-\mu(1-x^2)\dot{x}+x=0, \qquad
+\ddot{y}+\mu(1-x^2)\dot{y}+y=0.
+\]
+
+The Hamiltonian 
+\[
+H(x,y,p_x,p_y)=p_xp_y+xy-\mu(1-x^2)yp_y,\]
+where
+\[
+p_x=\dot{y} + \mu(1-x^2)y \quad\text{and}\quad p_y=\dot{x} \]
+are the conjugate momenta corresponding to ''x'' and ''y''.
+{\small}
+\end{frame}
+%=============================================
+\begin{frame}{The causality graph of Van der Pol oscillator model}
+\begin{tikzpicture}[
+    every node/.style={font=\large},
+    dot/.style={circle,fill=red,inner sep=2pt},
+    redlab/.style={red}
+]
+
+% Root branch
+\node[dot] (x1) at (0,3) {};
+\node[redlab,right=0.0cm of x1]{$X_1$};
+\node[dot] (c) at (0,1.5) {};
+\draw[red,thick] (x1) -- (c);
+
+% Central label
+\node[redlab,right=0.1cm of c] {$V_1$};
+%\node[redlab,below=0.3cm of c] {$X_3$};
+\node[label,left=0.1cm of c] {$+$};
+
+% Left roof branch
+\node[dot] (l1) at (-2,0.5) {};
+\draw[red,thick] (c) -- (l1);
+\node[redlab, right=0.2cm  of l1] {$V_2$};
+
+% Right roof branch
+\node[dot] (r1) at (2,0.5) {};
+\draw[red,thick] (c) -- (r1);
+\node[redlab,right=0.1cm of r1] {$V_5$};
+\node[left=0.1cm of r1] {$\sin$};
+
+% Left vertical branch
+\node[dot] (l2) at (-3.5,-0.8) {};
+\node[dot] (l3) at (-3.5,-2.1) {};
+\draw[red,thick] (l1) -- (l2) -- (l3);
+
+\node[left=0.1cm of l2] {$+$};
+\node[left=0.1cm of l3] {$\cdot^2$};
+
+\node[redlab,right=0.1cm of l2] {$V_3$};
+\node[redlab,right=0.1cm of l3] {$V_4$};
+
+\node[dot] (x3l) at (-3.5,-3.4) {};
+\draw[red,thick] (l3) -- (x3l);
+\node[redlab,right=0.0cm of x3l]{$X_3$};
+
+% Middle-left vertical branch
+\node[dot] (m1) at (-1.0,-0.8) {};
+\node[dot] (m2) at (-1.0,-2.0) {};
+\draw[red,thick] (l1) -- (m1) -- (m2);
+
+\node[redlab,right=0.0cm of m1] {$X_2$};
+\node[below=0.05cm of m2] {$t$};
+
+% Center vertical branch
+\node[dot] (m3) at (0,-0.5) {};
+\draw[red,thick] (c) -- (m3);
+\node[redlab,right=0.0cm of m3] {$X_3$};
+
+% Right vertical branch
+\node[dot] (r2) at (2,-0.8) {};
+\node[dot] (r3) at (2,-2.0) {};
+\draw[red,thick] (r1) -- (r2) -- (r3);
+
+\node[redlab,right=0.1cm of r2] {$V_6$};
+\node[left=0.1cm of r2] {$\times$};
+\node[below=0.05cm of r3] {$t$};
+
+% Stars near branch points
+\node[left=0.15cm of l1] {$\times$};
+\end{tikzpicture}
 
 \end{frame}
+%=============================================
+\begin{frame}{The adjacent matrix $Z$}
+\[
+\begin{array}{c|c|c|c||c|c|c|c|c|c||c}
+     & X_1 & X_2 & X_3 & V_1 & V_2 & V_3 & V_4 & V_5 & V_6 & t \\
+\hline \hline
+X_1 &   &   &   & 1 &   &   &   &   &   & 1 \\
+\hline
+X_2 &   &   &   &   &   &   &   &   &   & 1 \\
+\hline
+X_3 &   &   &   &   &   &   &   &   &   &   \\
+\hline  \hline
+V_1 &   &   & 1 &   & 1 &   &  & 1  &   &   \\
+\hline
+V_2 &   & 1 &   &   &   & 1 &   &   &   &   \\
+\hline
+V_3 &   &   &   &   &   &   & 1 &   &   &   \\
+\hline
+V_4 &   &   & 1 &   &   &   &   &   &   &   \\
+\hline
+V_5 &   &   &   &   &   &   &   &   & 1 &   \\
+\hline
+V_6 &   &   &   &   &   &   &   &   &   & 1 \\
+\end{array}
+\]
 
+The nodes: $X_1(t), X_2(t), X_3$ are the observable variables.%, $t$ is a time observable independent variable.
+The latent variables $V_1,\dots,V_6 \in \{\sin(\cdot), (\cdot)^2, +(w_1,\dots,w_{k+1}), \times(\dots, w_0) \}$
+
+The function <<$+$>> has $k+1$ linear parameters and $k$ arguments. 
+The function <<$\times$>> has one parameters and $k^\prime$ arguments. 
+
+% OBSOLETED To variate the number of observable and latent variables $(X,V)$, the dictionary of basic functions $\{\cdot, \text{id}\}$ includes the identity function (scalar with a scalar argument).
+
+% NOTE $A \sin(\omega t + \varphi)$ is a variant of the model.
+\end{frame}
+%=============================================
+\begin{frame}[c]{Graph rewriting ensures the admissibility of the model $f_G$
+\footnote{This topic will be investigated separately. See Hartmut Ehrig et al. Fundamentals of Algebraic Graph Transformation, Springer, 2006. }}
+ 
+\centering
+\includegraphics[width=0.8\linewidth]{tmp/fig_graph_rewriting_2.png}\\
+A graph of the form $+(\times (+(\dots)))$ could be simplified, too. 
+\includegraphics[width=0.8\linewidth]{tmp/fig_graph_rewriting_1.png}
+\end{frame}
 %=============================================
 \begin{frame}{Van der Pol oscillator\footnote{Wikipedia:  Van der Pol oscillator}}%https://en.wikipedia.org/wiki/Van_der_Pol_oscillator}}
 
@@ -152,29 +327,36 @@ are the conjugate momenta corresponding to ''x'' and ''y''.
 \item  Goals
 \item Requirements to model
 \item How to construct a model
-\item Algebraical and Statistical assumptions
-\item Do-intervention and testing (testability)
+\item Algebraic and Statistical assumptions
+\item Do-intervention and testing (test-ability)
 \item Local and global modeling expand 
 \item Graph diffusion and reconstruction
 \item Neural ODE is possible
 \item Fine-tuning 
 \item And testing
-\item The general probabilistic model and loss funcion
+\item The general probabilistic model and loss function
 \item Non-parametric modeling and Optimal sampling
 \item Time and space segmentation
 \end{enumerate}
 
 \end{frame}
 
-\end{document}
+
+%=============================================
+\begin{frame}{The graph probability}
+
+Introduce a Metropolis Hastings graph sampling procedure
+
+\end{frame}
+%\end{document}
 
 %=============================================
 
 
 \begin{frame}{Models}
 
-\end{frame}
-\end{document}
+%\end{frame}
+%\end{document}
 The goal is to learn to search a model of optimal structure.
 
 \medskip
