@@ -1,0 +1,77 @@
+\begin{tikzpicture}[
+    node distance=2.5cm,
+    every node/.style={font=\large},
+    var/.style={circle, draw, minimum size=1.2cm},
+    arrow/.style={->, thick},
+    curved/.style={->, thick, bend left=30},
+]
+
+% Top latent chain
+\node[var] (zt) {$\bz_t$};
+\node[var, right=of zt] (ztm1) {$\bz_{t-1}$};
+
+\node[left= 1cm of zt] (ztTm1) {$\dots$};
+\node[var, left= 2cm of zt] (ztT) {$\bz_T$};
+\node[right= 1cm of ztm1] (ztm0) {$\dots$};
+\node[var, right= 2cm of ztm1] (zt0) {$\bz_0$};
+\draw[arrow] (ztTm1) -- (zt);
+\draw[arrow] (ztm1) -- (ztm0);
+
+% Curved bidirectional arrows (approximation of sketch)
+\draw[arrow] (zt) to node[above]{$p_\bth(\bz_{t-1}\mid \bz_t)$}(ztm1);
+\draw[dotted, curved, bend right=40] (ztm1) to node[above] 
+	{$q(\bz_t\mid \bz_{t-1})\underbrace{q(\bz_{t-1}\mid \bA_{t-1})}_{\text{MC/M-H prior}}$}(zt);
+\draw[dotted, curved, bend right=40] (zt) to node[below] {$q(\bz_{t-1}\mid \bz_t)$} (ztm1);
+
+% Middle variables
+\node[var, below=2.5cm of zt] (wt) {$\bw_t$};
+\node[var, below=2.4cm of ztm1] (wtm1) {$\bw_{t-1}$};
+  
+\draw[arrow] (wtm1) --  node[above]{{\small fine tune} $\loss$} (wt);
+% Reconstruct the model parameters
+\draw[dotted, curved, bend left=40] (wt) to node[above] {$q_\bw(\bw_{t-1}\mid \bw_t)$} (wtm1); 
+
+% Vertical connections (adjoint operators)
+\draw[arrow] (zt) -- node[left] {$f_G(t)$} (wt);
+\draw[arrow] (ztm1) -- node[right] {$f_G(t-1)$} (wtm1);
+
+% Bottom variables
+\node[var, below=2.5cm of wt] (xt) {$\bx_t$};
+\node[var, below=2.35cm of wtm1] (xtm1) {$\bx_{t-1}$};
+
+\draw[arrow] (xtm1) -- node[above] {$\beps$} (xt);
+
+% Vertical arrows (forward operators)
+\draw[arrow] (xt) -- node[left] {$\eta$} (wt);
+\draw[dotted, arrow, bend right=40] (xt) to node[left] {\raisebox{-12ex}{$\bA_t^\prime$}} (zt);
+\draw[arrow] (xtm1) -- node[right] {$\eta$} (wtm1);
+\draw[dotted, arrow, bend right=40] (xtm1) to node[right] {\raisebox{-12ex}{$\bA_{t-1}^\prime$}} (ztm1);
+
+% Data terms at bottom
+\node[below=1.2cm of xt] (dxt) {$\text{do}(\bx_t)$};
+\node[below=1.2cm of xtm1] (dxtm1) {$\text{do}(\bx_{t-1})$};
+
+\draw[arrow] (dxt) -- (xt);
+\draw[arrow, bend right=40] (wt) to node[left] {\raisebox{4.5ex}{$\bA_t$}} (dxt);
+\draw[arrow] (dxtm1) -- (xtm1);
+\draw[arrow, bend right=40] (wtm1) to node[right] {\raisebox{4.5ex}{$\bA_{t-1}$}} (dxtm1);
+
+%%%%%%%%%%% Part extra: add T and t=0 to the left and right of the scheme
+% The second row, w
+\node[left= 1cm of wt] (wtTm1) {$\dots$};
+\node[var, left= 2cm of wt] (wtT) {$\bw_T$};
+\draw[arrow] (wt) -- (wtTm1);
+% right part
+\node[right= 1cm of wtm1] (wtm0) {$\dots$};
+\node[var, right= 2cm of wtm1] (wt0) {$\bw_0$};
+\draw[arrow] (wtm0) --  (wtm1);
+% The third row, x
+\node[left= 1cm of xt] (xtTm1) {$\dots$};
+\node[var, left= 2cm of xt] (xtT) {$\bx_T$};
+\draw[arrow] (xt) -- (xtTm1);
+% right part
+\node[right= 1cm of xtm1] (xtm0) {$\dots$};
+\node[var, right= 2cm of xtm1] (xt0) {$\bx_0$};
+\draw[arrow] (xtm0) -- (xtm1);
+
+\end{tikzpicture}
