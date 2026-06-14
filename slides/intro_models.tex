@@ -10,11 +10,14 @@
 %\usepackage{longtable}
 %\usepackage{multirow}
 
+\newcommand{\fr}{{\mathfrak{r}}}
+\newcommand{\fc}{{\mathfrak{c}}}
+
 \usepackage{pdfpages}
 
 \title{Diffusion Processes for Inference of Structural Causal Models}
 \author{IA pour la Science}%{Vadim Strijov}%
-\date{May $16^\text{th}$, 2026}
+\date{June $16^\text{th}$, 2026}
 
 \begin{document}
 \begin{frame}
@@ -22,6 +25,7 @@
 \end{frame}
 %=============================================
 %\includepdf[pages=1]{/Users/victor/Downloads/intro_ppt_model.pdf}
+%https://arxiv.org/pdf/2405.16626
 \begin{frame}{Inference of Structural Causal Models}
 
 The goal is to infer an SCM-model $f_G$ with optimal
@@ -34,7 +38,7 @@ The goal is to infer an SCM-model $f_G$ with optimal
 \bigskip
 The models:
 \begin{enumerate}[1)]
-\item the model $\fai$ maps a dataset $\bD$ to a model $f_G(\bw,\bx)$,
+\item the model $\fai$ maps a data set $\bD$ to a model $f_G(\bw,\bx)$,
 \item the model $f_G$ maps a sample $\bx\in\bD$ to its forecast $\hat{\bx}$, provided optimal parameters $\hat{\bw}$.
 \end{enumerate}
 \end{frame}
@@ -46,7 +50,7 @@ The forced Van der Pol oscillator:
 has two linear and one non-linear parameters: $\mu, A, \omega$,
 where $A$ is the amplitude, of the wave function and $\omega$ is its angular velocity.
 
-The causal graph has four verties, the variables: 
+The causal graph has four vertices, the variables: 
 \[
 X_1,X_2,X_3 \mapsto \ddot{x}, \dot{x}, x
 \]
@@ -82,7 +86,7 @@ and the time $t$.
         \centering
         \includegraphics[width=0.85\linewidth]{tmp/Van_der_pols_equation_phase_portrait.svg.png}
        
-        \small Phase portrait of van der Pol's equation%  $\frac {d^{2}x}{dt^{2}}+\mu (x^{2}-1){\frac {dx}{dt}}+x=0$.
+        \small Phase portrait of the Van der Pol's equation%  $\frac {d^{2}x}{dt^{2}}+\mu (x^{2}-1){\frac {dx}{dt}}+x=0$.
     \end{column}
     \begin{column}{0.5\textwidth}
         \centering
@@ -93,7 +97,7 @@ and the time $t$.
 \end{columns}
 \end{frame}
 %=============================================
-\begin{frame}{Alternative form of the van der Pol oscillator model}
+\begin{frame}{Alternative form of the Van der Pol oscillator model}
 
 An alternative form is a time-independent Hamiltonian by augmenting it to a four-dimensional, $X_1,\dots,X_4$ autonomous dynamical system using an auxiliary second-order nonlinear differential equation:
 \[
@@ -111,7 +115,7 @@ are the conjugate momenta corresponding to <<$x$>> and <<$y$>>.
 {\small}
 \end{frame}
 %=============================================
-\begin{frame}[c]{The causality graph of Van der Pol oscillator model}
+\begin{frame}[c]{The causality graph of the Van der Pol oscillator model}
 \centering
 \begin{tikzpicture}[
     every node/.style={font=\large},
@@ -175,15 +179,15 @@ are the conjugate momenta corresponding to <<$x$>> and <<$y$>>.
 \draw[red,thick] (r1) -- (r2) -- (r3);
 
 \node[redlab,right=0.1cm of r2] {$V_6$};
-\node[left=0.1cm of r2] {$\times$};
+\node[left=0.1cm of r2] {$*$};
 \node[below=0.05cm of r3] {$t$};
 
 % Stars near branch points
-\node[left=0.15cm of l1] {$\times$};
+\node[left=0.15cm of l1] {$*$};
 \end{tikzpicture}
 \[{d^2x \over dt^2}-\mu(1-x^2){dx \over dt}+x-A \sin(\omega t)= 0,\]
 \[
-X_1(t) = \mu(1-X_3^2) \times X_2(t) - X_3+A \sin(\omega t).
+X_1(t) = \mu(1-X_3^2) * X_2(t) - X_3+A \sin(\omega * t).
 \]
 \end{frame}
 %=============================================
@@ -226,7 +230,7 @@ V_6 &   &   &   &   &   &   &   &   &   & 1 \\
 The nodes: $X_1(t), X_2(t), X_3$ are the observable variables.%, $t$ is a time observable independent variable.
 
 \bigskip
-The latent variables $V_1,\dots,V_6$ are in the set  
+The latent variables $V_1,\dots,V_6$ are in the set  (the dictionary)
 \[
  \{\sin(\cdot), (\cdot)^2, +(w_1,\dots,w_{k+1}), \times(\dots, w_0) \}.
 \]
@@ -249,15 +253,76 @@ X_1(t) = w_1(w_4-w_5 X_3^2) \times X_2(t) - w_2 X_3 + w_3 \sin(w_6 t).
 % OBSOLETED To variate the number of observable and latent variables $(X,V)$, the dictionary of basic functions $\{\cdot, \text{id}\}$ includes the identity function (scalar with a scalar argument).
 
 % NOTE $A \sin(\omega t + \varphi)$ is a variant of the model.
-
-
 \end{frame}
+
+%=============================================
+\begin{frame}[c]{Magnetohydrodynamics compressible turbulence%
+\footnote{\href{https://polymathic-ai.org/the_well/datasets/MHD_256/}{The Well, MHD dataset, 2025}}}
+%This is an MHD fluid flows in the compressible limit %(subsonic, supersonic, sub-Alfvenic, super-Alfvenic).
+%\centering
+    MHD fluid flows in the compressible limit    
+\begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+
+	\begin{align*}
+	\frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \mathbf{v}) &= 0, \\
+	\frac{\partial (\rho \mathbf{v})}{\partial t}
+	+ \nabla \cdot \left( \rho \mathbf{v}\mathbf{v} - \mathbf{B}\mathbf{B} \right)
+	+ \nabla p &= 0, \\
+	\frac{\partial \mathbf{B}}{\partial t}
+	- \nabla \times (\mathbf{v} \times \mathbf{B}) &= 0,
+	\end{align*}
+	
+     \end{column}
+
+    \begin{column}{0.5\textwidth}
+        \centering
+		\includegraphics[width=0.9\linewidth]{tmp/density_normalized-6}
+       
+        %\small 
+    \end{column}
+\end{columns}
+
+\bigskip
+ where $\rho$ is the density, $\bv$ is the velocity, $\mathbf{B}$ is the magnetic field %
+(note that the $\nabla \cdot \left( \rho \mathbf{v}\mathbf{v} - \mathbf{B}\mathbf{B} \right)\in\mathbb{R}^3$)%
+ , %$\mathbf{I}$ the identity matrix 
+ and $p$ is the gas pressure.
+ 
+%The data are: density (scalar field), velocity (vector field), magnetic field (vector field).
+\end{frame}
+%=============================================
+\begin{frame}{The MHD data and CI variables }%https://polymathic-ai.org/the_well/datasets/MHD_256/
+\begin{block}{Six variables $X = X(t,s)$ with $\text{cod}$ in $\mathbb{R}^1$ or $\mathbb{R}^3$}
+\[
+X_1, X_2, X_3= \rho, \bv, \mathbf{B},
+\qquad
+X_4, X_5, X_6 = \partial\rho, \partial(\rho\bv), \partial\mathbf{B}.
+\]
+\end{block}
+\begin{block}{Dictionary}
+comprises the  functions $+, *, \times$ and the operators 
+\[
+\nabla \cdot \mathbf{F}: \mathbb{R}^3 \to \mathbb{R}^1 \quad\text{and}\quad \nabla \times \mathbf{F}: \mathbb{R}^1 \to \mathbb{R}^3.
+\]
+\end{block}
+\begin{block}{Data 4.58TB}
+Time $t \in [1,\dots,100]$, space $s \in [1,\dots,256]^3$.  
+
+\medskip
+Density $\rho(t,s)\in\mathbb{R}^1_+$, velocity $\bv(t,s)\in\mathbb{R}^3$, magnetic field $\mathbf{B}(t,s)\in\mathbb{R}^3$ are scalar and vector fields.
+
+\medskip
+Simulations: 10 Initial conditions $\times$ 10 combination of parameters make 100 trajectories.
+\end{block}
+\end{frame}
+
 %=============================================
 \begin{frame}{The graph generation and rewriting}
 
 A graph $G (V,E)$ with the 
 \begin{enumerate}[1)]
-\item coloring function $c(V)$,
+\item coloring function $c(V)$, where $c$ is in the dictionary,
 \item weights $\bw(V)$,
 \item probability of the vertices $p(V)$,
 \item probability of the edges $\bZ \in \{0,1\}^{n\times n}$ or $\bGam \in [0,1]^{n\times n}$.
@@ -281,13 +346,197 @@ To produce a sequence of the graphs introduce a vector $\bz = \textbf{vec}(\bZ)$
 A graph of the form $+(\times (+(\dots)))$ could be simplified, too. 
 \includegraphics[width=0.8\linewidth]{tmp/fig_graph_rewriting_1.png}
 \end{frame}
+%=============================================
+\begin{frame}{Coherent the SCM inference (problem statement)}
+
+\begin{block}{The given data and the problem}
+\begin{enumerate}
+\item There given a collection $\{\bD\} \rightarrowtail \{\fG\}$ with set injection. 
+\item For any given data set $\bD$ the model $\fai: \bD \mapsto f_G$  such that
+\item The model $f_G(\bw): \bx \mapsto \hat{\bx}$ with optimal criteria $(\loss_\text{C},\loss_\bD,\loss_{\text{ci}})$.
+\item A context or prior information $p(f_G)$ is provided along with the data $\bD$ as a vector.
+\end{enumerate}
+\end{block}
+
+\end{frame}
+%=============================================
+\begin{frame}{Coherent the SCM inference (addendum)}
+
+\begin{block}{Consigns}
+\begin{enumerate}
+\item Denote the given $\fG$ as $f_0$. 
+\item Convert its given graph $G(V,E)(\fc,\fr)$ to the vector $\bz_0$.
+\item {The rules $\fr$ rewrite the graph $G$; the colors $\fc$ apply restrictions to the adjacency matrix,~$\bz=\textbf{vec}({\bZ})$, the number of 1s in its row must coincide to the corresponding dictionary function.}
+\item The DAG $G$ splits the variables $X_1,\dots,X_n$ to the source and target variables. We denote the corresponding data samples by $\bx\mapsto \hat{\bx}$ without collision. 
+\item We treat all types of variables, $X, X(t), X(t,s)$ as random processes, each variable has its own dimensionality. For example, the MHD treat most of variables as a process $X(s,t)$ a vector function $\mathbb{R}^4\to\mathbb{R}^3$.
+\end{enumerate}
+\end{block}
+\end{frame}
+%=============================================
+\begin{frame}{Coherent the SCM inference (algorithm)}
+
+\begin{block}{The algorithm with steps $t = [T,\dots,0]$}
+\begin{enumerate}
+\item Sample some new structure $\bz_t$ from the distribution  $q(\bz_t\mid\bz_{t-1})q(\bz_{t-1}\mid\bA_{t-1})q(\fG)$.
+\item Convert the structure and its parameters $(\bz,\bw)$ to  the SCM $\fG(\bw,\bx)$.
+\item Rewrite the graph $G$ of the SCM according to the rules $\fr$.
+\item Note that the initial values of parameters $\bw_t$ of $f_t$ are inherited from $\hat{\bw}_{t-1}$. 
+\item Estimate the parameters $\hat{\bw}$ according to the data $\{\bx\}$.
+\item Given $\hat{\bw}$ estimate the covariance matrix $\hat{\bA}$.
+\item Make do-intervention and estimate the covariance matrix $\hat{\bA}^\prime$.
+\item Analyze the couple $\bA,\bA^\prime$ and set the parameters $\bpi$.
+\item Repeat until $t=T$. Keep the spectrum of $\bD$ at $t=T$.
+\end{enumerate}
+\end{block}
+\end{frame}
+%=============================================
+\begin{frame}{(continued)}
+
+\begin{block}{Forecasting}
+\begin{enumerate}
+\item Given the data set $\bD$ (and its spectrun at $t=T$) and the prior $p(G)$.
+\item Make the inference $p_\bth(\bz_{t-1}\mid\bz_{t})$ and compute $\bz_0$.
+\item At each step $t$ reconstruct $\bw_t$. No intervention needed.
+\item Return $\fG(\hat{\bw},\bx)$. Return optimal $\loss_\bD$, complexity, and robustness.
+\end{enumerate}
+\end{block}
+
+\vfill
+\begin{block}{Notes}
+\begin{enumerate}
+\item Step 4: new parameters are set to deliver $\text{it}$ to the dictionary functions. Examples. For $+$ the parameters $\bw=[0,0]$ delivers $\text{id}:$ $0x+0=x$. For $+$ the parameters $\bw=[1]$ delivers $\text{id}:$ $1*x = x$. The cross-product $\times$ delivers $\mathbf{I}$ or the identity tensor is written as the Kronecker delta. There is no parameters that delivers $\text{id}$ for functions like $\sin(x), \ln(x)$.
+\item Steps 2,3,5,6,7 do not depend on time.
+\end{enumerate}
+\end{block}
+\end{frame}
+%=============================================
+\begin{frame}{Coherent generation of SCMs with do-intervention}
+
+%\input{text_scm_daigram}
+\center
+\includegraphics[width=0.75\linewidth]{tmp/fig_scm_diagram}
+
+\end{frame}
+%=============================================
+\begin{frame}{The Metropolis Hastings graph sampling}
+
+Sample the new structure $\bz_t$ from  $q(\bz_t\mid\bz_{t-1})q(\bz_{t-1}\mid\bA_{t-1})q(\fG)$.
+
+\bigskip
+To sample graphs~$\bz_0 = \{\bz \mid \bz \sim p(\bz|\boldsymbol{\pi})\}$.
+The element $\bz_{t+1}$ of the sample depends on the previous element $\bz_t$ of the sample  only.
+Denote by $Q(\bz \mid \bz^\prime)$ an auxiliary distribution $Q(\bz\mid \bz^\prime)$.
+
+Choose an initial element $\bz_0$ and assign $\bz_0 = \{\bz_0\}$.
+
+Then let an element $\bz_t$ be chosen according  to the distribution $Q(\bz^\prime\mid\ba_t)$.
+The next element $\bz^\prime$ is generated randomly.
+Then the algorithm computes the acceptance ratio $a$:
+\[
+    a = \min\limits_{\bz^\prime\in\mathbb{R}^n}\left(
+    \frac{p(D\mid\ba^{\prime}, B_0)\quad Q(\bz_t\mid\ba^\prime)}
+    {p(D\mid\ba_t, B_0)\quad Q(\bz^\prime\mid \bz_t)}, 1\right).
+\]
+
+The algorithm accepts the candidate $\bz^\prime$ with the probability $a$,
+\[
+    \bz_{t+1} = \bz^\prime, \qquad, W_0 := W_0 \cup \bz^\prime.
+\]
+Otherwise, the algorithm rejects the candidate and puts $\bz_{t+1} = \bz_t$,
+\[
+\bz_{t+1} =
+\begin{cases}
+\bz^\prime, \quad\text{with the probability}\quad a, \\
+\bz_t,  \quad\text{with the probability} (1-a).
+\end{cases}
+\]
+\end{frame}
 
 %=============================================
+\begin{frame}{The Metropolis Hastings graph sampling}
+Let the auxiliary distribution $Q(\bz \mid \bz^\prime)$ be normal (it is pretty simplified case; replace to uniform, Dirichlet or Gumbel-Softmax distribution):
+\[
+    Q(\bz \mid \bz^\prime) = Q(\bz^\prime \mid \bz) = \frac{1}{(2\pi\alpha^{-1})^{n/2}} \exp\left(-\frac{\alpha}{2}(\bz - \bz^\prime)\T (\bz - \bz^\prime)\right).
+\]
+That is, the function $Q(\bz \mid \bz^\prime)$ is symmetric and
+the acceptance ratio $a$ simplifies to
+\[
+    a = \min\limits_{\bz^\prime\in\mathbb{R}^n}\left(
+    \frac{p(D\mid\ba^{\prime}, B_0)}{p(D\mid\ba_t, B_0)}, 1\right).
+\]
+The initial element $\bz_0$ is chosen randomly from the distribution $p(   \mid \boldsymbol{\pi})$.
+\end{frame}
 
-\begin{frame}{Slide 2}
+%=============================================
+\begin{frame}{The do-inference testing procedure}
+
+\begin{block}{There given}
+\begin{enumerate}[1)]
+\item the DAG $G$ corresponds to the model $\fG$,
+\item its parameters and covariance matrix $(\hat{\bw}, \hat{A})$,
+\item the strategy of do-intervention in $\{X\}$ of $n$ steps%
+\footnote{For example, set each input $X$ (of $n$ inputs, according to $G$) to the constant $ \text{do}X = \mathbb{E}[X]$.}
+\end{enumerate}
+\end{block}
+ 
+\begin{block}{Collect the covariance matrices}
+\begin{enumerate}
+\item Sample a subset of $\bx$ from the dats set $\bD$.
+\item Set $\text{do}X$ on the step $1,\dots,n$.
+\item Estimate the new covariance matrices $\hat{\bA}_1,\dots,\hat{\bA}_n$ for each step.
+\item Estimate the new aggregate covariance matrix $\hat{\bA}$ for each step.
+\item Set the parameters for the graph generation $\bpi$. 
+\end{enumerate}
+\end{block}
+\end{frame}
+
+%=============================================
+\begin{frame}{Discrete genetic algorithm for model selection}
+\begin{enumerate}
+    \item There is a set of binary vectors
+    $%\[
+    \{\mathbf{a}_1,\ldots,\mathbf{a}_P\}, \quad \mathbf{a} \in \{0,1\}^{n}.    $%\]
+    \item Select two vectors
+    $%\[
+    \mathbf{a}_p,\ \mathbf{a}_q,    \quad    p,q \in \{1,\ldots,P\}.    $%\]
+    \item Choose a random number
+    $%\[
+    \nu \in \{1,\ldots,n-1\}.
+    $%\]
+    \item Split both vectors and exchange their tails:
+    \[
+    \left[
+    a_{p,1},\ldots,a_{p,\nu},
+    a_{q,\nu+1},\ldots,a_{q,n}
+    \right]
+    \rightarrow
+    \mathbf{a}'_{p},
+    \]
+    \[
+    \left[
+    a_{q,1},\ldots,a_{q,\nu},
+    a_{p,\nu+1},\ldots,a_{p,n}
+    \right]
+    \rightarrow
+    \mathbf{a}'_{q}.
+    \]
+    \item Choose random numbers    $%\[
+    \eta_1,\ldots,\eta_Q \in \{1,\ldots,n\}.     $%\]
+    \item Invert positions    $%\[
+    \eta_1,\ldots,\eta_Q    $ %\]
+    of the vectors   $% \[
+    \mathbf{a}'_{p},\ \mathbf{a}'_{q}.     $%\]
+    \item Repeat Steps 2--6 $\frac{P}{2} $  times.
+    \item Evaluate the obtained models.
+\end{enumerate}
+
+\bigskip
+Repeat the procedure $R$ times; here $P$, $Q$, and $R$ are the parameters of the algorithm, and $n$ is the number of features in the corresponding model.
+\end{frame}
+%=============================================
+\begin{frame}{Plan of the algorithm of the SCM inference}
 
 \begin{enumerate}
-\item  Goals
 \item Requirements to model
 \item How to construct a model
 \item Algebraic and Statistical assumptions
@@ -296,26 +545,13 @@ A graph of the form $+(\times (+(\dots)))$ could be simplified, too.
 \item Graph diffusion and reconstruction
 \item Neural ODE is possible
 \item Fine-tuning 
-\item And testing
+\item Testing and do-inference
 \item The general probabilistic model and loss function
 \item Non-parametric modeling and Optimal sampling
 \item Time and space segmentation
 \end{enumerate}
-
 \end{frame}
-
-
 %=============================================
-\begin{frame}{The graph probability}
-
-Introduce a Metropolis Hastings graph sampling procedure
-
-\end{frame}
-%\end{document}
-
-%=============================================
-
-
 \begin{frame}{Models}
 
 %\end{frame}
