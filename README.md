@@ -1,6 +1,7 @@
 # Causal inference for time series and text data
 ## List of Contents
 ### Texts 
+- Diffusion of linear operators [text](/slides/text_linear_diffusion.pdf), [notebook]()   
 - Diffusion Processes for Inference of Structural Causal Models [text](/slides/text_models.pdf), [slides](/slides/intro_models.pdf)
 - Generative models for time series in CI [pdf](/slides/intro_generative_models.pdf) 
 - Forward and inverse models for the SCM inference [pdf](/slides/text_forward_inverse.pdf)
