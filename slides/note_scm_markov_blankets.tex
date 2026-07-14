@@ -1,0 +1,158 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\Pa}{\operatorname{Pa}}
+\newcommand{\Ch}{\operatorname{Ch}}
+\newcommand{\MB}{\operatorname{MB}}
+\newcommand{\indep}{\perp\!\!\!\perp}
+
+\title{Structural Causal Models and Markov Blankets}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Structural causal models}
+
+Let $V=\{V_1,\ldots,V_n\}$ be the endogenous variables in an acyclic
+structural causal model (SCM), and let $\Pa(V_i)$ denote the parents of
+$V_i$ in its directed acyclic graph (DAG). The SCM consists of structural
+equations
+\[
+  V_i=f_i\bigl(\Pa(V_i),U_i\bigr), \qquad i=1,\ldots,n,
+\]
+where $U_i$ are exogenous variables. If the exogenous variables are mutually
+independent, the observational distribution obeys the causal Markov
+factorization
+\[
+  P(V_1,\ldots,V_n)=\prod_{i=1}^n P\bigl(V_i\mid\Pa(V_i)\bigr).
+\]
+
+Edges are ordinarily structural features of the DAG rather than random
+variables. If graph structure is uncertain and represented by a random graph
+$G$, a joint model is
+\[
+  P(G,V)=P(G)\prod_{i=1}^n P\bigl(V_i\mid\Pa_G(V_i),G\bigr).
+\]
+
+\section{Formal definition of a Markov blanket}
+
+For a variable $X\in V$, a set $B\subseteq V\setminus\{X\}$ is a
+\emph{Markov blanket} of $X$ with respect to $P$ if
+\[
+  X\indep V\setminus\bigl(B\cup\{X\}\bigr)\mid B.
+\]
+Equivalently,
+\[
+  P\bigl(X\mid V\setminus\{X\}\bigr)=P(X\mid B).
+\]
+Thus, conditional on $B$, every variable outside $B$ carries no further
+information about $X$.
+
+A \emph{Markov boundary} is a minimal Markov blanket:
+\[
+  \MB(X)\in\arg\min_B
+  \left\{B\subseteq V\setminus\{X\}:\;
+  X\indep V\setminus\bigl(B\cup\{X\}\bigr)\mid B\right\},
+\]
+where minimality means that no member can be removed while preserving the
+conditional-independence property. Under standard positivity/intersection
+conditions, this boundary is unique.
+
+For a distribution faithful to a DAG, the Markov boundary of $X$ is
+\[
+  \MB(X)=\Pa(X)\cup\Ch(X)\cup
+  \left(\bigcup_{Y\in\Ch(X)}\Pa(Y)\setminus\{X\}\right).
+\]
+It therefore contains the parents of $X$, the children of $X$, and the other
+parents of those children (often called spouses of $X$).
+
+\section{Combining all Markov blankets}
+
+The set of local Markov blankets is
+\[
+  \mathcal{B}=\left\{\MB(X_i): i=1,\ldots,n\right\}.
+\]
+It defines an undirected Markov-blanket graph
+\[
+  G_{\mathrm{MB}}=(V,E_{\mathrm{MB}}),
+\]
+where a symmetric edge rule is
+\[
+  \{X_i,X_j\}\in E_{\mathrm{MB}}
+  \quad\Longleftrightarrow\quad
+  X_j\in\MB(X_i)\ \text{or}\ X_i\in\MB(X_j).
+\]
+For an exactly known DAG, this is its moral graph: retain parent--child
+adjacencies, connect co-parents of each child, and remove arrow directions.
+Consequently, $G_{\mathrm{MB}}$ does not in general identify causal directions.
+
+\section{Probability of a Markov-blanket graph}
+
+A graph has a probability only when graph structure is modeled as uncertain.
+Given observed data $D$, the posterior probability of a candidate
+Markov-blanket graph is
+\[
+  P(G_{\mathrm{MB}}\mid D)=
+  \frac{P(D\mid G_{\mathrm{MB}})P(G_{\mathrm{MB}})}
+       {\sum_{G'}P(D\mid G')P(G')}.
+\]
+Here $P(G_{\mathrm{MB}})$ is a graph prior, often chosen to favor sparse
+graphs, and $P(D\mid G_{\mathrm{MB}})$ is the marginal likelihood.
+
+If $G_{\mathrm{MB}}$ is obtained by moralizing an uncertain causal DAG $G$,
+then
+\[
+  P(G_{\mathrm{MB}}\mid D)=
+  \sum_{G:\,\operatorname{moral}(G)=G_{\mathrm{MB}}}P(G\mid D).
+\]
+Several DAGs can contribute to the same Markov-blanket graph.
+
+\section{Estimating a Markov blanket from data}
+
+For a target $X$, estimate the smallest set $S$ satisfying
+\[
+  X\indep V\setminus\bigl(\{X\}\cup S\bigr)\mid S.
+\]
+The resulting estimate is $\widehat{\MB}(X)=S$. A constraint-based approach
+iteratively adds variables $Y$ that remain conditionally dependent on $X$,
+\[
+  X\not\indep Y\mid S,
+\]
+and then removes a selected variable $Y\in S$ if
+\[
+  X\indep Y\mid S\setminus\{Y\}.
+\]
+
+For linear-Gaussian variables, conditional independence can be tested with
+partial correlation:
+\[
+  \rho_{XY\mid S}\approx0\quad\Longrightarrow\quad X\indep Y\mid S.
+\]
+For discrete variables, use conditional mutual information:
+\[
+  I(X;Y\mid S)=\sum_{x,y,s}P(x,y,s)
+  \log\!\left(\frac{P(x,y\mid s)}{P(x\mid s)P(y\mid s)}\right).
+\]
+Small values of $I(X;Y\mid S)$ support conditional independence. In
+high-dimensional linear settings, neighborhood selection may use the Lasso:
+\[
+  \widehat{\beta}=\arg\min_{\beta}\left[
+  \frac{1}{2n}\lVert X-\mathbf{X}_{-X}\beta\rVert_2^2+
+  \lambda\lVert\beta\rVert_1\right],
+  \qquad
+  \widehat{\MB}(X)=\{Y:\widehat{\beta}_Y\ne0\}.
+\]
+
+\section{Sources}
+\begin{itemize}
+  \item J. Pearl, ``The Foundations of Causal Inference,'' \emph{Sociological
+  Methodology}, 2010. \url{https://doi.org/10.1111/j.1467-9531.2010.01228.x}
+  \item J. Peters, D. Janzing, and B. Sch\"olkopf, \emph{Elements of Causal
+  Inference}, MIT Press, 2017. \url{https://web.math.ku.dk/~peters/jonas_files/ElementsOfCausalInference.pdf}
+\end{itemize}
+
+\end{document}
