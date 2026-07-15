@@ -3,53 +3,75 @@
 \usepackage{mathabx}%$\Mars \Venus$
 \title{Markov Blanket Optimization with Graph Diffusion}
 \author{IA pour la Science}
-\date{8 July 2026}
+\date{15 July 2026}
 \begin{document}
 \maketitle
 
 \section*{Preliminary}
+The Markov blanket reconstruction serves the only goal: 
+it reduces the computational complexity of the causal graph reconstruction. 
+The model selection complexity is $C = 2^n-1$, where $n$ in the number of features or model parameters. 
+The structural causal model selection complexity is the number of the selected edges given the number of nodes. 
+For $n$ nodes the number of the edges is $m = 2(n^2-n)$.  
 
-\section*{Markov Blanket Optimization}
+\medskip
+The goal of the proposed algorithm is a DAG of minimal complexity.
+%The algorithm is the diffusion algorithm. 
+It reduces the SCM causal graph reconstruction problem to the series of problems of lesser complexity.
+Instead of the graph reconstruction one has to reconstruct the Markov blanket.
+The nodes and edges around the target variable of the Markov blanket form a smaller causal graph.
+The whole causal graph is a union of the Markov blankets. 
 
+\medskip
+The main problem of model selection remains in SCM selection. 
+It is the problem of high correlation between parents of a variable. 
+It is difficult to discover causality when one observes high dependency between the parents.
+Note that when the  SCM selection criterion is accuracy, 
+averaging features with similar distribution boost the accuracy. 
 
+\clearpage
+\section*{There given}
+The graph $G=(V,E)$, the probabilities of vertices $P(V)$, the probabilities of edges $P(E)$, the data $D$, and the class of SCM with the Bayesian evidence $p(D|\mathbf{A};\mathbf{w})$
 
-The problem of high correlation between parents of a variable.
-It is difficult to tell the causality when one observes high dependency between the parents.
+\medskip
+The initial set of blankets $\{B\}$, where each initial blanket is an isolated vertex, $B=X$:
+it has no parents, spouses and children. 
 
-The complexity of the model selection. The feature selection complexity is $C = 2^n-1$. The causal model selection complexity is the number of the selected edges given the number of nodes. For $n$ nodes the number of the edges is $m = 2(n^2-n)$.  
-
-Include the complexity of the Markov blanket approach 
-\[
-C_\text{MB} = 
-\]
-
-The goal is to select a proper number of edges. It must be DAG, one-connected, minimal complexity.
-
-The main purpose of the MB is to reduce complexity of the optimization problem 
-
-Put the SCM definition here 
-
-
-
-
-\section*{Minimax problem statement}
-
-Minimum complexity of union and maximum probability of elements of the Markov blanket.
-
-The elements of the MB are
+\section*{Algorithm of the graph reconstruction}
 \begin{enumerate}
-\item probability of the vertex prior post
-\item probability of the edge prior post
-\item 
-\item 
-\item 
+\item Random sampling. Select a vertex $V$ as a target $Y$ from the set of vertices in $G$.
+\item Estimate the blanket $B$ with an algorithm like PCMB. %IAMB, MMMB, HITON-MB, PCMB.
+\item Random sampling. Append a random item $P(V)$ to the blanket $B$ and test it. 
+% With one Apply do-intervention, make forward and back-propagation of a signal.
+% \item Correct the blanket $B(V)$ for the selected vertex.
+%\item Estimate the local parameters $\mathbf{b}$ and hyper-parameters $\mathbf{A}$.
+\item Insert the blanket into the graph $G = \bigcup B$.
+% \item Check consistency of the model.
+\item Fine-tune the SCM model the local parameters $\mathbf{b}$ and hyper-parameters $\mathbf{A}$.
+\item Compute the model evidence $p(D|\mathbf{A};\mathbf{w})$. Stop when it converges. 
 \end{enumerate}
+\end{document}
+
+
+
 
 
 \section*{Definition of Markov blanket}
+\section*{Algorithm of the graph reconstruction}
 
-
-
+There given an initial MB. In case of lack of it, set the initial MB as the set of the vertices only; no parents, no children.
+\begin{enumerate}
+\item Select a vertex $V$ from the set of vertices.
+\item Apply do-intervention, make forward and back-propagation of a signal.
+\item Sample the edges.
+\item Correct the blanket $B(V)$ for the selected vertex.
+\item Estimate the local parameters and hyper-parameters.
+\item Insert the blanket into the graph $G$.--
+% \item Check consistency of the model.
+\item Fit the model parameters and hyper-parameters. ?
+\item Compute the model evidence. Stop when it converges. 
+\end{enumerate}
+Note: we need spouses to union blankets, $G=\bigcup B$.
 \end{document}
 
 %============REMOVE BELOV===========

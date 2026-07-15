@@ -3,6 +3,10 @@
 \usepackage{amsmath,amssymb,mathtools}
 \usepackage[hidelinks]{hyperref}
 
+\usepackage{amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
 \newcommand{\Pa}{\operatorname{Pa}}
 \newcommand{\Ch}{\operatorname{Ch}}
 \newcommand{\MB}{\operatorname{MB}}
@@ -146,6 +150,254 @@ high-dimensional linear settings, neighborhood selection may use the Lasso:
   \qquad
   \widehat{\MB}(X)=\{Y:\widehat{\beta}_Y\ne0\}.
 \]
+
+
+
+\begin{algorithm}[H]
+\caption{Bayesian Sequential Reconstruction of a Structural Causal Model}
+\label{alg:bayesian_scm}
+\begin{algorithmic}[1]
+
+\State Let
+\[
+G=(V,E), \qquad
+D=\text{observational data}, \qquad
+D^{do}=\text{interventional data}.
+\]
+
+\Repeat
+
+%---------------------------------------------------------
+\State \textbf{Select a vertex}
+
+Choose a vertex
+\[
+V_i\in V,
+\]
+for example,
+\[
+V_i
+=
+\arg\max_{V}
+H(B(V)\mid D),
+\]
+where
+\[
+H(B)
+=
+-\sum_B
+P(B\mid D)\log P(B\mid D).
+\]
+
+%---------------------------------------------------------
+\State \textbf{Apply do-intervention and propagate a signal}
+
+Perform the intervention
+\[
+do(V_i=x^*)
+\]
+and estimate
+\[
+P(X\mid do(V_i)).
+\]
+
+Forward diffusion is computed by
+\[
+u(t)=e^{-tL}u_0,
+\qquad
+u_0=e_i,
+\]
+where
+\[
+L=D-A
+\]
+is the graph Laplacian.
+
+Backward propagation is obtained from the adjoint equation
+\[
+u^*(t)=e^{tL}u_T.
+\]
+
+%---------------------------------------------------------
+\State \textbf{Sample candidate edges}
+
+For every candidate vertex $V_j$ compute
+\[
+P(E_{ij}=1)
+=
+\sigma(s_{ij}),
+\]
+where
+\[
+s_{ij}
+=
+I(X_i;X_j)
++
+\alpha
+D_{KL}
+\!\left(
+P(X_j\mid do(X_i))
+\|
+P(X_j)
+\right).
+\]
+
+Sample
+\[
+E_{ij}
+\sim
+P(E_{ij}\mid D,D^{do}).
+\]
+
+%---------------------------------------------------------
+\State \textbf{Correct the Markov blanket}
+
+Update
+\[
+B(V_i)
+=
+Pa(V_i)
+\cup
+Ch(V_i)
+\cup
+Sp(V_i).
+\]
+
+Estimate the posterior
+\[
+P(B(V_i)\mid D)
+\propto
+P(D\mid B(V_i))
+P(B(V_i)).
+\]
+
+Choose
+\[
+B^*(V_i)
+=
+\arg\max_B
+P(B\mid D).
+\]
+
+%---------------------------------------------------------
+\State \textbf{Estimate local parameters and hyperparameters}
+
+Estimate
+\[
+(\theta_i,\lambda_i)
+=
+\arg\max
+P(D\mid\theta_i,B(V_i))
+P(\theta_i\mid\lambda_i)
+P(\lambda_i).
+\]
+
+%---------------------------------------------------------
+\State \textbf{Insert the blanket into the graph}
+
+Update
+\[
+G_{k+1}
+=
+G_k
+\cup
+B(V_i),
+\]
+or equivalently
+\[
+E_{k+1}
+=
+E_k
+\cup
+E(B(V_i)).
+\]
+
+%---------------------------------------------------------
+\State \textbf{Fit global parameters and hyperparameters}
+
+Estimate
+\[
+(\Theta,\Lambda)
+=
+\arg\max
+P(D\mid G,\Theta)
+P(\Theta\mid\Lambda)
+P(\Lambda),
+\]
+where
+\[
+\Theta
+=
+(\theta_1,\ldots,\theta_n),
+\qquad
+\Lambda
+=
+(\lambda_1,\ldots,\lambda_n).
+\]
+
+For Gaussian SCMs this is equivalent to minimizing
+\[
+\Theta
+=
+\arg\min_{\Theta}
+\left[
+-\log
+P(D\mid G,\Theta)
++
+\sum_i
+\lambda_i
+\|\theta_i\|^2
+\right].
+\]
+
+%---------------------------------------------------------
+\State \textbf{Compute model evidence}
+
+Compute the Bayesian evidence
+\[
+P(D\mid G)
+=
+\int
+P(D\mid\Theta,G)
+P(\Theta\mid G)
+\,d\Theta.
+\]
+
+The Laplace approximation is
+\[
+\log P(D\mid G)
+\approx
+\log
+P(D\mid\hat{\Theta},G)
++
+\log
+P(\hat{\Theta})
+-
+\frac12
+\log|H|,
+\]
+where
+\[
+H
+=
+-\nabla^2
+\log
+P(\Theta\mid D).
+\]
+
+\Until
+\[
+\left|
+\log P(D\mid G_{k+1})
+-
+\log P(D\mid G_k)
+\right|
+<
+\varepsilon.
+\]
+
+\end{algorithmic}
+\end{algorithm}
 
 \section{Sources}
 \begin{itemize}
